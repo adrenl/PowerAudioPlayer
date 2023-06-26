@@ -13,6 +13,7 @@
 #include "bassmidi.h"
 #include "BASS_WADSP.h"
 #include "bass_sfx.h"
+#include "tags.h"
 #include "SkinH.h"
 
 #endif //PCH_H

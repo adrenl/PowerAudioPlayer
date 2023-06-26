@@ -45,10 +45,19 @@
     <ClInclude Include="bassmidi.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CGlobal.h">
+    <ClInclude Include="SkinH.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="SkinH.h">
+    <ClInclude Include="libzplay.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CBASS.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CPublic.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="tags.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -62,7 +71,10 @@
     <ClCompile Include="pch.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CGlobal.cpp">
+    <ClCompile Include="CBASS.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CPublic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -80,5 +92,14 @@
     <Image Include="res\PowerAudioPlayer.ico">
       <Filter>资源文件</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="bass.lib" />
+    <Library Include="BASS_SFX.lib" />
+    <Library Include="BASS_WADSP.lib" />
+    <Library Include="bassmidi.lib" />
+    <Library Include="libzplay.lib" />
+    <Library Include="SkinH.lib" />
+    <Library Include="tags.lib" />
   </ItemGroup>
 </Project>

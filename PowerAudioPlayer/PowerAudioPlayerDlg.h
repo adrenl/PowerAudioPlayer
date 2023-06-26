@@ -3,7 +3,8 @@
 //
 
 #pragma once
-#include "CGlobal.h"
+#include "CPublic.h"
+#include "CBASS.h"
 
 // CPowerAudioPlayerDlg 对话框
 class CPowerAudioPlayerDlg : public CDialogEx
@@ -29,6 +30,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg LRESULT OnKickIdle(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 public:
 	CString LoadStr;
@@ -49,6 +51,7 @@ public:
 	void AddToList(CString Path, CString Title = _T(""), int Time = 0, bool IsConvert = FALSE);
 	void SaveList(CString Path = _T(""));
 	void LoadList(CString Path = _T(""));
+	void ConvertList();
 	afx_msg void OnBnClickedButton5();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();

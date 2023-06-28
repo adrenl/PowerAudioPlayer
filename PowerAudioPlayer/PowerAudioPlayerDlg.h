@@ -5,6 +5,7 @@
 #pragma once
 #include "CPublic.h"
 #include "CBASS.h"
+#include "CInputBox.h"
 
 // CPowerAudioPlayerDlg 对话框
 class CPowerAudioPlayerDlg : public CDialogEx
@@ -49,6 +50,8 @@ public:
 	void ChangeVolumeSide();
 	void Play(int Id);
 	void AddToList(CString Path, CString Title = _T(""), int Time = 0, bool IsConvert = FALSE);
+	void DelToList(int Id);
+	void CleanList();
 	void SaveList(CString Path = _T(""));
 	void LoadList(CString Path = _T(""));
 	void ConvertList();
@@ -63,4 +66,6 @@ public:
 	afx_msg void OnNMDblclkList1(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void On32783();
 	afx_msg void On32782();
+	afx_msg void OnNMRClickList1(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void On32779();
 };

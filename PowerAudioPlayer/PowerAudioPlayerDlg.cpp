@@ -13,6 +13,7 @@
 #define new DEBUG_NEW
 #endif
 
+
 // CPowerAudioPlayerDlg 对话框
 
 CPowerAudioPlayerDlg::CPowerAudioPlayerDlg(CWnd* pParent /*=nullptr*/)
@@ -53,6 +54,8 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
 	ON_COMMAND(ID_32783, &CPowerAudioPlayerDlg::On32783)
 	ON_COMMAND(ID_32782, &CPowerAudioPlayerDlg::On32782)
 	ON_MESSAGE(WM_KICKIDLE, OnKickIdle)
+	ON_NOTIFY(NM_RCLICK, IDC_LIST1, &CPowerAudioPlayerDlg::OnNMRClickList1)
+	ON_COMMAND(ID_32779, &CPowerAudioPlayerDlg::On32779)
 END_MESSAGE_MAP()
 
 void CPowerAudioPlayerDlg::ChangeVolumeSide() {
@@ -82,7 +85,7 @@ void CPowerAudioPlayerDlg::Play(int Id)
 		m_playbtn.SetWindowTextW(_T("暂停"));
 		m_infosta.SetWindowTextW(CPb::pl_title[Id]);
 		m_ttimesta.SetWindowTextW(BASS::TimeToString(BASS::ChannelBytes2Seconds(Length)));
-		//MessageBox(CPb::CharToLPCWSTR((char*)TAGS_Read(BASS::Stream, "%IFV1(%TRCK,%TRCK. )%IFV2(%ARTI,%ICAP(%ARTI),no artist) - %IFV2(%TITL,%ICAP(%TITL) -,no title -)%IFV1(%ALBM, %IUPC(%ALBM))%IFV1(%YEAR, %(%YEAR%))")));
+		
 	}else {
 		Play(0);
 	}
@@ -97,59 +100,83 @@ void CPowerAudioPlayerDlg::AddToList(CString Path, CString Title, int Time, bool
 	CPb::pl_isconvert.push_back(IsConvert);
 }
 
+void CPowerAudioPlayerDlg::DelToList(int Id)
+{
+	//Id--;
+	CPb::pl_path.erase(CPb::pl_path.begin() + Id);
+	CPb::pl_title.erase(CPb::pl_title.begin() + Id);
+	CPb::pl_time.erase(CPb::pl_time.begin() + Id);
+	CPb::pl_isconvert.erase(CPb::pl_isconvert.begin() + Id);
+}
+
+void CPowerAudioPlayerDlg::CleanList()
+{
+
+}
+
 void CPowerAudioPlayerDlg::SaveList(CString Path)
 {
-	if (Path == _T("")) Path = CPb::GetExeModuleDir() + _T("\\default.pappl");
-	CFile file;
-	CString Content;
-	file.Open(Path, CFile::modeCreate | CFile::modeReadWrite);
-	file.SeekToEnd();
+	if (Path == _T("")) Path = CPb::GetExeModuleDir() + _T("\\default.json");
+	Json::Value root;
+	Json::FastWriter fw;
 	int total = CPb::pl_path.size();
-	for (int i = 0; i < total; i++) {
-		Content += CPb::pl_title[i] + _T("|") + CPb::pl_path[i] + _T("|") + CPb::i2cs(CPb::pl_time[i]) + _T("|") + CPb::i2cs(CPb::pl_isconvert[i])+_T("\r\n");
+	for (int i = 0; i < total; ++i){
+		root[i]["tite"] = Json::Value(CPb::CStrToChar(CPb::pl_title[i]));
+		root[i]["path"] = Json::Value(CPb::CStrToChar(CPb::pl_path[i]));
+		root[i]["time"] = Json::Value(CPb::pl_time[i]);
+		root[i]["isconvert"] = Json::Value(CPb::pl_isconvert[i]);
 	}
+	CString json = (CString)fw.write(root).c_str();
+	CFile file(Path, CFile::modeCreate | CFile::modeWrite);
+	file.SeekToEnd();
 	wchar_t unicode = 0xFEFF;
 	file.Write(&unicode, 2);
-	file.Write(Content, wcslen(Content) * sizeof(wchar_t));
+	file.Write(json, wcslen(json) * sizeof(wchar_t));
 	file.Close();
 }
 
 void CPowerAudioPlayerDlg::LoadList(CString Path)
 {
-	if (Path == _T("")) Path = CPb::GetExeModuleDir() + _T("\\default.pappl");
+	if (Path == _T("")) Path = CPb::GetExeModuleDir() + _T("\\default.json");
 	if (PathFileExists(Path) == FALSE) return;
-	CFile file;
-	CStringArray St1, St2;
+	CStringArray St1;
+	CFile file(Path, CFile::modeRead);
 	char* pBuf;
-	file.Open(Path, CFile::modeRead);
 	int dwFileLen = file.GetLength();
 	pBuf = new char[dwFileLen + 1];
 	pBuf[dwFileLen] = 0;
 	file.Read(pBuf, dwFileLen);
 	file.Close();
 	CPb::split(CPb::CharToCStr(pBuf), *"\r\n", St1);
-	St1.RemoveAt(St1.GetSize() - 1);
-	for (int i = 0; i < St1.GetSize(); ++i) {
-		CPb::split(St1[i], *"|", St2);
-		AddToList(St2[1], St2[0], _ttoi(St2[2]), _ttoi(St2[3]));
-		m_playlist.InsertItem(i, St2[0]);
-		m_playlist.SetItemText(i, 1, BASS::TimeToString(_ttoi(St2[2])));
+	Json::Reader reader;
+	Json::Value root;
+	CString temp;
+	USES_CONVERSION;
+	char* cJson = T2A(St1[0].GetBuffer(0));
+	St1[0].ReleaseBuffer();
+	if (reader.parse(cJson,root)){
+		for (int i = 0; i < root.size();++i) {
+			AddToList((CString)root[i]["path"].asCString(), (CString)root[i]["title"].asCString(),root[i]["path"].asInt(), root[i]["path"].asBool());
+			m_playlist.InsertItem(i, (CString)root[i]["title"].asCString());
+			m_playlist.SetItemText(i, 1, BASS::TimeToString(root[i]["path"].asInt()));
+		}
 	}
+
 }
 
 void CPowerAudioPlayerDlg::ConvertList()
 {
 	if (CPb::pl_path.size() == 0) return;
-	//ZPlay* file = CreateZPlay();
-	//TID3InfoEx id3_info{};
-	//LPCWSTR Title = nullptr;
 	int total = CPb::pl_path.size();
 	for (int i = 0; i < total; i++) {
-		//char *location = (char*)CPb::CStrToChar(CPb::pl_path[i]);
-		//CPb::pl_time[i]=BASS::LengthFile(CPb::pl_path[i]);
-		//m_playlist.SetItemText(i, 1,BASS::TimeToString(CPb::pl_time[i]));
-		//file->LoadFileID3Ex(location, sfAutodetect, &id3_info, 1);
-		//m_playlist.SetItemText(i, 0, CPb::CharToLPCWSTR(id3_info.Title));
+		//if (CPb::pl_isconvert[i] == TRUE) continue;
+		HSTREAM STREAM = BASS_StreamCreateFile(FALSE, CPb::pl_path[i], NULL, NULL, NULL);
+		CPb::pl_title[i] = CPb::CharToLPCWSTR((char*)TAGS_Read(STREAM, "%IFV2(%ARTI,%ICAP(%ARTI),无艺术家) - %IFV2(%TITL,%ICAP(%TITL) ,无标题 ) %IFV1(%ALBM,%IUPC(- %ALBM))"));
+		CPb::pl_time[i] = BASS_ChannelBytes2Seconds(STREAM, BASS_ChannelGetLength(STREAM,0));
+		m_playlist.SetItemText(i, 0, CPb::pl_title[i]);
+		m_playlist.SetItemText(i, 1, BASS::TimeToString(CPb::pl_time[i]));
+		CPb::pl_isconvert[i] = TRUE;
+		BASS_StreamFree(STREAM);
 	}
 	CPb::ToConvertList = FALSE;
 }
@@ -170,10 +197,10 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
 		MessageBox(_T("初始化Bass失败"),NULL, MB_ICONERROR);
 		exit(-1);
 	}
-	//SkinH_Attach();
+	SkinH_Attach();
 	SetTimer(TIMER_ALAWAYS, 400, NULL);
-	m_playlist.InsertColumn(1, _T("标题"), LVCFMT_LEFT, 210);
-	m_playlist.InsertColumn(2, _T("时间"), LVCFMT_LEFT, 50);
+	m_playlist.InsertColumn(0, _T("标题"), LVCFMT_LEFT, 210);
+	m_playlist.InsertColumn(1, _T("时间"), LVCFMT_LEFT, 50);
 	m_playlist.SetExtendedStyle(m_playlist.GetExtendedStyle()| LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
 	//加载Plugins
 	CString filepath = CPb::GetExeModuleDir();
@@ -301,7 +328,7 @@ void CPowerAudioPlayerDlg::OnBnClickedCheck1()
 void CPowerAudioPlayerDlg::OnClose()
 {
 	BASS_Free();
-	SaveList(CPb::GetExeModuleDir() + _T("\\default.pappl"));
+	SaveList(NULL);
 	CDialogEx::OnClose();
 }
 
@@ -334,14 +361,24 @@ void CPowerAudioPlayerDlg::OnNMDblclkList1(NMHDR* pNMHDR, LRESULT* pResult)
 void CPowerAudioPlayerDlg::On32776()
 {
 	LoadStr.LoadStringW(IDS_FILTER_AUDIO);
-	CFileDialog Dlg(TRUE, NULL, NULL, 0, LoadStr, this);
+	CFileDialog Dlg(TRUE, NULL, NULL, OFN_ALLOWMULTISELECT, LoadStr, this);
 	CString FilePath;
-	if (Dlg.DoModal()) {
-		FilePath = Dlg.GetPathName();
-		AddToList(FilePath);
-		int index = m_playlist.GetItemCount();
-		m_playlist.InsertItem(index, FilePath);
-		m_playlist.SetItemText(index, 1, _T("00:00"));
+	DWORD max_file = 60000;
+	TCHAR* lsf = new TCHAR[max_file];
+	Dlg.m_ofn.nMaxFile = max_file;
+	Dlg.m_ofn.lpstrFile = lsf;
+	Dlg.m_ofn.lpstrFile[0] = NULL;
+	if (Dlg.DoModal() == IDOK) {
+		POSITION posFile = Dlg.GetStartPosition();
+		while (posFile != NULL)
+		{
+			FilePath = Dlg.GetNextPathName(posFile);
+			AddToList(FilePath);
+			int index = m_playlist.GetItemCount();
+			m_playlist.InsertItem(index, FilePath);
+			m_playlist.SetItemText(index, 1, _T("00:00"));
+		}
+		delete lsf;
 		CPb::ToConvertList = TRUE;
 	}
 }
@@ -351,7 +388,7 @@ void CPowerAudioPlayerDlg::On32783()
 	LoadStr.LoadStringW(IDS_FILTER_PAPPL);
 	CFileDialog Dlg(TRUE, NULL, NULL, 0, LoadStr, this);
 	CString FilePath;
-	if (Dlg.DoModal()) {
+	if (Dlg.DoModal() == IDOK) {
 		FilePath = Dlg.GetPathName();
 		LoadList(FilePath);
 	}
@@ -363,8 +400,35 @@ void CPowerAudioPlayerDlg::On32782()
 	LoadStr.LoadStringW(IDS_FILTER_PAPPL);
 	CFileDialog Dlg(FALSE, NULL, NULL, 0, LoadStr, this);
 	CString FilePath;
-	if (Dlg.DoModal()) {
+	if (Dlg.DoModal() == IDOK) {
 		FilePath = Dlg.GetPathName();
 		SaveList(FilePath);
+	}
+}
+
+void CPowerAudioPlayerDlg::OnNMRClickList1(NMHDR* pNMHDR, LRESULT* pResult)
+{
+	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
+	if (m_playlist.GetSelectionMark() != -1) {
+		CMenu menu;
+		CMenu* pSubMenu = NULL;
+		menu.LoadMenu(IDR_PLRMENU);
+		CPoint posMouse;
+		GetCursorPos(&posMouse);
+		pSubMenu = menu.GetSubMenu(0);
+		pSubMenu->TrackPopupMenu(0, posMouse.x, posMouse.y, this);
+	}
+	*pResult = 0;
+}
+
+
+void CPowerAudioPlayerDlg::On32779()
+{
+	for (int iItem = m_playlist.GetItemCount() - 1; iItem >= 0; iItem--)
+	{
+		if (m_playlist.GetItemState(iItem, LVIS_SELECTED) == LVIS_SELECTED){
+			m_playlist.DeleteItem(iItem);
+			DelToList(iItem);
+		}
 	}
 }

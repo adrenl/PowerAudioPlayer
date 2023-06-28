@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Lib">
+      <UniqueIdentifier>{9ae651c1-f918-473a-a096-5c44473b56ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PowerAudioPlayer.h">
@@ -48,9 +51,6 @@
     <ClInclude Include="SkinH.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="libzplay.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="CBASS.h">
       <Filter>头文件</Filter>
     </ClInclude>
@@ -58,6 +58,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="tags.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CInputBox.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,6 +80,9 @@
     <ClCompile Include="CPublic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CInputBox.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PowerAudioPlayer.rc">
@@ -94,12 +100,23 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
-    <Library Include="bass.lib" />
-    <Library Include="BASS_SFX.lib" />
-    <Library Include="BASS_WADSP.lib" />
-    <Library Include="bassmidi.lib" />
-    <Library Include="libzplay.lib" />
-    <Library Include="SkinH.lib" />
-    <Library Include="tags.lib" />
+    <Library Include="bass.lib">
+      <Filter>Lib</Filter>
+    </Library>
+    <Library Include="BASS_SFX.lib">
+      <Filter>Lib</Filter>
+    </Library>
+    <Library Include="BASS_WADSP.lib">
+      <Filter>Lib</Filter>
+    </Library>
+    <Library Include="bassmidi.lib">
+      <Filter>Lib</Filter>
+    </Library>
+    <Library Include="SkinH.lib">
+      <Filter>Lib</Filter>
+    </Library>
+    <Library Include="tags.lib">
+      <Filter>Lib</Filter>
+    </Library>
   </ItemGroup>
 </Project>

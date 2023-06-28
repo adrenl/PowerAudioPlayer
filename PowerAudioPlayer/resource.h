@@ -8,6 +8,7 @@
 #define IDR_PLRMENU                     133
 #define IDS_FILTER_AUDIO                134
 #define IDS_FILTER_PAPPL                135
+#define IDD_INPUTBOX                    135
 #define IDC_TTIME                       1000
 #define IDC_BUTTON1                     1001
 #define IDC_CHECK1                      1002
@@ -20,7 +21,9 @@
 #define IDC_INFO                        1009
 #define IDC_BUTTON5                     1010
 #define IDC_BUTTON6                     1011
+#define IDC_EDIT1                       1011
 #define IDC_NTIME                       1012
+#define IDC_EDIT2                       1012
 #define IDC_VOL                         1013
 #define ID_MENU_32773                   32773
 #define ID_MENU_32774                   32774
@@ -43,14 +46,15 @@
 #define ID_MENU_32791                   32791
 #define ID_MENU_32792                   32792
 #define ID_MENU_32793                   32793
+#define ID_32794                        32794
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        135
-#define _APS_NEXT_COMMAND_VALUE         32794
-#define _APS_NEXT_CONTROL_VALUE         1011
+#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_COMMAND_VALUE         32795
+#define _APS_NEXT_CONTROL_VALUE         1013
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

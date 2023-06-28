@@ -139,12 +139,12 @@ HSTREAM BASS::StreamCreate(DWORD freq, DWORD chans, DWORD flags, STREAMPROC* pro
 
 HSTREAM BASS::StreamCreateFile(BOOL mem, CString file, QWORD offset, QWORD length, DWORD flags)
 {
-	return BASS::Stream = BASS_StreamCreateFile(mem,file,offset,length,flags);
+	return BASS::Stream = BASS_StreamCreateFile(mem, file, offset, length, flags);
 }
 
 HSTREAM BASS::StreamCreateFileUser(DWORD system, DWORD flags, BASS_FILEPROCS* procs, void* user)
 {
-	return BASS::Stream = BASS_StreamCreateFileUser(system,flags,procs,user);
+	return BASS::Stream = BASS_StreamCreateFileUser(system, flags, procs, user);
 }
 
 HSTREAM BASS::StreamCreateURL(char* url, DWORD offset, DWORD flags, DOWNLOADPROC* proc, void* user)

@@ -115,10 +115,11 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <ConformanceMode>Default</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;libzplay.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -142,10 +143,11 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <ConformanceMode>Default</ConformanceMode>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;libzplay.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -171,12 +173,13 @@
       <LanguageStandard_C>stdc17</LanguageStandard_C>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
       <ConformanceMode>Default</ConformanceMode>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;libzplay.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;json_vc71_libmt.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -207,7 +210,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;libzplay.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -226,9 +229,9 @@
     <ClInclude Include="bass_sfx.h" />
     <ClInclude Include="BASS_WADSP.h" />
     <ClInclude Include="CBASS.h" />
+    <ClInclude Include="CInputBox.h" />
     <ClInclude Include="CPublic.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="libzplay.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PowerAudioPlayer.h" />
     <ClInclude Include="PowerAudioPlayerDlg.h" />
@@ -239,6 +242,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CBASS.cpp" />
+    <ClCompile Include="CInputBox.cpp" />
     <ClCompile Include="CPublic.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -263,7 +267,6 @@
     <Library Include="bassmidi.lib" />
     <Library Include="BASS_SFX.lib" />
     <Library Include="BASS_WADSP.lib" />
-    <Library Include="libzplay.lib" />
     <Library Include="SkinH.lib" />
     <Library Include="tags.lib" />
   </ItemGroup>

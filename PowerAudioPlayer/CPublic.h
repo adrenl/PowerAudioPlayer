@@ -4,6 +4,7 @@
 #define TIMER_PLAYING 101
 #include <vector>
 #include <string>
+#include <fstream>
 class CPb
 {
 public:

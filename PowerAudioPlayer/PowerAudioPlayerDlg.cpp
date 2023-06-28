@@ -156,7 +156,8 @@ void CPowerAudioPlayerDlg::LoadList(CString Path)
 	St1[0].ReleaseBuffer();
 	if (reader.parse(cJson,root)){
 		for (int i = 0; i < root.size();++i) {
-			AddToList((CString)root[i]["path"].asCString(), (CString)root[i]["title"].asCString(),root[i]["path"].asInt(), root[i]["path"].asBool());
+			MessageBox(L"Success!!!!!!!!");
+			AddToList((CString)root[i]["path"].asCString(), (CString)root[i]["title"].asCString(), root[i]["time"].asInt(), root[i]["isconvert"].asBool());
 			m_playlist.InsertItem(i, (CString)root[i]["title"].asCString());
 			m_playlist.SetItemText(i, 1, BASS::TimeToString(root[i]["path"].asInt()));
 		}

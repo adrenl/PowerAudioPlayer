@@ -51,6 +51,11 @@ CString CPb::GetExeModuleDir()
 	return strProgramPath;
 }
 
+CString CPb::GetInPathFileName(CString Path)
+{
+	return Path.Right(Path.GetLength() - Path.ReverseFind('\\') - 1);
+}
+
 CString CPb::CharToCStr(char* CharStr)
 {
 	CString Result;

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CBASS.h"
 HSTREAM BASS::Stream = NULL;
+std::vector<HPLUGIN> BASS::PLUGINS;
 
 BASS::BASS()
 {
@@ -32,24 +33,25 @@ BOOL BASS::SetConfigPtr(DWORD option, void* value)
 	return  BASS_SetConfigPtr(option,value);
 }
 
-HPLUGIN BASS::PluginLoad(char* file, DWORD flags)
+void BASS::PluginLoad(const char* file, DWORD flags)
 {
-	return BASS_PluginLoad(file, flags);
+	BASS::PLUGINS.push_back(BASS_PluginLoad(file, flags));
 }
 
-const BASS_PLUGININFO* BASS::PluginGetInfo(HPLUGIN handle)
+const BASS_PLUGININFO* BASS::PluginGetInfo(int id)
 {
-	return BASS_PluginGetInfo(handle);
+	return BASS_PluginGetInfo(BASS::PLUGINS[id]);
 }
 
-BOOL BASS::PluginFree(HPLUGIN handle)
+void BASS::PluginFree(int id)
 {
-	return BASS_PluginFree(handle);
+	BASS_PluginFree(BASS::PLUGINS[id]);
+	BASS::PLUGINS.erase(BASS::PLUGINS.begin()  +id);
 }
 
-BOOL BASS::PluginEnable(HPLUGIN handle, BOOL enabl)
+void BASS::PluginEnable(int id, BOOL enabl)
 {
-	return BASS_PluginEnable(handle,enabl);
+	BASS_PluginEnable(BASS::PLUGINS[id], enabl);
 }
 
 int BASS::ErrorGetCode()
@@ -132,24 +134,24 @@ BOOL BASS::Update(DWORD length)
 	return BASS_Update(length);
 }
 
-HSTREAM BASS::StreamCreate(DWORD freq, DWORD chans, DWORD flags, STREAMPROC* proc, void* user)
+void BASS::StreamCreate(DWORD freq, DWORD chans, DWORD flags, STREAMPROC* proc, void* user)
 {
-	return BASS::Stream = BASS_StreamCreate(freq,chans,flags,proc,user);
+	BASS::Stream = BASS_StreamCreate(freq,chans,flags,proc,user);
 }
 
-HSTREAM BASS::StreamCreateFile(BOOL mem, CString file, QWORD offset, QWORD length, DWORD flags)
+void BASS::StreamCreateFile(BOOL mem, CString file, QWORD offset, QWORD length, DWORD flags)
 {
-	return BASS::Stream = BASS_StreamCreateFile(mem, file, offset, length, flags);
+	BASS::Stream = BASS_StreamCreateFile(mem, file, offset, length, flags);
 }
 
-HSTREAM BASS::StreamCreateFileUser(DWORD system, DWORD flags, BASS_FILEPROCS* procs, void* user)
+void BASS::StreamCreateFileUser(DWORD system, DWORD flags, BASS_FILEPROCS* procs, void* user)
 {
-	return BASS::Stream = BASS_StreamCreateFileUser(system, flags, procs, user);
+	BASS::Stream = BASS_StreamCreateFileUser(system, flags, procs, user);
 }
 
-HSTREAM BASS::StreamCreateURL(char* url, DWORD offset, DWORD flags, DOWNLOADPROC* proc, void* user)
+void BASS::StreamCreateURL(char* url, DWORD offset, DWORD flags, DOWNLOADPROC* proc, void* user)
 {
-	return BASS::Stream = BASS_StreamCreateURL(url,offset,flags,proc,user);
+	BASS::Stream = BASS_StreamCreateURL(url,offset,flags,proc,user);
 }
 
 BOOL BASS::StreamFree()

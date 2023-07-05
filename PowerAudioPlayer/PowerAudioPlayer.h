@@ -9,6 +9,8 @@
 #endif
 
 #include "resource.h"		// 主符号
+#include "CPublic.h"
+#include "CBASS.h"
 
 
 // CPowerAudioPlayerApp:

@@ -119,7 +119,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;Version.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -147,7 +147,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;Version.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -179,7 +179,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;json_vc71_libmt.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;Version.lib;json_vc71_libmt.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -210,7 +210,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;Version.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -229,8 +229,8 @@
     <ClInclude Include="bass_sfx.h" />
     <ClInclude Include="BASS_WADSP.h" />
     <ClInclude Include="CBASS.h" />
-    <ClInclude Include="CInputBox.h" />
     <ClInclude Include="CPublic.h" />
+    <ClInclude Include="CSettingsDlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PowerAudioPlayer.h" />
@@ -241,9 +241,11 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CBASS.cpp" />
-    <ClCompile Include="CInputBox.cpp" />
+    <ClCompile Include="CBASS.cpp">
+      <FileType>CppCode</FileType>
+    </ClCompile>
     <ClCompile Include="CPublic.cpp" />
+    <ClCompile Include="CSettingsDlg.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

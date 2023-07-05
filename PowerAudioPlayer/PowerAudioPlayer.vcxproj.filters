@@ -60,7 +60,7 @@
     <ClInclude Include="tags.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="CInputBox.h">
+    <ClInclude Include="CSettingsDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -80,7 +80,7 @@
     <ClCompile Include="CPublic.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="CInputBox.cpp">
+    <ClCompile Include="CSettingsDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

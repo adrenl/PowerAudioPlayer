@@ -3,9 +3,7 @@
 //
 
 #pragma once
-#include "CPublic.h"
-#include "CBASS.h"
-#include "CInputBox.h"
+#include "CSettingsDlg.h"
 
 // CPowerAudioPlayerDlg 对话框
 class CPowerAudioPlayerDlg : public CDialogEx
@@ -47,6 +45,7 @@ public:
 	CButton m_backbtn;
 	CButton m_nextbtn;	
 	CListCtrl m_playlist;
+	void LoadSettings();
 	void ChangeVolumeSide();
 	void Play(int Id);
 	void AddToList(CString Path, CString Title = _T(""), int Time = 0, bool IsConvert = FALSE);
@@ -68,4 +67,10 @@ public:
 	afx_msg void On32782();
 	afx_msg void OnNMRClickList1(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void On32779();
+	afx_msg void On32784();
+	afx_msg void On32794();
+	afx_msg void On32777();
+	afx_msg void OnMenu32786();
+	afx_msg void OnMenu32787();
+	afx_msg void OnMenu32795();
 };

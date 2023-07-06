@@ -35,6 +35,7 @@
 #define IDC_OKBTN                       1021
 #define IDC_SFX_SELECT                  1022
 #define IDC_VIS_PANEL                   1023
+#define IDC_STATIC23                    1026
 #define ID_MENU_32773                   32773
 #define ID_MENU_32774                   32774
 #define ID_MENU_32775                   32775
@@ -68,7 +69,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        147
 #define _APS_NEXT_COMMAND_VALUE         32799
-#define _APS_NEXT_CONTROL_VALUE         1024
+#define _APS_NEXT_CONTROL_VALUE         1027
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

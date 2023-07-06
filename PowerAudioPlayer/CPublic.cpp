@@ -8,6 +8,8 @@ std::vector<CString> CPb::pl_path;
 std::vector<CString> CPb::pl_title;
 std::vector<int> CPb::pl_time;
 std::vector<bool> CPb::pl_isconvert;
+std::vector<CString> CPb::SFXs;
+int CPb::SFXId = 0;
 CPb::CPb()
 {
 }

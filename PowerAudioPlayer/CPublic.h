@@ -1,10 +1,12 @@
 #pragma once
 #define PATH_INI ".\PowerAudioPlayer.ini";
-#define TIMER_ALAWAYS 100
-#define TIMER_PLAYING 101
+#define TIMER_ALAWAYS 1000
+#define TIMER_PLAYING 1001
+#define TIMER_SFX	  1002
 #include <vector>
 #include <string>
 #include <fstream>
+#include <exception>
 
 /*struct Settings {
 	CString midi_path;
@@ -24,6 +26,8 @@ public:
 	static std::vector<CString> pl_title;
 	static std::vector<int> pl_time;
 	static std::vector<bool> pl_isconvert;
+	static std::vector<CString> SFXs;
+	static int SFXId;
 	static int split(const CString strLine, char split, CStringArray& strArray);
 	static CString i2cs(QWORD var);
 	static CString GetExeModuleDir();

@@ -56,6 +56,8 @@ public:
 	void SaveList(CString Path = _T(""));
 	void LoadList(CString Path = _T(""));
 	void ConvertList();
+	void LoadPlugins();
+	void BuildSFXList();
 	afx_msg void OnBnClickedButton5();
 	afx_msg void OnBnClickedButton1();
 	afx_msg void OnBnClickedButton2();

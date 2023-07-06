@@ -187,6 +187,65 @@ void CPowerAudioPlayerDlg::ConvertList()
 	CPb::ToConvertList = FALSE;
 }
 
+void CPowerAudioPlayerDlg::LoadPlugins()
+{
+	CString filepath = CPb::GetExeModuleDir();
+	CString filename = _T("");
+	CFileFind find;
+	BOOL IsFind = find.FindFile(filepath + _T("\\bass_*.dll"));
+	while (IsFind)
+	{
+		IsFind = find.FindNextFile();
+		if (find.IsDots()) {
+			continue;
+		}
+		else {
+			filename = filepath + "\\" + find.GetFileName();
+			BASS::PluginLoad(CPb::CStrToChar(filename), 0);
+		}
+	}
+	CString Basic_name;
+	CString Basic_exts;
+	Basic_name.LoadStringW(IDS_BASIC_EXTS_NAME);
+	Basic_exts.LoadStringW(IDS_BASIC_EXTS);
+	CPb::SFF.Format(_T("%s(%s)|%s"), Basic_name, Basic_exts, Basic_exts);
+	CString Name = _T("");
+	CString Exts = _T("");
+	CString Add = _T("");
+	for (int i = 0; i < BASS::PLUGINS.size(); ++i) {
+		const BASS_PLUGININFO* info = BASS::PluginGetInfo(i);
+		if (info) {
+			if (info->formats->name) Name = CPb::CharToLPCWSTR((char*)info->formats->name);
+			if (info->formats->exts) Exts = CPb::CharToLPCWSTR((char*)info->formats->exts);
+			Add.Format(_T("|%s(%s)|%s"), Name, Exts, Exts);
+			CPb::SFF += Add;
+		}
+	}
+	LoadStr.LoadStringW(IDS_FILTER_ALL);
+	CPb::SFF += _T("|") + LoadStr;
+}
+
+void CPowerAudioPlayerDlg::BuildSFXList()
+{
+	CString filepath = CPb::GetExeModuleDir();
+	//CString filename = _T("");
+	CFileFind find;
+	CString FindFiles[2] = { _T("\\sfx\\*.dll") ,_T("\\sfx\\*.svp") };
+	for(int j=0;j<2;++j){
+		bool IsFind = find.FindFile(filepath + FindFiles[j]);
+		while (IsFind)
+		{
+			IsFind = find.FindNextFile();
+			if (find.IsDots()) {
+				continue;
+			}
+			else {
+				CPb::SFXs.push_back(_T(".\\sfx\\") + find.GetFileName());
+			}
+		}
+	}
+}
+
 // CPowerAudioPlayerDlg 消息处理程序
 
 BOOL CPowerAudioPlayerDlg::OnInitDialog()
@@ -203,47 +262,12 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
 		MessageBox(_T("初始化Bass失败"),NULL, MB_ICONERROR);
 		exit(-1);
 	}
-	//SkinH_Attach();
 	SetTimer(TIMER_ALAWAYS, 400, NULL);
 	m_playlist.InsertColumn(0, _T("标题"), LVCFMT_LEFT, 210);
 	m_playlist.InsertColumn(1, _T("时间"), LVCFMT_LEFT, 50);
 	m_playlist.SetExtendedStyle(m_playlist.GetExtendedStyle()| LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
-	//加载Plugins
-	CString filepath = CPb::GetExeModuleDir();
-	CString filename = _T("");
-	CFileFind find;
-	BOOL IsFind = find.FindFile(filepath + _T("\\bass_*.dll"));
-	while (IsFind)
-	{
-		IsFind = find.FindNextFile();
-		if (find.IsDots()) {
-			continue;
-		} else {
-			filename = filepath+"\\"+find.GetFileName();
-			BASS::PluginLoad(CPb::CStrToChar(filename), 0);
-		}
-	}
-	//
-	CString Basic_name;
-	CString Basic_exts;
-	Basic_name.LoadStringW(IDS_BASIC_EXTS_NAME);
-	Basic_exts.LoadStringW(IDS_BASIC_EXTS);
-	CPb::SFF.Format(_T("%s(%s)|%s"), Basic_name, Basic_exts , Basic_exts);
-	CString Name = _T("");
-	CString Exts = _T("");
-	CString Add = _T("");
-	for (int i = 0; i < BASS::PLUGINS.size(); ++i) {
-		const BASS_PLUGININFO* info = BASS::PluginGetInfo(i);
-		if (info) {
-			if (info->formats->name) Name = CPb::CharToLPCWSTR((char*)info->formats->name);
-			if (info->formats->exts) Exts = CPb::CharToLPCWSTR((char*)info->formats->exts);
-			Add.Format(_T("|%s(%s)|%s"), Name, Exts,Exts);
-			CPb::SFF += Add;
-		}
-	}
-	LoadStr.LoadStringW(IDS_FILTER_ALL);
-	CPb::SFF += _T("|") + LoadStr;
-	//
+	LoadPlugins();
+	BuildSFXList();
 	LoadList();
 	return TRUE;
 }
@@ -353,8 +377,9 @@ void CPowerAudioPlayerDlg::OnBnClickedCheck1()
 
 void CPowerAudioPlayerDlg::OnClose()
 {
-	BASS_Free();
+	On32798();
 	SaveList(NULL);
+	BASS_Free();
 	CDialogEx::OnClose();
 }
 

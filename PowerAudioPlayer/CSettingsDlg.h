@@ -33,4 +33,5 @@ public:
 	CButton m_ok;
 	afx_msg void OnBnClickedOkbtn();
 	afx_msg void OnBnClickedCancelbtn();
+	CStatic m_static23;
 };

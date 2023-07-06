@@ -27,6 +27,7 @@ void CSettingsDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MFCPROPERTYGRID1, m_pgctrl);
 	DDX_Control(pDX, IDC_CANCELBTN, m_can);
 	DDX_Control(pDX, IDC_OKBTN, m_ok);
+	DDX_Control(pDX, IDC_STATIC23, m_static23);
 }
 
 
@@ -63,7 +64,6 @@ BOOL CSettingsDlg::OnInitDialog()
 		new CMFCPropertyGridProperty(_T("首选项")), //0
 		new CMFCPropertyGridProperty(_T("列表")),	//1
 		new CMFCPropertyGridProperty(_T("MIDI")),	//2
-		new CMFCPropertyGridProperty(_T("可视化")),	//3
 		new CMFCPropertyGridProperty(_T("DSP")),	//4
 		new CMFCPropertyGridProperty(_T("插件")),	//5
 		new CMFCPropertyGridProperty(_T("关于PowerAudioPlayer")) 
@@ -72,11 +72,12 @@ BOOL CSettingsDlg::OnInitDialog()
 	CMFCPropertyGridProperty* g0Props[] = {
 		new CMFCPropertyGridProperty(_T("记忆播放位置"),_T(""), _T("启动时列表是否跳到上次播放位置")),
 		new CMFCPropertyGridProperty(_T("接收文件拖放"),_T(""), _T("是否接收文件拖放")),
-		new CMFCPropertyGridFileProperty(_T("皮肤"),TRUE,NULL,NULL,NULL,SKINFilter,_T("留空则不加载"))
+		new CMFCPropertyGridFileProperty(_T("皮肤"),TRUE,NULL,NULL,NULL,SKINFilter,_T("留空则不加载")),
+		new CMFCPropertyGridProperty(_T("可视化效果刷新周期"),(_variant_t)0, _T("设置可视化效果每次刷新时的间隔，单位为毫秒，越小的值会获得更流畅的效果，但也会占用更多资源（比如占用更多CPU）"), NULL, NULL, NULL,_T("0123456789"))
 	};
 	MFCPropertyGridPropertyMakeTrueOrFalse(g0Props[0]);
 	MFCPropertyGridPropertyMakeTrueOrFalse(g0Props[1]);
-	for (int i = 0; i < 3; ++i) {
+	for (int i = 0; i < 4; ++i) {
 		Groups[0]->AddSubItem(g0Props[i]);
 	}
 	/////////////
@@ -95,15 +96,15 @@ BOOL CSettingsDlg::OnInitDialog()
 		Groups[2]->AddSubItem(g2Props[i]);
 	}
 	/////////////
-	std::vector<CMFCPropertyGridProperty*>g5Props;
-	g5Props.push_back(new CMFCPropertyGridProperty(_T("名称"),_T("支持格式"), _T("")));
-	g5Props[0]->AllowEdit(FALSE);
+	std::vector<CMFCPropertyGridProperty*>g4Props;
+	g4Props.push_back(new CMFCPropertyGridProperty(_T("名称"),_T("支持格式"), _T("")));
+	g4Props[0]->AllowEdit(FALSE);
 	CString Basic_name;
 	CString Basic_exts;
 	Basic_name.LoadStringW(IDS_BASIC_EXTS_NAME);
 	Basic_exts.LoadStringW(IDS_BASIC_EXTS);
-	g5Props.push_back(new CMFCPropertyGridProperty(Basic_name, Basic_exts, _T("")));
-	g5Props[1]->AllowEdit(FALSE);
+	g4Props.push_back(new CMFCPropertyGridProperty(Basic_name, Basic_exts, _T("")));
+	g4Props[1]->AllowEdit(FALSE);
 	CString Name = _T("");
 	CString Exts = _T("");
 	for (int i = 0; i < BASS::PLUGINS.size(); ++i) {
@@ -111,36 +112,33 @@ BOOL CSettingsDlg::OnInitDialog()
 		if (info){
 			if(info->formats->name) Name = CPb::CharToLPCWSTR((char*)info->formats->name);
 			if (info->formats->exts) Exts = CPb::CharToLPCWSTR((char*)info->formats->exts);
-			g5Props.push_back(new CMFCPropertyGridProperty(Name,Exts, _T("")));
-			g5Props[g5Props.size()-1]->AllowEdit(FALSE);
+			g4Props.push_back(new CMFCPropertyGridProperty(Name,Exts, _T("")));
+			g4Props[g4Props.size()-1]->AllowEdit(FALSE);
 		}
 	}
-	for (int i = 0; i < g5Props.size(); ++i) {
-		Groups[5]->AddSubItem(g5Props[i]);
+	for (int i = 0; i < g4Props.size(); ++i) {
+		Groups[4]->AddSubItem(g4Props[i]);
 	}
 	/////////////
-	for (int i = 0; i < 7; ++i) {
+	for (int i = 0; i < 6; ++i) {
 		m_pgctrl.AddProperty(Groups[i]);
 	}
 	HDITEM item;
 	item.cxy = 140;
 	item.mask = HDI_WIDTH;
 	m_pgctrl.GetHeaderCtrl().SetItem(0, new HDITEM(item));
-	return TRUE;  // return TRUE unless you set the focus to a control
-	// 异常: OCX 属性页应返回 FALSE
+	return TRUE;
 }
 
 
 void CSettingsDlg::OnBnClickedOk()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	CDialogEx::OnOK();
 }
 
 
 void CSettingsDlg::OnBnClickedCancel()
 {
-	// TODO: 在此添加控件通知处理程序代码
 	CDialogEx::OnCancel();
 }
 

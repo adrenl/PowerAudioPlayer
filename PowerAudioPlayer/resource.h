@@ -6,15 +6,16 @@
 #define IDR_MAINFRAME                   128
 #define IDR_PLMENU                      132
 #define IDR_PLRMENU                     133
-#define IDS_FILTER_AUDIO                134
+#define IDS_FILTER_ALL                  134
 #define IDS_FILTER_PAPPL                135
 #define IDS_FILTER_SKIN                 136
 #define IDD_SETTINGS                    137
 #define IDS_DESCRIBE_TITLE              137
-#define IDS_STANDARD_EXTS               138
-#define IDS_STANDARD_EXTS_NAME          139
+#define IDS_BASIC_EXTS                  138
+#define IDS_BASIC_EXTS_NAME             139
 #define IDR_MAINMENU                    140
 #define IDS_FILTER_SF                   143
+#define IDD_SFXDLG                      144
 #define IDC_TTIME                       1000
 #define IDC_BUTTON1                     1001
 #define IDC_CHECK1                      1002
@@ -32,6 +33,8 @@
 #define IDC_MFCPROPERTYGRID1            1015
 #define IDC_CANCELBTN                   1020
 #define IDC_OKBTN                       1021
+#define IDC_SFX_SELECT                  1022
+#define IDC_VIS_PANEL                   1023
 #define ID_MENU_32773                   32773
 #define ID_MENU_32774                   32774
 #define ID_MENU_32775                   32775
@@ -55,14 +58,17 @@
 #define ID_MENU_32793                   32793
 #define ID_32794                        32794
 #define ID_MENU_32795                   32795
+#define ID_32796                        32796
+#define ID_32797                        32797
+#define ID_32798                        32798
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        144
-#define _APS_NEXT_COMMAND_VALUE         32796
-#define _APS_NEXT_CONTROL_VALUE         1021
+#define _APS_NEXT_RESOURCE_VALUE        147
+#define _APS_NEXT_COMMAND_VALUE         32799
+#define _APS_NEXT_CONTROL_VALUE         1024
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -62,6 +62,8 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_32786, &CPowerAudioPlayerDlg::OnMenu32786)
 	ON_COMMAND(ID_MENU_32787, &CPowerAudioPlayerDlg::OnMenu32787)
 	ON_COMMAND(ID_MENU_32795, &CPowerAudioPlayerDlg::OnMenu32795)
+	ON_COMMAND(ID_32797, &CPowerAudioPlayerDlg::On32797)
+	ON_COMMAND(ID_32798, &CPowerAudioPlayerDlg::On32798)
 END_MESSAGE_MAP()
 
 void CPowerAudioPlayerDlg::LoadSettings()
@@ -222,7 +224,26 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
 		}
 	}
 	//
-
+	CString Basic_name;
+	CString Basic_exts;
+	Basic_name.LoadStringW(IDS_BASIC_EXTS_NAME);
+	Basic_exts.LoadStringW(IDS_BASIC_EXTS);
+	CPb::SFF.Format(_T("%s(%s)|%s"), Basic_name, Basic_exts , Basic_exts);
+	CString Name = _T("");
+	CString Exts = _T("");
+	CString Add = _T("");
+	for (int i = 0; i < BASS::PLUGINS.size(); ++i) {
+		const BASS_PLUGININFO* info = BASS::PluginGetInfo(i);
+		if (info) {
+			if (info->formats->name) Name = CPb::CharToLPCWSTR((char*)info->formats->name);
+			if (info->formats->exts) Exts = CPb::CharToLPCWSTR((char*)info->formats->exts);
+			Add.Format(_T("|%s(%s)|%s"), Name, Exts,Exts);
+			CPb::SFF += Add;
+		}
+	}
+	LoadStr.LoadStringW(IDS_FILTER_ALL);
+	CPb::SFF += _T("|") + LoadStr;
+	//
 	LoadList();
 	return TRUE;
 }
@@ -365,8 +386,8 @@ void CPowerAudioPlayerDlg::OnNMDblclkList1(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CPowerAudioPlayerDlg::On32776()
 {
-	LoadStr.LoadStringW(IDS_FILTER_AUDIO);
-	CFileDialog Dlg(TRUE, NULL, NULL, OFN_ALLOWMULTISELECT, LoadStr, this);
+	//LoadStr.LoadStringW(IDS_FILTER_AUDIO);
+	CFileDialog Dlg(TRUE, NULL, NULL, OFN_ALLOWMULTISELECT,CPb::SFF, this);
 	CString FilePath;
 	DWORD max_file = 60000;
 	TCHAR* lsf = new TCHAR[max_file];
@@ -486,4 +507,22 @@ void CPowerAudioPlayerDlg::OnMenu32795()
 {
 	CSettingsDlg Modal;
 	Modal.DoModal();
+}
+
+
+void CPowerAudioPlayerDlg::On32797()
+{
+	if (m_SFXDlg == NULL || !m_SFXDlg->GetSafeHwnd()) {
+		m_SFXDlg = new CSFXDlg(this);
+		m_SFXDlg->Create(IDD_SFXDLG, this);
+	}
+	m_SFXDlg->ShowWindow(TRUE);
+}
+
+
+void CPowerAudioPlayerDlg::On32798()
+{
+	if (m_SFXDlg->GetSafeHwnd()) {
+		m_SFXDlg->DestroyWindow();
+	}
 }

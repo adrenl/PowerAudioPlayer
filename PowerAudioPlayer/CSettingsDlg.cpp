@@ -98,11 +98,11 @@ BOOL CSettingsDlg::OnInitDialog()
 	std::vector<CMFCPropertyGridProperty*>g5Props;
 	g5Props.push_back(new CMFCPropertyGridProperty(_T("名称"),_T("支持格式"), _T("")));
 	g5Props[0]->AllowEdit(FALSE);
-	CString Std_name;
-	CString Std_exts;
-	Std_name.LoadStringW(IDS_STANDARD_EXTS_NAME);
-	Std_exts.LoadStringW(IDS_STANDARD_EXTS);
-	g5Props.push_back(new CMFCPropertyGridProperty(Std_name,Std_exts, _T("")));
+	CString Basic_name;
+	CString Basic_exts;
+	Basic_name.LoadStringW(IDS_BASIC_EXTS_NAME);
+	Basic_exts.LoadStringW(IDS_BASIC_EXTS);
+	g5Props.push_back(new CMFCPropertyGridProperty(Basic_name, Basic_exts, _T("")));
 	g5Props[1]->AllowEdit(FALSE);
 	CString Name = _T("");
 	CString Exts = _T("");

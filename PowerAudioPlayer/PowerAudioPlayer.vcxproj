@@ -231,6 +231,7 @@
     <ClInclude Include="CBASS.h" />
     <ClInclude Include="CPublic.h" />
     <ClInclude Include="CSettingsDlg.h" />
+    <ClInclude Include="CSFXDlg.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="PowerAudioPlayer.h" />
@@ -246,6 +247,7 @@
     </ClCompile>
     <ClCompile Include="CPublic.cpp" />
     <ClCompile Include="CSettingsDlg.cpp" />
+    <ClCompile Include="CSFXDlg.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

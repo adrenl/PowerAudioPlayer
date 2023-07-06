@@ -19,6 +19,7 @@ public:
 	//static Settings set;
 	static bool ToConvertList;
 	static int PlayId;
+	static CString SFF;
 	static std::vector<CString> pl_path;
 	static std::vector<CString> pl_title;
 	static std::vector<int> pl_time;

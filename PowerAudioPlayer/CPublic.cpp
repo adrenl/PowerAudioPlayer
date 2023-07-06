@@ -3,6 +3,7 @@
 #include "pch.h"
 bool CPb::ToConvertList = FALSE;
 int CPb::PlayId = -1;
+CString CPb::SFF = _T("");
 std::vector<CString> CPb::pl_path;
 std::vector<CString> CPb::pl_title;
 std::vector<int> CPb::pl_time;

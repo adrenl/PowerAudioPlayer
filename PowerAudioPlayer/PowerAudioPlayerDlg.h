@@ -4,6 +4,7 @@
 
 #pragma once
 #include "CSettingsDlg.h"
+#include "CSFXDlg.h"
 
 // CPowerAudioPlayerDlg 对话框
 class CPowerAudioPlayerDlg : public CDialogEx
@@ -32,6 +33,7 @@ protected:
 	afx_msg LRESULT OnKickIdle(WPARAM wParam, LPARAM lParam);
 	DECLARE_MESSAGE_MAP()
 public:
+	CSFXDlg* m_SFXDlg;
 	CString LoadStr;
 	CStatic m_infosta;
 	CStatic m_ttimesta;
@@ -73,4 +75,6 @@ public:
 	afx_msg void OnMenu32786();
 	afx_msg void OnMenu32787();
 	afx_msg void OnMenu32795();
+	afx_msg void On32797();
+	afx_msg void On32798();
 };

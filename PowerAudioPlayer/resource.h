@@ -16,6 +16,21 @@
 #define IDR_MAINMENU                    140
 #define IDS_FILTER_SF                   143
 #define IDD_SFXDLG                      144
+#define IDI_BIG                         147
+#define IDI_SMALL                       148
+#define IDI_BACK                        162
+#define IDI_MUTE                        163
+#define IDI_NEXT                        164
+#define IDI_PAUSE                       165
+#define IDI_PLAY                        166
+#define IDI_SETDLG_BIG                  167
+#define IDI_SETDLG_SMALL                168
+#define IDI_SFXDLG_BIG                  169
+#define IDI_ICON9                       170
+#define IDI_SFXDLG_SMALL                170
+#define IDI_STOP                        171
+#define IDI_VOL                         172
+#define IDI_LIST                        173
 #define IDC_TTIME                       1000
 #define IDC_BUTTON1                     1001
 #define IDC_CHECK1                      1002
@@ -67,7 +82,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        147
+#define _APS_NEXT_RESOURCE_VALUE        174
 #define _APS_NEXT_COMMAND_VALUE         32799
 #define _APS_NEXT_CONTROL_VALUE         1027
 #define _APS_NEXT_SYMED_VALUE           101

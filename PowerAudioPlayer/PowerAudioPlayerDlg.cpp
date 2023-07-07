@@ -20,6 +20,17 @@ CPowerAudioPlayerDlg::CPowerAudioPlayerDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_POWERAUDIOPLAYER_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	m_hBigIcon= AfxGetApp()->LoadIcon(IDI_BIG);
+	m_hSmallIcon = AfxGetApp()->LoadIcon(IDI_SMALL);
+
+	m_hPauseIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_PAUSE), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hPlayIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_PLAY), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hBackIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_BACK), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hNextIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_NEXT), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hStopIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_STOP), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hVolIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_VOL), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hMuteIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_MUTE), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hListIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_LIST), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
 }
 
 void CPowerAudioPlayerDlg::DoDataExchange(CDataExchange* pDX)
@@ -37,6 +48,7 @@ void CPowerAudioPlayerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BUTTON3, m_backbtn);
 	DDX_Control(pDX, IDC_BUTTON4, m_nextbtn);
 	DDX_Control(pDX, IDC_LIST1, m_playlist);
+	DDX_Control(pDX, IDC_BUTTON5, m_listbtn);
 }
 
 BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
@@ -64,6 +76,8 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
 	ON_COMMAND(ID_MENU_32795, &CPowerAudioPlayerDlg::OnMenu32795)
 	ON_COMMAND(ID_32797, &CPowerAudioPlayerDlg::On32797)
 	ON_COMMAND(ID_32798, &CPowerAudioPlayerDlg::On32798)
+	ON_WM_MOUSEWHEEL()
+//	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER1, &CPowerAudioPlayerDlg::OnNMCustomdrawSlider1)
 END_MESSAGE_MAP()
 
 void CPowerAudioPlayerDlg::LoadSettings()
@@ -169,12 +183,12 @@ void CPowerAudioPlayerDlg::LoadList(CString Path)
 	}
 }
 
-void CPowerAudioPlayerDlg::ConvertList()
+void CPowerAudioPlayerDlg::ConvertList(bool ReConvert)
 {
 	if (CPb::pl_path.size() == 0) return;
 	int total = CPb::pl_path.size();
 	for (int i = 0; i < total; i++) {
-		if (CPb::pl_isconvert[i] == TRUE) continue;
+		if (CPb::pl_isconvert[i] == TRUE && ReConvert == FALSE) continue;
 		HSTREAM STREAM = BASS_StreamCreateFile(FALSE, CPb::pl_path[i], NULL, NULL, NULL);
 		CPb::pl_title[i] = CPb::CharToLPCWSTR((char*)TAGS_Read(STREAM, "%IFV2(%ARTI,%ICAP(%ARTI),无艺术家) - %IFV2(%TITL,%ICAP(%TITL) ,无标题 ) %IFV1(%ALBM,%IUPC(- %ALBM))"));
 		if (CPb::pl_title[i] == _T("")) CPb::pl_title[i] = CPb::GetInPathFileName(CPb::pl_path[i]);
@@ -254,8 +268,8 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
 
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
-	SetIcon(m_hIcon, TRUE);			// 设置大图标
-	SetIcon(m_hIcon, FALSE);		// 设置小图标
+	SetIcon(m_hBigIcon, TRUE);			// 设置大图标
+	SetIcon(m_hSmallIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
 	if (!BASS_Init(-1, 44100, 0, 0, NULL)) {
@@ -266,6 +280,14 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
 	m_playlist.InsertColumn(0, _T("标题"), LVCFMT_LEFT, 210);
 	m_playlist.InsertColumn(1, _T("时间"), LVCFMT_LEFT, 50);
 	m_playlist.SetExtendedStyle(m_playlist.GetExtendedStyle()| LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
+
+	m_playbtn.SetIcon(m_hPauseIcon);
+	m_stopbtn.SetIcon(m_hStopIcon);
+	m_backbtn.SetIcon(m_hBackIcon);
+	m_nextbtn.SetIcon(m_hNextIcon);
+	m_listbtn.SetIcon(m_hListIcon);
+	m_volchk.SetIcon(m_hVolIcon);	
+
 	LoadPlugins();
 	BuildSFXList();
 	LoadList();
@@ -369,8 +391,10 @@ void CPowerAudioPlayerDlg::OnBnClickedCheck1()
 		BASS_SetConfig(BASS_CONFIG_GVOL_STREAM, 0);
 		m_volside.EnableWindow(FALSE);
 		m_volsta.SetWindowText(_T("静音"));
+		m_volchk.SetIcon(m_hMuteIcon);
 	}else {
 		m_volside.EnableWindow(TRUE);
+		m_volchk.SetIcon(m_hVolIcon);
 		CPowerAudioPlayerDlg::ChangeVolumeSide();
 	}
 }
@@ -388,7 +412,7 @@ void CPowerAudioPlayerDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrol
 	CWnd* pVolumeSider = GetDlgItem(IDC_SLIDER1);
 	CWnd* pTimeSider = GetDlgItem(IDC_SLIDER2);
 	if(pScrollBar == pVolumeSider){
-		CPowerAudioPlayerDlg::ChangeVolumeSide();
+		ChangeVolumeSide();
 	}else if (pScrollBar == pTimeSider) {
 		if (BASS::ChannelIsActive() == 0) {
 			return;
@@ -411,7 +435,6 @@ void CPowerAudioPlayerDlg::OnNMDblclkList1(NMHDR* pNMHDR, LRESULT* pResult)
 
 void CPowerAudioPlayerDlg::On32776()
 {
-	//LoadStr.LoadStringW(IDS_FILTER_AUDIO);
 	CFileDialog Dlg(TRUE, NULL, NULL, OFN_ALLOWMULTISELECT,CPb::SFF, this);
 	CString FilePath;
 	DWORD max_file = 60000;
@@ -550,4 +573,18 @@ void CPowerAudioPlayerDlg::On32798()
 	if (m_SFXDlg->GetSafeHwnd()) {
 		m_SFXDlg->DestroyWindow();
 	}
+}
+
+
+BOOL CPowerAudioPlayerDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	int pos = m_volside.GetPos();
+	if (zDelta > 0) {
+		m_volside.SetPos(pos -2);
+		ChangeVolumeSide();
+	}else if (zDelta < 0) {
+		m_volside.SetPos(pos +2);
+		ChangeVolumeSide();
+	}
+	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }

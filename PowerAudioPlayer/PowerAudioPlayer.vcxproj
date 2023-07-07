@@ -264,15 +264,21 @@
     <None Include="res\PowerAudioPlayer.rc2" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\back.ico" />
+    <Image Include="res\big.ico" />
+    <Image Include="res\list.ico" />
+    <Image Include="res\mute.ico" />
+    <Image Include="res\next.ico" />
+    <Image Include="res\pause.ico" />
+    <Image Include="res\play.ico" />
     <Image Include="res\PowerAudioPlayer.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="bass.lib" />
-    <Library Include="bassmidi.lib" />
-    <Library Include="BASS_SFX.lib" />
-    <Library Include="BASS_WADSP.lib" />
-    <Library Include="SkinH.lib" />
-    <Library Include="tags.lib" />
+    <Image Include="res\setdlg_big.ico" />
+    <Image Include="res\setdlg_small.ico" />
+    <Image Include="res\sfxdlg_big.ico" />
+    <Image Include="res\sfxdlg_small.ico" />
+    <Image Include="res\small.ico" />
+    <Image Include="res\stop.ico" />
+    <Image Include="res\vol.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -22,6 +22,8 @@ protected:
 	HSFX hsfx;
 	CRect rect;
 	CDC* m_pVisDC;
+	HICON m_hBigIcon;
+	HICON m_hSmallIcon;
 	DECLARE_MESSAGE_MAP()
 		virtual void PostNcDestroy();
 	virtual void OnCancel();

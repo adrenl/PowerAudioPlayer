@@ -17,7 +17,6 @@ public:
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_POWERAUDIOPLAYER_DIALOG };
 #endif
-
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV 支持
 
@@ -25,7 +24,17 @@ public:
 // 实现
 protected:
 	HICON m_hIcon;
+	HICON m_hBigIcon;
+	HICON m_hSmallIcon;
 
+	HICON m_hPlayIcon;
+	HICON m_hPauseIcon;
+	HICON m_hStopIcon;
+	HICON m_hBackIcon;
+	HICON m_hNextIcon;
+	HICON m_hVolIcon;
+	HICON m_hMuteIcon;
+	HICON m_hListIcon;
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnPaint();
@@ -47,6 +56,7 @@ public:
 	CButton m_backbtn;
 	CButton m_nextbtn;	
 	CListCtrl m_playlist;
+	Settings Sets;
 	void LoadSettings();
 	void ChangeVolumeSide();
 	void Play(int Id);
@@ -55,7 +65,7 @@ public:
 	void CleanList();
 	void SaveList(CString Path = _T(""));
 	void LoadList(CString Path = _T(""));
-	void ConvertList();
+	void ConvertList(bool ReConvert=FALSE);
 	void LoadPlugins();
 	void BuildSFXList();
 	afx_msg void OnBnClickedButton5();
@@ -79,4 +89,6 @@ public:
 	afx_msg void OnMenu32795();
 	afx_msg void On32797();
 	afx_msg void On32798();
+	CButton m_listbtn;
+	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
 };

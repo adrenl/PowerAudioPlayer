@@ -59,22 +59,22 @@ BOOL CSettingsDlg::OnInitDialog()
 	CMFCPropertyGridProperty* group1 = new CMFCPropertyGridProperty(_T("MIDI"));
 	group0->AddSubItem(pProp1);
 	m_pgctrl.AddProperty(group0);*/
-
 	CMFCPropertyGridProperty* Groups[] = {
 		new CMFCPropertyGridProperty(_T("首选项")), //0
 		new CMFCPropertyGridProperty(_T("列表")),	//1
 		new CMFCPropertyGridProperty(_T("MIDI")),	//2
-		new CMFCPropertyGridProperty(_T("DSP")),	//4
-		new CMFCPropertyGridProperty(_T("插件")),	//5
-		new CMFCPropertyGridProperty(_T("关于PowerAudioPlayer")) 
+		new CMFCPropertyGridProperty(_T("DSP")),	//3
+		new CMFCPropertyGridProperty(_T("插件")),	//4
+		new CMFCPropertyGridProperty(_T("关于"))	//5
 	};
 	/////////////
 	CMFCPropertyGridProperty* g0Props[] = {
 		new CMFCPropertyGridProperty(_T("记忆播放位置"),_T(""), _T("启动时列表是否跳到上次播放位置")),
 		new CMFCPropertyGridProperty(_T("接收文件拖放"),_T(""), _T("是否接收文件拖放")),
 		new CMFCPropertyGridFileProperty(_T("皮肤"),TRUE,NULL,NULL,NULL,SKINFilter,_T("留空则不加载")),
-		new CMFCPropertyGridProperty(_T("可视化效果刷新周期"),(_variant_t)0, _T("设置可视化效果每次刷新时的间隔，单位为毫秒，越小的值会获得更流畅的效果，但也会占用更多资源（比如占用更多CPU）"), NULL, NULL, NULL,_T("0123456789"))
+		new CMFCPropertyGridProperty(_T("可视化效果刷新周期"),(_variant_t)0, _T("设置可视化效果每次刷新时的间隔，单位为毫秒，越小的值会获得更流畅的效果，但也会占用更多资源"), NULL, NULL, NULL,_T("0123456789"))
 	};
+	g0Props[3]->EnableSpinControl(TRUE, 1, 1000);
 	MFCPropertyGridPropertyMakeTrueOrFalse(g0Props[0]);
 	MFCPropertyGridPropertyMakeTrueOrFalse(g0Props[1]);
 	for (int i = 0; i < 4; ++i) {
@@ -83,9 +83,10 @@ BOOL CSettingsDlg::OnInitDialog()
 	/////////////
 	CMFCPropertyGridProperty* g1Props[] = {
 		new CMFCPropertyGridProperty(_T("标题显示格式"),_T(""), _T("可以自定义列表标题的显示格式，支持条件判断，当遇到不支持的文件时将以文件名作为标题。用法如下："+TITLEFMTDescribe)),
-		new CMFCPropertyGridFontProperty(_T("列表字体"), font)
+		new CMFCPropertyGridProperty(_T("显示序号"),_T(""), _T("是否在标题前显示项目在列表的序号")),
 	};
-	for (int i = 0; i < 2; ++i) {
+	MFCPropertyGridPropertyMakeTrueOrFalse(g1Props[1]);
+	for (int i = 0; i < 1; ++i) {
 		Groups[1]->AddSubItem(g1Props[i]);
 	}
 	/////////////
@@ -96,15 +97,15 @@ BOOL CSettingsDlg::OnInitDialog()
 		Groups[2]->AddSubItem(g2Props[i]);
 	}
 	/////////////
-	std::vector<CMFCPropertyGridProperty*>g4Props;
-	g4Props.push_back(new CMFCPropertyGridProperty(_T("名称"),_T("支持格式"), _T("")));
-	g4Props[0]->AllowEdit(FALSE);
+	std::vector<CMFCPropertyGridProperty*>g3Props;
+	g3Props.push_back(new CMFCPropertyGridProperty(_T("名称"),_T("支持格式"), _T("")));
+	g3Props[0]->AllowEdit(FALSE);
 	CString Basic_name;
 	CString Basic_exts;
 	Basic_name.LoadStringW(IDS_BASIC_EXTS_NAME);
 	Basic_exts.LoadStringW(IDS_BASIC_EXTS);
-	g4Props.push_back(new CMFCPropertyGridProperty(Basic_name, Basic_exts, _T("")));
-	g4Props[1]->AllowEdit(FALSE);
+	g3Props.push_back(new CMFCPropertyGridProperty(Basic_name, Basic_exts, _T("")));
+	g3Props[1]->AllowEdit(FALSE);
 	CString Name = _T("");
 	CString Exts = _T("");
 	for (int i = 0; i < BASS::PLUGINS.size(); ++i) {
@@ -112,12 +113,24 @@ BOOL CSettingsDlg::OnInitDialog()
 		if (info){
 			if(info->formats->name) Name = CPb::CharToLPCWSTR((char*)info->formats->name);
 			if (info->formats->exts) Exts = CPb::CharToLPCWSTR((char*)info->formats->exts);
-			g4Props.push_back(new CMFCPropertyGridProperty(Name,Exts, _T("")));
-			g4Props[g4Props.size()-1]->AllowEdit(FALSE);
+			g3Props.push_back(new CMFCPropertyGridProperty(Name,Exts, _T("")));
+			g3Props[g3Props.size()-1]->AllowEdit(FALSE);
 		}
 	}
-	for (int i = 0; i < g4Props.size(); ++i) {
-		Groups[4]->AddSubItem(g4Props[i]);
+	for (int i = 0; i < g3Props.size(); ++i) {
+		Groups[4]->AddSubItem(g3Props[i]);
+	}
+	/////////////
+	CMFCPropertyGridProperty* g5Props[] = {
+		new CMFCPropertyGridProperty(_T("名称"),CPb::CharToLPCWSTR((char *)VER_NAME),_T("")),
+		new CMFCPropertyGridProperty(_T("版本"),CPb::CharToLPCWSTR((char*)VER_VERSION),_T("")),
+		new CMFCPropertyGridProperty(_T("BASS版本"),(LPCWSTR)CPb::i2cs(BASS::GetVersion()),_T("")),
+	};
+	g5Props[0]->AllowEdit(FALSE);
+	g5Props[1]->AllowEdit(FALSE);
+	g5Props[2]->AllowEdit(FALSE);
+	for (int i = 0; i < 3; ++i) {
+		Groups[5]->AddSubItem(g5Props[i]);
 	}
 	/////////////
 	for (int i = 0; i < 6; ++i) {

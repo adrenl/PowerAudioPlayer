@@ -10,6 +10,7 @@ std::vector<int> CPb::pl_time;
 std::vector<bool> CPb::pl_isconvert;
 std::vector<CString> CPb::SFXs;
 int CPb::SFXId = 0;
+Settings CPb::set;
 CPb::CPb()
 {
 }

@@ -16,6 +16,8 @@ CSFXDlg::CSFXDlg(CWnd* pParent /*=nullptr*/)
 {
 	hsfx = 0;
 	m_pVisDC = 0;
+	m_hBigIcon = AfxGetApp()->LoadIcon(IDI_SFXDLG_BIG);
+	m_hSmallIcon = AfxGetApp()->LoadIcon(IDI_SFXDLG_SMALL);
 }
 
 CSFXDlg::~CSFXDlg()
@@ -42,6 +44,8 @@ END_MESSAGE_MAP()
 BOOL CSFXDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
+	SetIcon(m_hBigIcon, TRUE);			// 设置大图标
+	SetIcon(m_hSmallIcon, FALSE);		// 设置小图标
 	m_sfx_select.InsertString(0,_T("空"));
 	for(int i=0;i<CPb::SFXs.size();++i){
 		m_sfx_select.InsertString(i+1,CPb::GetInPathFileName(CPb::SFXs[i]));

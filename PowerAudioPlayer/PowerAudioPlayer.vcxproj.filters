@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Lib">
-      <UniqueIdentifier>{9ae651c1-f918-473a-a096-5c44473b56ee}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PowerAudioPlayer.h">
@@ -104,25 +101,47 @@
     <Image Include="res\PowerAudioPlayer.ico">
       <Filter>资源文件</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="bass.lib">
-      <Filter>Lib</Filter>
-    </Library>
-    <Library Include="BASS_SFX.lib">
-      <Filter>Lib</Filter>
-    </Library>
-    <Library Include="BASS_WADSP.lib">
-      <Filter>Lib</Filter>
-    </Library>
-    <Library Include="bassmidi.lib">
-      <Filter>Lib</Filter>
-    </Library>
-    <Library Include="SkinH.lib">
-      <Filter>Lib</Filter>
-    </Library>
-    <Library Include="tags.lib">
-      <Filter>Lib</Filter>
-    </Library>
+    <Image Include="res\big.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\small.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\back.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\mute.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\next.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\pause.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\play.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\setdlg_big.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\setdlg_small.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\sfxdlg_big.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\sfxdlg_small.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stop.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\vol.ico">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\list.ico">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

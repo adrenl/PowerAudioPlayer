@@ -1,5 +1,7 @@
 #pragma once
-#define PATH_INI ".\PowerAudioPlayer.ini";
+#define SET           "Settings.json"
+#define VER_VERSION   "0.1"
+#define VER_NAME	  "PowerAudioPlayer"
 #define TIMER_ALAWAYS 1000
 #define TIMER_PLAYING 1001
 #define TIMER_SFX	  1002
@@ -8,10 +10,23 @@
 #include <fstream>
 #include <exception>
 
-/*struct Settings {
-	CString midi_path;
-	CString skin_path;
-};*/
+struct Settings {
+	int vol;
+	int is_mute;
+	int pl_location;
+	int sfx_id;
+
+	bool smain_rem_pl_location;
+	bool smain_allow_drag;
+	CString main_skin_path;
+	int smain_sfx_render_elapse;
+	//---
+	CString spl_title_format;
+	bool spl_show_snum;
+	//---
+	CString smidi_sf_path;
+	//---
+};
 
 class CPb
 {
@@ -28,6 +43,7 @@ public:
 	static std::vector<bool> pl_isconvert;
 	static std::vector<CString> SFXs;
 	static int SFXId;
+	static Settings set;
 	static int split(const CString strLine, char split, CStringArray& strArray);
 	static CString i2cs(QWORD var);
 	static CString GetExeModuleDir();

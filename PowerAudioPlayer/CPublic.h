@@ -1,14 +1,19 @@
 #pragma once
-#define SET           "Settings.json"
-#define VER_VERSION   "0.1"
-#define VER_NAME	  "PowerAudioPlayer"
-#define TIMER_ALAWAYS 1000
-#define TIMER_PLAYING 1001
-#define TIMER_SFX	  1002
+#define SET					"Settings.json"
+#define VER_VERSION			"0.1"
+#define VER_NAME			"PowerAudioPlayer"
+#define TIMER_ALAWAYS		1000
+#define TIMER_PLAYING		1001
+#define TIMER_SFX			1002
+#define TASKBARBTN_PLAY		2000
+#define TASKBARBTN_STOP		2001
+#define TASKBARBTN_BACK		2002
+#define TASKBARBTN_NEXT		2003
 #include <vector>
 #include <string>
 #include <fstream>
 #include <exception>
+#include <strsafe.h>
 
 struct Settings {
 	int vol;

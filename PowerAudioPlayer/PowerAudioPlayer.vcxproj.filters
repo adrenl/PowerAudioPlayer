@@ -143,5 +143,32 @@
     <Image Include="res\list.ico">
       <Filter>资源文件</Filter>
     </Image>
+    <Image Include="res\back.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\list.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\mute.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\next.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\pause.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\play.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\stop.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\vol.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
+    <Image Include="res\ImgGroup.bmp">
+      <Filter>资源文件</Filter>
+    </Image>
   </ItemGroup>
 </Project>

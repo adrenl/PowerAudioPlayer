@@ -23,14 +23,15 @@ CPowerAudioPlayerDlg::CPowerAudioPlayerDlg(CWnd* pParent /*=nullptr*/)
 	m_hBigIcon= AfxGetApp()->LoadIcon(IDI_BIG);
 	m_hSmallIcon = AfxGetApp()->LoadIcon(IDI_SMALL);
 
-	m_hPauseIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_PAUSE), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hPlayIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_PLAY), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hBackIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_BACK), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hNextIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_NEXT), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hStopIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_STOP), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hVolIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_VOL), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hMuteIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_MUTE), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
-	m_hListIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_LIST), IMAGE_ICON, 16, 16, LR_DEFAULTCOLOR);
+	m_hPauseIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_PAUSE), IMAGE_ICON, 16, 16, NULL);
+	m_hPlayIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_PLAY), IMAGE_ICON, 16, 16, NULL);
+	m_hBackIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_BACK), IMAGE_ICON, 16, 16, NULL);
+	m_hNextIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_NEXT), IMAGE_ICON, 16, 16, NULL);
+	m_hStopIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_STOP), IMAGE_ICON, 16, 16, NULL);
+	m_hVolIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_VOL), IMAGE_ICON, 16, 16, NULL);
+	m_hMuteIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_MUTE), IMAGE_ICON, 16, 16, NULL);
+	m_hListIcon = (HICON)LoadImage(AfxGetApp()->m_hInstance, MAKEINTRESOURCE(IDI_LIST), IMAGE_ICON, 16, 16, NULL);
+
 }
 
 void CPowerAudioPlayerDlg::DoDataExchange(CDataExchange* pDX)
@@ -77,7 +78,6 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
 	ON_COMMAND(ID_32797, &CPowerAudioPlayerDlg::On32797)
 	ON_COMMAND(ID_32798, &CPowerAudioPlayerDlg::On32798)
 	ON_WM_MOUSEWHEEL()
-//	ON_NOTIFY(NM_CUSTOMDRAW, IDC_SLIDER1, &CPowerAudioPlayerDlg::OnNMCustomdrawSlider1)
 END_MESSAGE_MAP()
 
 void CPowerAudioPlayerDlg::LoadSettings()
@@ -110,6 +110,7 @@ void CPowerAudioPlayerDlg::Play(int Id)
 		m_timeside.SetPos(0);
 		CPb::PlayId = Id;
 		m_playbtn.SetWindowTextW(_T("暂停"));
+		m_playbtn.SetIcon(m_hPlayIcon);
 		m_infosta.SetWindowTextW(CPb::pl_title[Id]);
 		m_ttimesta.SetWindowTextW(BASS::TimeToString(BASS::ChannelBytes2Seconds(Length)));
 		
@@ -286,7 +287,7 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
 	m_backbtn.SetIcon(m_hBackIcon);
 	m_nextbtn.SetIcon(m_hNextIcon);
 	m_listbtn.SetIcon(m_hListIcon);
-	m_volchk.SetIcon(m_hVolIcon);	
+	m_volchk.SetIcon(m_hVolIcon);
 
 	LoadPlugins();
 	BuildSFXList();
@@ -296,6 +297,12 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
 
 LRESULT CPowerAudioPlayerDlg::OnKickIdle(WPARAM wParam, LPARAM lParam)
 {
+	int Active = BASS::ChannelIsActive();
+	if (Active == 1) {
+
+	}else if (Active == 1 || Active == 0) {
+
+	}
 	if (CPb::ToConvertList == TRUE) {
 		ConvertList();
 	}
@@ -370,10 +377,12 @@ void CPowerAudioPlayerDlg::OnBnClickedButton1()
 	if (Active == 1) {
 		BASS::ChannelPause();
 		m_playbtn.SetWindowTextW(_T("播放"));
+		m_playbtn.SetIcon(m_hPauseIcon);
 		SetTimer(TIMER_PLAYING, 0, NULL);
 	} else {
 		BASS::ChannelPlay(FALSE);
 		m_playbtn.SetWindowTextW(_T("暂停"));
+		m_playbtn.SetIcon(m_hPlayIcon);
 		SetTimer(TIMER_PLAYING, 500, NULL);
 	}
 }
@@ -383,6 +392,7 @@ void CPowerAudioPlayerDlg::OnBnClickedButton2()
 {
 	BASS::ChannelStop();
 	m_playbtn.SetWindowTextW(_T("播放"));
+	m_playbtn.SetIcon(m_hPauseIcon);
 }
 
 void CPowerAudioPlayerDlg::OnBnClickedCheck1()
@@ -522,7 +532,7 @@ void CPowerAudioPlayerDlg::On32794()
 
 void CPowerAudioPlayerDlg::On32777()
 {
-	
+	CleanList();
 }
 
 
@@ -587,4 +597,135 @@ BOOL CPowerAudioPlayerDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
 		ChangeVolumeSide();
 	}
 	return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
+}
+
+LRESULT CPowerAudioPlayerDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
+{
+	static UINT s_uTBBC = WM_NULL;
+	if (s_uTBBC == WM_NULL)
+	{
+		s_uTBBC = RegisterWindowMessage(L"TaskbarButtonCreated");
+		ChangeWindowMessageFilter(s_uTBBC, MSGFLT_ADD);
+		ChangeWindowMessageFilter(WM_COMMAND, MSGFLT_ADD);
+	}
+	if (message == s_uTBBC)
+	{
+		CreateThumbnailToolbar(this->m_hWnd);
+	}else {
+		switch (message)
+		{
+			case WM_COMMAND:
+			{
+				int const wmId = LOWORD(wParam);
+				switch (wmId)
+				{
+					case TASKBARBTN_PLAY:
+					{
+
+					}
+					case TASKBARBTN_STOP:
+					{
+
+					}
+					case TASKBARBTN_BACK:
+					{
+
+					}
+					case TASKBARBTN_NEXT:
+					{
+
+					}
+					default:
+					{
+						return DefWindowProc((int)this->m_hWnd, message, wParam);
+					}
+				}
+			}
+		}
+	}
+	return CDialogEx::WindowProc(message, wParam, lParam);
+}
+
+
+HRESULT CPowerAudioPlayerDlg::CreateThumbnailToolbar(HWND hWnd)
+{
+	ITaskbarList3* pTaskbarList;
+	HRESULT hr = CoCreateInstance(CLSID_TaskbarList, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&pTaskbarList));
+	if (SUCCEEDED(hr))
+	{
+		hr = pTaskbarList->HrInit();
+		if (SUCCEEDED(hr))
+		{
+			// Figure out what bitmap to use for the thumbnail toolbar buttons - we
+			// make the decision based on the system's small icon width. This will make
+			// us DPI-friendly.
+			struct
+			{
+				PCWSTR pbmp;
+				int cx;
+			}
+			const bitmaps[4] =
+			{
+				{ MAKEINTRESOURCE(IDB_IMGGROUP),  16 },
+				{ MAKEINTRESOURCE(IDB_IMGGROUP), 20 },
+				{ MAKEINTRESOURCE(IDB_IMGGROUP), 24 },
+				{ MAKEINTRESOURCE(IDB_IMGGROUP), 28 }
+			};
+
+			int const cxButton = GetSystemMetrics(SM_CXSMICON);
+
+			int iButtons = 0;
+			for (int i = 0; i < ARRAYSIZE(bitmaps); i++)
+			{
+				if (bitmaps[i].cx <= cxButton)
+				{
+					iButtons = i;
+				}
+			}
+
+			HIMAGELIST himl = ImageList_LoadImage(GetModuleHandle(NULL), bitmaps[iButtons].pbmp,
+				bitmaps[iButtons].cx, 0, RGB(255, 0, 255), IMAGE_BITMAP, LR_CREATEDIBSECTION);
+			if (himl)
+			{
+				hr = pTaskbarList->ThumbBarSetImageList(hWnd, himl);
+				if (SUCCEEDED(hr))
+				{
+					THUMBBUTTON buttons[4] = {};
+
+					// First button
+					buttons[0].dwMask = THB_BITMAP | THB_TOOLTIP | THB_FLAGS;
+					buttons[0].dwFlags = THBF_ENABLED | THBF_DISMISSONCLICK;
+					buttons[0].iId = TASKBARBTN_BACK;
+					buttons[0].iBitmap = 3;
+					StringCchCopy(buttons[0].szTip, ARRAYSIZE(buttons[0].szTip), L"上一首");
+
+					// Second button
+					buttons[1].dwMask = THB_BITMAP | THB_TOOLTIP | THB_FLAGS;
+					buttons[1].dwFlags = THBF_ENABLED | THBF_DISMISSONCLICK;
+					buttons[1].iId = TASKBARBTN_PLAY;
+					buttons[1].iBitmap = 1;
+					StringCchCopy(buttons[1].szTip, ARRAYSIZE(buttons[1].szTip), L"播放/暂停");
+
+					// Third button
+					buttons[2].dwMask = THB_BITMAP | THB_TOOLTIP | THB_FLAGS;
+					buttons[2].dwFlags = THBF_ENABLED | THBF_DISMISSONCLICK;
+					buttons[2].iId = TASKBARBTN_STOP;
+					buttons[2].iBitmap = 2;
+					StringCchCopy(buttons[2].szTip, ARRAYSIZE(buttons[2].szTip), L"停止");
+
+					buttons[3].dwMask = THB_BITMAP | THB_TOOLTIP | THB_FLAGS;
+					buttons[3].dwFlags = THBF_ENABLED | THBF_DISMISSONCLICK;
+					buttons[3].iId = TASKBARBTN_NEXT;
+					buttons[3].iBitmap = 4;
+					StringCchCopy(buttons[3].szTip, ARRAYSIZE(buttons[2].szTip), L"下一首");
+
+					hr = pTaskbarList->ThumbBarAddButtons(hWnd, ARRAYSIZE(buttons), buttons);
+				}
+				ImageList_Destroy(himl);
+			}
+		}
+		pTaskbarList->Release();
+	}
+
+	return hr;
 }

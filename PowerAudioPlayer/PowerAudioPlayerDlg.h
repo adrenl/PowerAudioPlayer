@@ -91,4 +91,6 @@ public:
 	afx_msg void On32798();
 	CButton m_listbtn;
 	afx_msg BOOL OnMouseWheel(UINT nFlags, short zDelta, CPoint pt);
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
+	HRESULT CreateThumbnailToolbar(HWND hWnd);
 };

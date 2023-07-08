@@ -31,7 +31,6 @@
 #define IDI_PAUSE                       187
 #define IDI_PLAY                        188
 #define IDI_STOP                        189
-#define IDI_ICON1                       190
 #define IDI_VOL                         190
 #define IDC_TTIME                       1000
 #define IDC_BUTTON1                     1001
@@ -79,13 +78,19 @@
 #define ID_32796                        32796
 #define ID_32797                        32797
 #define ID_32798                        32798
+#define ID_32799                        32799
+#define ID_32800                        32800
+#define ID_32801                        32801
+#define ID_32802                        32802
+#define ID_32803                        32803
+#define ID_C                            32804
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        191
-#define _APS_NEXT_COMMAND_VALUE         32799
+#define _APS_NEXT_COMMAND_VALUE         32805
 #define _APS_NEXT_CONTROL_VALUE         1027
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -9,7 +9,6 @@ std::vector<CString> CPb::pl_title;
 std::vector<int> CPb::pl_time;
 std::vector<bool> CPb::pl_isconvert;
 std::vector<CString> CPb::SFXs;
-int CPb::SFXId = 0;
 Settings CPb::set;
 CPb::CPb()
 {
@@ -21,7 +20,7 @@ CPb::~CPb()
 
 int CPb::split(const CString strLine, char split, CStringArray &strArray)
 {
-    strArray.RemoveAll();//自带清空属性
+    strArray.RemoveAll();
     CString temp = strLine;
     int tag = 0;
     while (1)
@@ -83,4 +82,63 @@ LPCWSTR CPb::CharToLPCWSTR(char *szStr)
     wcscpy((LPTSTR)wszClassName, T2W((LPTSTR)str.GetBuffer(NULL)));
     str.ReleaseBuffer();
     return wszClassName;
+}
+
+bool CPb::IsUrl(CString str)
+{
+    if (str.Left(7) == _T("http://") || str.Left(8) == _T("https://") || str.Left(6) == _T("ftp://"))
+    {
+        return TRUE;
+    }
+    else
+    {
+        return FALSE;
+    }
+}
+
+void CPb::ReadSettings()
+{
+    CString path = CPb::GetExeModuleDir() + _T("\\") + _T(SET);
+    Json::Reader reader;
+    Json::Value root;
+    std::ifstream in(path, std::ios::binary);
+    if (reader.parse(in, root))
+    {
+        set.vol = root["vol"].asInt();
+        set.is_mute = root["is_mute"].asBool();
+        set.pl_location = root["pl_location"].asInt();
+        set.sfx_id = root["sfx_id"].asInt();
+        set.playmode = root["playmode"].asInt();
+        set.smain_rem_pl_location = root["smain_rem_pl_location"].asBool();
+        set.smain_allow_drag = root["smain_allow_drag"].asBool();
+        set.smain_skin_path = (CString)root["smain_skin_path"].asCString();
+        set.smain_sfx_render_elapse = root["smain_sfx_render_elapse"].asInt();
+        set.spl_title_format = (CString)root["spl_title_format"].asCString();
+        set.spl_show_snum = root["spl_show_snum"].asBool();
+        set.smidi_sf_path = (CString)root["smidi_sf_path"].asCString();
+    }
+    in.close();
+}
+
+void CPb::WriteSettings()
+{
+    CString path = CPb::GetExeModuleDir() + _T("\\") + _T(SET);
+    Json::Value root;
+    Json::StyledWriter sw;
+    root["vol"] = Json::Value(set.vol);
+    root["is_mute"] = Json::Value(set.is_mute);
+    root["pl_location"] = Json::Value(set.pl_location);
+    root["sfx_id"] = Json::Value(set.sfx_id);
+    root["playmode"] = Json::Value(set.playmode);
+    root["smain_rem_pl_location"] = Json::Value(set.smain_rem_pl_location);
+    root["smain_allow_drag"] = Json::Value(set.smain_allow_drag);
+    root["smain_skin_path"] = Json::Value(set.smain_skin_path);
+    root["smain_sfx_render_elapse"] = Json::Value(set.smain_sfx_render_elapse);
+    root["spl_title_format"] = Json::Value(set.spl_title_format);
+    root["spl_show_snum"] = Json::Value(set.spl_show_snum);
+    root["smidi_sf_path"] = Json::Value(set.smidi_sf_path);
+    std::ofstream os;
+    os.open(path, std::ios::out);
+    os << sw.write(root);
+    os.close();
 }

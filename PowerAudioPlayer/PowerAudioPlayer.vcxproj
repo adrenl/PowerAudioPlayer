@@ -78,7 +78,7 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>.\output\</OutDir>
     <IncludePath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\output\;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\;$(LibraryPath);D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer</LibraryPath>
+    <LibraryPath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\;$(LibraryPath);D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer;D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer</LibraryPath>
     <GenerateManifest>true</GenerateManifest>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -86,21 +86,21 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>.\output\</OutDir>
     <IncludePath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\output\;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\;$(LibraryPath);D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer</LibraryPath>
+    <LibraryPath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\;$(LibraryPath);D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer;D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer</LibraryPath>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>.\output\</OutDir>
     <IncludePath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\output\;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\output\;$(LibraryPath);D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer</LibraryPath>
+    <LibraryPath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\output\;$(LibraryPath);D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer;D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer</LibraryPath>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>.\output\</OutDir>
     <IncludePath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\output\;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\output\;$(LibraryPath);D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer</LibraryPath>
+    <LibraryPath>D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer\output\;$(LibraryPath);D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer;D:\bc\cpp\PowerAudioPlayer\PowerAudioPlayer</LibraryPath>
     <GenerateManifest>true</GenerateManifest>
     <IntDir>$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -119,7 +119,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;Version.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;bass_midi.lib;BASS_SFX.lib;BASS_WADSP.lib;tags.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -147,7 +147,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;Version.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;bass_midi.lib;BASS_SFX.lib;BASS_WADSP.lib;tags.lib;jsoncpp.lib;SkinH.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -179,7 +179,10 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;Version.lib;json_vc71_libmt.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;bass_midi.lib;BASS_SFX.lib;BASS_WADSP.lib;tags.lib;json_vc71_libmt.lib;SkinH.lib</AdditionalDependencies>
+      <ShowProgress>LinkVerbose</ShowProgress>
+      <AdditionalLibraryDirectories>.\plugins\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DelayLoadDLLs>bassmidi.dll;bass_sfx.dll;bass_wadsp.dll;tags.dll</DelayLoadDLLs>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -210,7 +213,10 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>bass.lib;BASS_SFX.lib;BASS_WADSP.lib;bassmidi.lib;tags.lib;Version.lib;SkinH.lib</AdditionalDependencies>
+      <AdditionalDependencies>bass.lib;bass_midi.lib;BASS_SFX.lib;BASS_WADSP.lib;tags.lib;SkinH.lib</AdditionalDependencies>
+      <ShowProgress>LinkVerbose</ShowProgress>
+      <AdditionalLibraryDirectories>.\plugins\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <DelayLoadDLLs>bassmidi.dll;bass_sfx.dll;bass_wadsp.dll;tags.dll</DelayLoadDLLs>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>

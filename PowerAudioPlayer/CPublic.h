@@ -1,5 +1,5 @@
 #pragma once
-#define SET					"Settings.json"
+#define SET					"settings.json"
 #define VER_VERSION			"0.1"
 #define VER_NAME			"PowerAudioPlayer"
 #define TIMER_ALAWAYS		1000
@@ -14,24 +14,25 @@
 #include <fstream>
 #include <exception>
 #include <strsafe.h>
+#include <regex>
 
 struct Settings
 {
-    int vol;
-    int is_mute;
-    int pl_location;
-    int sfx_id;
-    int playmode;
+    int vol = 50;
+    int is_mute = FALSE;
+    int pl_location = -1;
+    int sfx_id = 0;
+    int playmode = 0;
 
-    bool smain_rem_pl_location;
-    bool smain_allow_drag;
-    CString main_skin_path;
-    int smain_sfx_render_elapse;
+    bool smain_rem_pl_location = TRUE;
+    bool smain_allow_drag = TRUE;
+    CString smain_skin_path = _T("");
+    int smain_sfx_render_elapse = 20;
     //---
-    CString spl_title_format;
-    bool spl_show_snum;
+    CString spl_title_format =_T("%IFV2(%ARTI,%ICAP(%ARTI),无艺术家) - %IFV2(%TITL,%ICAP(%TITL) ,无标题 ) %IFV1(%ALBM,%IUPC(- %ALBM))");
+    bool spl_show_snum = TRUE;
     //---
-    CString smidi_sf_path;
+    CString smidi_sf_path = _T("");
     //---
 };
 
@@ -48,7 +49,6 @@ public:
     static std::vector<int> pl_time;
     static std::vector<bool> pl_isconvert;
     static std::vector<CString> SFXs;
-    static int SFXId;
     static Settings set;
     static int split(const CString strLine, char split, CStringArray &strArray);
     static CString i2cs(QWORD var);
@@ -57,8 +57,7 @@ public:
     static CString CharToCStr(char *CharStr);
     static const char *CStrToChar(CString CStr);
     static LPCWSTR CharToLPCWSTR(char *szStr);
-    static void OJS();
-    static void RJS();
-    static void WJS();
-    static void CJS();
+    static bool IsUrl(CString str);
+    static void ReadSettings();
+    static void WriteSettings();
 };

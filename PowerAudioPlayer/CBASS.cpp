@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CBASS.h"
 HSTREAM BASS::Stream = NULL;
+HSOUNDFONT BASS::SoundFont = NULL;
 std::vector<HPLUGIN> BASS::PLUGINS;
 
 BASS::BASS()
@@ -233,12 +234,29 @@ BOOL BASS::ChannelSetPosition(QWORD pos, DWORD mode)
 {
     return BASS_ChannelSetPosition(BASS::Stream, pos, mode);
 }
+
 //
 CString BASS::i2cs(QWORD val)
 {
     CString Str;
     Str.Format(_T("%d"), val);
     return Str;
+}
+
+void BASS::SetMidiSoundFont(CString file)
+{
+    HSOUNDFONT newfont = BASS_MIDI_FontInit(file, 0);
+    if (newfont) 
+    {
+        BASS_MIDI_FONT sf{};
+        sf.font = newfont;
+        sf.preset = -1;
+        sf.bank = 0;
+        BASS_MIDI_StreamSetFonts(0, &sf, 1);
+        BASS_MIDI_StreamSetFonts(BASS::Stream, &sf, 1);
+        BASS_MIDI_FontFree(SoundFont); 
+        SoundFont = newfont;
+    }
 }
 
 CString BASS::TimeToString(QWORD time) //Time:Need BASS_ChannelBytes2Seconds()

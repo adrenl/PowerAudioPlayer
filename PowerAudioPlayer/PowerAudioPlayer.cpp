@@ -39,6 +39,30 @@ CPowerAudioPlayerApp theApp;
 
 BOOL CPowerAudioPlayerApp::InitInstance()
 {
+    m_hMutex = CreateMutex(NULL, FALSE, _T("796e4e47004fb11d00809d22b8890781"));
+    if (GetLastError() == ERROR_ALREADY_EXISTS)
+    {
+        CWnd* pDesktopWnd = CWnd::GetDesktopWindow();
+        CWnd* pWnd = pDesktopWnd->GetWindow(GW_CHILD);
+        while (pWnd != NULL)
+        {
+            if (::GetProp(pWnd->m_hWnd, m_pszExeName))
+            {
+                pWnd->SetForegroundWindow();
+                break;
+            }
+            pWnd = pWnd->GetWindow(GW_HWNDNEXT);
+        }
+        MessageBox(NULL, _T("已经有一个实例在运行了"), _T("提示"), MB_OK);
+        return FALSE;
+    }
+
+    AddDllDirectory(_T(".\\plugins"));
+    LoadLibrary(_T(".\\plugins\\bassmidi.dll"));
+    LoadLibrary(_T(".\\plugins\\bass_sfx.dll"));
+    LoadLibrary(_T(".\\plugins\\bass_wadsp.dll"));
+    LoadLibrary(_T(".\\plugins\\tags.dll"));
+
     // 如果一个运行在 Windows XP 上的应用程序清单指定要
     // 使用 ComCtl32.dll 版本 6 或更高版本来启用可视化方式，
     //则需要 InitCommonControlsEx()。  否则，将无法创建窗口。
@@ -68,7 +92,7 @@ BOOL CPowerAudioPlayerApp::InitInstance()
     // 更改用于存储设置的注册表项
     // TODO: 应适当修改该字符串，
     // 例如修改为公司或组织名
-    SetRegistryKey(_T("PowerAudioPlayer"));
+    //SetRegistryKey(_T("PowerAudioPlayer"));
     CPowerAudioPlayerDlg dlg;
     m_pMainWnd = &dlg;
     INT_PTR nResponse = dlg.DoModal();

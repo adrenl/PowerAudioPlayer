@@ -51,7 +51,7 @@ BOOL CSFXDlg::OnInitDialog()
     {
         m_sfx_select.InsertString(i + 1, CPb::GetInPathFileName(CPb::SFXs[i]));
     }
-    m_sfx_select.SetCurSel(CPb::SFXId);
+    m_sfx_select.SetCurSel(CPb::set.sfx_id);
 
     m_vis_panel.GetClientRect(&rect);
     m_pVisDC = m_vis_panel.GetDC();

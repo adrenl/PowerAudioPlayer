@@ -73,16 +73,27 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
     ON_COMMAND(ID_32794, &CPowerAudioPlayerDlg::On32794)
     ON_COMMAND(ID_32777, &CPowerAudioPlayerDlg::On32777)
     ON_COMMAND(ID_MENU_32786, &CPowerAudioPlayerDlg::OnMenu32786)
-    ON_COMMAND(ID_MENU_32787, &CPowerAudioPlayerDlg::OnMenu32787)
     ON_COMMAND(ID_MENU_32795, &CPowerAudioPlayerDlg::OnMenu32795)
     ON_COMMAND(ID_32797, &CPowerAudioPlayerDlg::On32797)
     ON_COMMAND(ID_32798, &CPowerAudioPlayerDlg::On32798)
     ON_WM_MOUSEWHEEL()
+    ON_COMMAND(ID_32800, &CPowerAudioPlayerDlg::On32800)
+    ON_COMMAND(ID_32801, &CPowerAudioPlayerDlg::On32801)
+    ON_COMMAND(ID_32802, &CPowerAudioPlayerDlg::On32802)
+    ON_COMMAND(ID_32803, &CPowerAudioPlayerDlg::On32803)
+    ON_BN_CLICKED(IDC_BUTTON3, &CPowerAudioPlayerDlg::OnBnClickedButton3)
+    ON_BN_CLICKED(IDC_BUTTON4, &CPowerAudioPlayerDlg::OnBnClickedButton4)
 END_MESSAGE_MAP()
 
-void CPowerAudioPlayerDlg::LoadSettings()
+void CPowerAudioPlayerDlg::LoadSettings(bool isReload)
 {
-    //CPb::set.midi_path = _T("");
+    CPb::ReadSettings();
+    m_volside.SetPos(CPb::set.vol);
+    m_volchk.SetCheck(CPb::set.is_mute);
+    CPowerAudioPlayerDlg::CPowerAudioPlayerDlg::OnBnClickedCheck1();
+    ChangePlayMode(CPb::set.playmode,TRUE);
+    //BASS::SetMidiSoundFont(CPb::set.smidi_sf_path);
+    BASS::SetMidiSoundFont(_T("D:\\程序\\SF2\\gm.sf2"));
 }
 
 void CPowerAudioPlayerDlg::ChangeVolumeSide()
@@ -94,17 +105,58 @@ void CPowerAudioPlayerDlg::ChangeVolumeSide()
     m_volsta.SetWindowText(StaticText);
 }
 
+void CPowerAudioPlayerDlg::ChangePlayMode(int Mode, bool ChangeMenu_)
+{
+    CPb::set.playmode = Mode;
+    if (ChangeMenu_)
+    {
+        CMenu *menu = GetMenu()->GetSubMenu(0);
+        switch (Mode) 
+        {
+            case 0:
+            {
+                menu->CheckMenuRadioItem(ID_32800, ID_32803, ID_32800, MF_BYCOMMAND);
+                break;
+            }
+            case 1:
+            {
+                menu->CheckMenuRadioItem(ID_32800, ID_32803, ID_32801, MF_BYCOMMAND);
+                break;
+            }
+            case 2:
+            {
+                menu->CheckMenuRadioItem(ID_32800, ID_32803, ID_32802, MF_BYCOMMAND);
+                break;
+            }
+            case 3:
+            {
+                menu->CheckMenuRadioItem(ID_32800, ID_32803, ID_32803, MF_BYCOMMAND);
+                break;
+            }
+        }
+    }
+}
+
 void CPowerAudioPlayerDlg::Play(int Id)
 {
     BASS::StreamFree();
     if (Id >= 0 && Id < CPb::pl_path.size())
     {
-        BASS::StreamCreateFile(FALSE, CPb::pl_path[Id], 0, 0, BASS_SAMPLE_FLOAT);
+        if (CPb::IsUrl(CPb::pl_path[Id]))
+        {
+            BASS::StreamCreateURL((char*)CPb::CStrToChar(CPb::pl_path[Id]), 0, BASS_SAMPLE_FLOAT,NULL,NULL);
+        }
+        else
+        {
+          BASS::StreamCreateFile(FALSE, CPb::pl_path[Id], 0, 0, BASS_SAMPLE_FLOAT);
+        }
         if (BASS::Stream == 0)
         {
             Play(Id + 1);
+            m_playlist.SetItemText(Id, 0, _T("!!错误  - " + CPb::i2cs(BASS::ErrorGetCode()) + "!! ") + CPb::pl_title[Id]);
             return;
         }
+        m_playlist.SetItemText(Id, 0,CPb::pl_title[Id]);
         int Length = BASS::ChannelGetLength(0);
         BASS::ChannelPlay(FALSE);
         SetTimer(TIMER_PLAYING, 500, NULL);
@@ -189,10 +241,9 @@ void CPowerAudioPlayerDlg::LoadList(CString Path)
             int nTime = root[i]["time"].asInt();
             bool nIsConvert = root[i]["isconvert"].asBool();
             AddToList(nPath, nTitle, nTime, nIsConvert);
-            //m_playlist.InsertItem(i, nTitle);
-            //m_playlist.SetItemText(i, 1, BASS::TimeToString(nTime));
         }
     }
+    in.close();
 }
 
 void CPowerAudioPlayerDlg::ConvertList(bool ReConvert)
@@ -219,7 +270,7 @@ void CPowerAudioPlayerDlg::LoadPlugins()
     CString filepath = CPb::GetExeModuleDir();
     CString filename = _T("");
     CFileFind find;
-    BOOL IsFind = find.FindFile(filepath + _T("\\bass_*.dll"));
+    BOOL IsFind = find.FindFile(filepath + _T("\\plugins\\*.dll"));
     while (IsFind)
     {
         IsFind = find.FindNextFile();
@@ -229,7 +280,7 @@ void CPowerAudioPlayerDlg::LoadPlugins()
         }
         else
         {
-            filename = filepath + "\\" + find.GetFileName();
+            filename = filepath + "\\plugins\\" + find.GetFileName();
             BASS::PluginLoad(CPb::CStrToChar(filename), 0);
         }
     }
@@ -309,9 +360,11 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
     m_listbtn.SetIcon(m_hListIcon);
     m_volchk.SetIcon(m_hVolIcon);
 
+    
     LoadPlugins();
     BuildSFXList();
     LoadList();
+    LoadSettings();
     return TRUE;
 }
 
@@ -424,10 +477,24 @@ void CPowerAudioPlayerDlg::OnBnClickedButton1()
 
 void CPowerAudioPlayerDlg::OnBnClickedButton2()
 {
+    BASS::ChannelPlay(TRUE);
     BASS::ChannelStop();
+    SetTimer(TIMER_PLAYING, 0, NULL);
     m_playbtn.SetWindowTextW(_T("播放"));
     m_playbtn.SetIcon(m_hPauseIcon);
 }
+
+void CPowerAudioPlayerDlg::OnBnClickedButton3()
+{
+    // TODO: 在此添加控件通知处理程序代码
+}
+
+
+void CPowerAudioPlayerDlg::OnBnClickedButton4()
+{
+    // TODO: 在此添加控件通知处理程序代码
+}
+
 
 void CPowerAudioPlayerDlg::OnBnClickedCheck1()
 {
@@ -451,6 +518,7 @@ void CPowerAudioPlayerDlg::OnClose()
     On32798();
     SaveList(NULL);
     BASS_Free();
+    CPb::WriteSettings();
     CDialogEx::OnClose();
 }
 
@@ -501,9 +569,6 @@ void CPowerAudioPlayerDlg::On32776()
         {
             FilePath = Dlg.GetNextPathName(posFile);
             AddToList(FilePath);
-            //int index = m_playlist.GetItemCount();
-            //m_playlist.InsertItem(index, CPb::GetInPathFileName(FilePath));
-            //m_playlist.SetItemText(index, 1, _T("00:00"));
         }
         delete lsf;
         CPb::ToConvertList = TRUE;
@@ -589,27 +654,6 @@ void CPowerAudioPlayerDlg::OnMenu32786()
 }
 
 
-void CPowerAudioPlayerDlg::OnMenu32787()
-{
-    for (int iItem = m_playlist.GetItemCount() - 1; iItem >= 0; iItem--)
-    {
-        if (m_playlist.GetItemState(iItem, LVIS_SELECTED) == LVIS_SELECTED)
-        {
-            SHFILEOPSTRUCT FileOp = { 0 };
-            FileOp.fFlags = FOF_ALLOWUNDO | FOF_NOCONFIRMATION;
-            FileOp.pFrom = CPb::pl_path[iItem];
-            FileOp.pTo = NULL;
-            FileOp.wFunc = FO_DELETE;
-            if (SHFileOperation(&FileOp) == 0)
-            {
-                m_playlist.DeleteItem(iItem);
-                DelToList(iItem);
-            }
-        }
-    }
-}
-
-
 void CPowerAudioPlayerDlg::OnMenu32795()
 {
     CSettingsDlg Modal;
@@ -643,13 +687,12 @@ BOOL CPowerAudioPlayerDlg::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
     if (zDelta > 0)
     {
         m_volside.SetPos(pos - 2);
-        ChangeVolumeSide();
     }
     else if (zDelta < 0)
     {
         m_volside.SetPos(pos + 2);
-        ChangeVolumeSide();
     }
+    ChangeVolumeSide();
     return CDialogEx::OnMouseWheel(nFlags, zDelta, pt);
 }
 
@@ -805,3 +848,32 @@ BOOL CPowerAudioPlayerDlg::PreTranslateMessage(MSG *pMsg)
     }
     return CDialogEx::PreTranslateMessage(pMsg);
 }
+
+void CPowerAudioPlayerDlg::On32800()
+{
+    ChangePlayMode(0);
+    GetMenu()->GetSubMenu(0)->CheckMenuRadioItem(ID_32800, ID_32803, ID_32800, MF_BYCOMMAND);
+}
+
+
+void CPowerAudioPlayerDlg::On32801()
+{
+    ChangePlayMode(1);
+    GetMenu()->GetSubMenu(0)->CheckMenuRadioItem(ID_32800, ID_32803, ID_32801, MF_BYCOMMAND);
+}
+
+
+void CPowerAudioPlayerDlg::On32802()
+{
+    ChangePlayMode(2);
+    GetMenu()->GetSubMenu(0)->CheckMenuRadioItem(ID_32800, ID_32803, ID_32802, MF_BYCOMMAND);
+}
+
+
+
+void CPowerAudioPlayerDlg::On32803()
+{
+    ChangePlayMode(3);
+    GetMenu()->GetSubMenu(0)->CheckMenuRadioItem(ID_32800, ID_32803, ID_32803, MF_BYCOMMAND);
+}
+

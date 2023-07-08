@@ -5,6 +5,7 @@ public:
     BASS();
     virtual ~BASS();
     static HSTREAM Stream;
+    static HSOUNDFONT SoundFont;
     static std::vector<HPLUGIN> PLUGINS;
     static DWORD GetConfig(DWORD option);
     static const void *GetConfigPtr(DWORD option);
@@ -51,6 +52,7 @@ public:
     static BOOL ChannelUpdate(DWORD length);
     static BOOL ChannelSetPosition(QWORD pos, DWORD mode);
     //
+    static void SetMidiSoundFont(CString file);
     static CString TimeToString(QWORD time);
     static QWORD LengthFile(CString file, bool byte2sec = TRUE);
 private:

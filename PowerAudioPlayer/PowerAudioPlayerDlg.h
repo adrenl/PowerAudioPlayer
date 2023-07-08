@@ -57,8 +57,9 @@ public:
     CButton m_nextbtn;
     CListCtrl m_playlist;
     Settings Sets;
-    void LoadSettings();
+    void LoadSettings(bool isReload = FALSE);
     void ChangeVolumeSide();
+    void ChangePlayMode(int Mode,bool ChangeMenu_ = FALSE);
     void Play(int Id);
     void AddToList(CString Path, CString Title = _T(""), int Time = 0, bool IsConvert = FALSE);
     void DelToList(int Id);
@@ -85,7 +86,6 @@ public:
     afx_msg void On32794();
     afx_msg void On32777();
     afx_msg void OnMenu32786();
-    afx_msg void OnMenu32787();
     afx_msg void OnMenu32795();
     afx_msg void On32797();
     afx_msg void On32798();
@@ -95,4 +95,8 @@ public:
     HRESULT CreateThumbnailToolbar(HWND hWnd);
     HRESULT UpdateThumbarButton(HWND hwnd, bool isPause);
     virtual BOOL PreTranslateMessage(MSG *pMsg);
+    afx_msg void On32800();
+    afx_msg void On32801();
+    afx_msg void On32802();
+    afx_msg void On32803();
 };

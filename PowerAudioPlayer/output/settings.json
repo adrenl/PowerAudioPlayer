@@ -1,0 +1,14 @@
+{
+   "is_mute" : 0,
+   "pl_location" : -1,
+   "playmode" : 0,
+   "sfx_id" : 0,
+   "smain_allow_drag" : true,
+   "smain_rem_pl_location" : true,
+   "smain_sfx_render_elapse" : 20,
+   "smain_skin_path" : true,
+   "smidi_sf_path" : true,
+   "spl_show_snum" : true,
+   "spl_title_format" : true,
+   "vol" : 50
+}

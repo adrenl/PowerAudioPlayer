@@ -14,7 +14,7 @@
 #include <fstream>
 #include <exception>
 #include <strsafe.h>
-#include <regex>
+#include <random>
 
 struct Settings
 {
@@ -41,6 +41,7 @@ class CPb
 public:
     CPb();
     virtual ~CPb();
+    static int length;
     static bool ToConvertList;
     static int PlayId;
     static CString SFF;
@@ -57,7 +58,9 @@ public:
     static CString CharToCStr(char *CharStr);
     static const char *CStrToChar(CString CStr);
     static LPCWSTR CharToLPCWSTR(char *szStr);
+    static char* replace_str(char* text, char sp_ch, char re_ch);
     static bool IsUrl(CString str);
     static void ReadSettings();
     static void WriteSettings();
+    static int GetRand(int MIN, int MAX);
 };

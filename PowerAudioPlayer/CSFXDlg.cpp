@@ -73,7 +73,6 @@ void CSFXDlg::OnCancel()
     ReleaseDC(m_pVisDC);
     BASS_SFX_Free();
     DestroyWindow();
-    //CDialogEx::OnCancel();
 }
 
 
@@ -84,7 +83,7 @@ void CSFXDlg::OnCbnSelchangeSfxSelect()
     {
         char *file = (char *)CPb::CStrToChar(CPb::SFXs[nIndex - 1]);
         KillTimer(TIMER_SFX);
-        Sleep(1);
+        Sleep(25);
         CString Title;
         if (hsfx)
             BASS_SFX_PluginFree(hsfx);
@@ -92,7 +91,7 @@ void CSFXDlg::OnCbnSelchangeSfxSelect()
         {
             BASS_SFX_PluginSetStream(hsfx, BASS::Stream);
             BASS_SFX_PluginStart(hsfx);
-            SetTimer(TIMER_SFX, 1, NULL);
+            SetTimer(TIMER_SFX, 25, NULL);
             Title.Format(_T("可视化效果 - %s"), CPb::CharToLPCWSTR(BASS_SFX_PluginGetName(hsfx)));
         }
         else

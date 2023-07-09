@@ -27,7 +27,6 @@ void CSettingsDlg::DoDataExchange(CDataExchange *pDX)
     DDX_Control(pDX, IDC_MFCPROPERTYGRID1, m_pgctrl);
     DDX_Control(pDX, IDC_CANCELBTN, m_can);
     DDX_Control(pDX, IDC_OKBTN, m_ok);
-    DDX_Control(pDX, IDC_STATIC23, m_static23);
 }
 
 
@@ -52,13 +51,6 @@ BOOL CSettingsDlg::OnInitDialog()
     SKINFilter.LoadStringW(IDS_FILTER_SKIN);
     TITLEFMTDescribe.LoadStringW(IDS_DESCRIBE_TITLE);
 
-    /*
-    CMFCPropertyGridProperty* pProp1 = new CMFCPropertyGridFileProperty(_T("MIDI音色库"),TRUE,_T(""),NULL,NULL,LoadStr);
-
-    CMFCPropertyGridProperty* group0 = new CMFCPropertyGridProperty(_T("MIDI"));
-    CMFCPropertyGridProperty* group1 = new CMFCPropertyGridProperty(_T("MIDI"));
-    group0->AddSubItem(pProp1);
-    m_pgctrl.AddProperty(group0);*/
     CMFCPropertyGridProperty *Groups[] =
     {
         new CMFCPropertyGridProperty(_T("首选项")), //0
@@ -68,13 +60,13 @@ BOOL CSettingsDlg::OnInitDialog()
         new CMFCPropertyGridProperty(_T("插件")),	//4
         new CMFCPropertyGridProperty(_T("关于"))	//5
     };
-    /////////////
+    /////////////0
     CMFCPropertyGridProperty *g0Props[] =
     {
-        new CMFCPropertyGridProperty(_T("记忆播放位置"), _T(""), _T("启动时列表是否跳到上次播放位置")),
-        new CMFCPropertyGridProperty(_T("接收文件拖放"), _T(""), _T("是否接收文件拖放")),
-        new CMFCPropertyGridFileProperty(_T("皮肤"), TRUE, NULL, NULL, NULL, SKINFilter, _T("留空则不加载")),
-        new CMFCPropertyGridProperty(_T("可视化效果刷新周期"), (_variant_t)0, _T("设置可视化效果每次刷新时的间隔，单位为毫秒，越小的值会获得更流畅的效果，但也会占用更多资源"), NULL, NULL, NULL, _T("0123456789"))
+        new CMFCPropertyGridProperty(_T("记忆播放位置"),PropertyGridPropertyOutputTrueOrFalse(CPb::set.smain_rem_pl_location), _T("启动时列表是否跳到上次播放位置")),
+        new CMFCPropertyGridProperty(_T("接收文件拖放"), PropertyGridPropertyOutputTrueOrFalse(CPb::set.smain_allow_drag), _T("是否接收文件拖放")),
+        new CMFCPropertyGridFileProperty(_T("皮肤"), TRUE, CPb::set.smain_skin_path, NULL, NULL, SKINFilter, _T("留空则不加载")),
+        new CMFCPropertyGridProperty(_T("可视化效果刷新周期"), (_variant_t)CPb::set.smain_sfx_render_elapse, _T("设置可视化效果每次刷新时的间隔，单位为毫秒，越小的值会获得更流畅的效果，但也会占用更多资源"), NULL, NULL, NULL, _T("0123456789"))
     };
     g0Props[3]->EnableSpinControl(TRUE, 1, 1000);
     MFCPropertyGridPropertyMakeTrueOrFalse(g0Props[0]);
@@ -83,27 +75,27 @@ BOOL CSettingsDlg::OnInitDialog()
     {
         Groups[0]->AddSubItem(g0Props[i]);
     }
-    /////////////
+    /////////////1
     CMFCPropertyGridProperty *g1Props[] =
     {
-        new CMFCPropertyGridProperty(_T("标题显示格式"), _T(""), _T("可以自定义列表标题的显示格式，支持条件判断，当遇到不支持的文件时将以文件名作为标题。用法如下：" + TITLEFMTDescribe)),
-        new CMFCPropertyGridProperty(_T("显示序号"), _T(""), _T("是否在标题前显示项目在列表的序号")),
+        new CMFCPropertyGridProperty(_T("标题显示格式"), CPb::set.spl_title_format, _T("可以自定义列表标题的显示格式，支持条件判断，当遇到不支持的文件时将以文件名作为标题。用法如下：" + TITLEFMTDescribe)),
+        new CMFCPropertyGridProperty(_T("显示序号"), PropertyGridPropertyOutputTrueOrFalse(CPb::set.spl_show_snum), _T("是否在标题前显示项目在列表的序号")),
     };
     MFCPropertyGridPropertyMakeTrueOrFalse(g1Props[1]);
     for (int i = 0; i < 1; ++i)
     {
         Groups[1]->AddSubItem(g1Props[i]);
     }
-    /////////////
+    /////////////2
     CMFCPropertyGridProperty *g2Props[] =
     {
-        new CMFCPropertyGridFileProperty(_T("音色库"), TRUE, _T(""), NULL, NULL, LoadStr)
+        new CMFCPropertyGridFileProperty(_T("音色库"), TRUE, CPb::set.smidi_sf_path, NULL, NULL, LoadStr)
     };
     for (int i = 0; i < 1; ++i)
     {
         Groups[2]->AddSubItem(g2Props[i]);
     }
-    /////////////
+    /////////////3
     std::vector<CMFCPropertyGridProperty *>g3Props;
     g3Props.push_back(new CMFCPropertyGridProperty(_T("名称"), _T("支持格式"), _T("")));
     g3Props[0]->AllowEdit(FALSE);
@@ -130,7 +122,9 @@ BOOL CSettingsDlg::OnInitDialog()
     {
         Groups[4]->AddSubItem(g3Props[i]);
     }
-    /////////////
+    /////////////4
+    
+    /////////////5
     CMFCPropertyGridProperty *g5Props[] =
     {
         new CMFCPropertyGridProperty(_T("名称"), CPb::CharToLPCWSTR((char *)VER_NAME), _T("")),
@@ -173,6 +167,18 @@ void CSettingsDlg::MFCPropertyGridPropertyMakeTrueOrFalse(CMFCPropertyGridProper
     PropertyGridProperty->AddOption(_T("是"));
     PropertyGridProperty->AddOption(_T("否"));
     PropertyGridProperty->AllowEdit(FALSE);
+}
+
+LPCWSTR CSettingsDlg::PropertyGridPropertyOutputTrueOrFalse(bool val)
+{
+    if (val)
+    {
+        return _T("是");
+    }
+    else
+    {
+        return _T("否");
+    }
 }
 
 

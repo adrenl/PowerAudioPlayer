@@ -28,10 +28,10 @@ public:
     afx_msg void OnBnClickedCancel();
     CMFCPropertyGridCtrl m_pgctrl;
     void MFCPropertyGridPropertyMakeTrueOrFalse(CMFCPropertyGridProperty *PropertyGridProperty);
+    LPCWSTR PropertyGridPropertyOutputTrueOrFalse(bool val);
     afx_msg void OnSize(UINT nType, int cx, int cy);
     CButton m_can;
     CButton m_ok;
     afx_msg void OnBnClickedOkbtn();
     afx_msg void OnBnClickedCancelbtn();
-    CStatic m_static23;
 };

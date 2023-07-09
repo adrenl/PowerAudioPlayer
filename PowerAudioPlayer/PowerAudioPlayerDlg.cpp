@@ -157,18 +157,19 @@ void CPowerAudioPlayerDlg::Play(int Id)
             return;
         }
         m_playlist.SetItemText(Id, 0,CPb::pl_title[Id]);
-        int Length = BASS::ChannelGetLength(0);
+        CPb::length = BASS::ChannelGetLength(0);
         BASS::ChannelPlay(FALSE);
-        SetTimer(TIMER_PLAYING, 500, NULL);
+        SetTimer(TIMER_PLAYING, 200, NULL);
         CPowerAudioPlayerDlg::ChangeVolumeSide();
-        m_timeside.SetRange(0, Length);
+        m_timeside.SetRange(0, CPb::length);
         m_timeside.SetPos(0);
         CPb::PlayId = Id;
         m_playbtn.SetWindowTextW(_T("暂停"));
         m_playbtn.SetIcon(m_hPlayIcon);
         m_infosta.SetWindowTextW(CPb::pl_title[Id]);
-        m_ttimesta.SetWindowTextW(BASS::TimeToString(BASS::ChannelBytes2Seconds(Length)));
-
+        m_ttimesta.SetWindowTextW(BASS::TimeToString(BASS::ChannelBytes2Seconds(CPb::length)));
+        m_playlist.SetItemState(Id, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
+        m_playlist.EnsureVisible(Id, FALSE);
     }
     else
     {
@@ -437,11 +438,36 @@ void CPowerAudioPlayerDlg::OnTimer(UINT_PTR nIDEvent)
         int Position = BASS::ChannelGetPosition(0);
         m_timeside.SetPos(Position);
         m_ntimesta.SetWindowTextW(BASS::TimeToString(BASS::ChannelBytes2Seconds(Position)));
-        if (m_timeside.GetRangeMax() == m_timeside.GetPos())
+        if (BASS::ChannelIsActive() == 0)    //播放完了
         {
-            //Next One.
+            KillTimer(TIMER_PLAYING);
+            switch (CPb::set.playmode) {
+                case 0:         //顺序播放
+                {
+                    CPowerAudioPlayerDlg::OnBnClickedButton4();
+                    break;
+                }
+                case 1:         //单曲循环
+                {
+                    Play(CPb::PlayId);
+                    break;
+                }
+                case 2:         //列表循环
+                {
+                    if (CPb::PlayId == CPb::pl_path.size())
+                    {
+                        Play(0);
+                    }
+                    break;
+                }
+                case 3:         //随机播放
+                {
+                   // MessageBox();
+                    Play(CPb::GetRand(0, CPb::pl_path.size()));
+                    break;
+                }
+            }
         }
-
     }
     CDialogEx::OnTimer(nIDEvent);
 }
@@ -463,36 +489,37 @@ void CPowerAudioPlayerDlg::OnBnClickedButton1()
         BASS::ChannelPause();
         m_playbtn.SetWindowTextW(_T("播放"));
         m_playbtn.SetIcon(m_hPauseIcon);
-        SetTimer(TIMER_PLAYING, 0, NULL);
+        KillTimer(TIMER_PLAYING);
     }
     else
     {
         BASS::ChannelPlay(FALSE);
         m_playbtn.SetWindowTextW(_T("暂停"));
         m_playbtn.SetIcon(m_hPlayIcon);
-        SetTimer(TIMER_PLAYING, 500, NULL);
+        SetTimer(TIMER_PLAYING, 200, NULL);
     }
 }
 
 
 void CPowerAudioPlayerDlg::OnBnClickedButton2()
 {
-    BASS::ChannelPlay(TRUE);
-    BASS::ChannelStop();
-    SetTimer(TIMER_PLAYING, 0, NULL);
+    BASS::ChannelPause();
+    BASS::ChannelSetPosition(0, 0);
+    m_timeside.SetPos(0);
+    KillTimer(TIMER_PLAYING);
     m_playbtn.SetWindowTextW(_T("播放"));
     m_playbtn.SetIcon(m_hPauseIcon);
 }
 
 void CPowerAudioPlayerDlg::OnBnClickedButton3()
 {
-    // TODO: 在此添加控件通知处理程序代码
+    Play(CPb::PlayId - 1);
 }
 
 
 void CPowerAudioPlayerDlg::OnBnClickedButton4()
 {
-    // TODO: 在此添加控件通知处理程序代码
+    Play(CPb::PlayId + 1);
 }
 
 
@@ -718,24 +745,26 @@ LRESULT CPowerAudioPlayerDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lPa
             int const wmId = LOWORD(wParam);
             switch (wmId)
             {
-            case TASKBARBTN_PLAY:
-            {
-                CPowerAudioPlayerDlg::OnBnClickedButton1();
-                break;
-            }
-            case TASKBARBTN_STOP:
-            {
-                CPowerAudioPlayerDlg::OnBnClickedButton2();
-                break;
-            }
-            case TASKBARBTN_BACK:
-            {
-                break;
-            }
-            case TASKBARBTN_NEXT:
-            {
-                break;
-            }
+                case TASKBARBTN_PLAY:
+                {
+                    CPowerAudioPlayerDlg::OnBnClickedButton1();
+                    break;
+                }
+                case TASKBARBTN_STOP:
+                {
+                    CPowerAudioPlayerDlg::OnBnClickedButton2();
+                    break;
+                }
+                case TASKBARBTN_BACK:
+                {
+                    CPowerAudioPlayerDlg::OnBnClickedButton3();
+                    break;
+                }
+                case TASKBARBTN_NEXT:
+                {
+                    CPowerAudioPlayerDlg::OnBnClickedButton4();
+                    break;
+                }
             }
         }
         }

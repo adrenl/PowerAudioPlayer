@@ -1,14 +1,14 @@
 {
    "is_mute" : 0,
    "pl_location" : -1,
-   "playmode" : 0,
+   "playmode" : 3,
    "sfx_id" : 0,
    "smain_allow_drag" : true,
    "smain_rem_pl_location" : true,
    "smain_sfx_render_elapse" : 20,
-   "smain_skin_path" : true,
-   "smidi_sf_path" : true,
+   "smain_skin_path" : "",
+   "smidi_sf_path" : "",
    "spl_show_snum" : true,
-   "spl_title_format" : true,
+   "spl_title_format" : "%IFV2(%ARTI,%ICAP(%ARTI),无艺术家) - %IFV2(%TITL,%ICAP(%TITL) ,无标题 ) %IFV1(%ALBM,%IUPC(- %ALBM))",
    "vol" : 50
 }

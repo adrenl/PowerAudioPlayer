@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CPublic.h"
 #include "pch.h"
+int CPb::length = 0;
 bool CPb::ToConvertList = FALSE;
 int CPb::PlayId = -1;
 CString CPb::SFF = _T("");
@@ -84,6 +85,31 @@ LPCWSTR CPb::CharToLPCWSTR(char *szStr)
     return wszClassName;
 }
 
+char* CPb::replace_str(char* text, char sp_ch, char re_ch)
+{
+    int len = strlen(text);
+
+    // 动态创建copy之后的字符创
+    char* copy = (char*)malloc(len + 1);
+
+    for (int i = 0; i < len; i++)
+    {
+        // 获取当前的char
+        char ch = text[i];
+        if (ch == sp_ch)
+            copy[i] = re_ch;
+        else
+            copy[i] = ch;
+    }
+    // 结束
+    copy[len] = 0;
+    // 赋值给传进来的字符串
+    strcpy(text, copy);
+    // 释放动态创建的内存
+    free(copy);
+    return text;
+}
+
 bool CPb::IsUrl(CString str)
 {
     if (str.Left(7) == _T("http://") || str.Left(8) == _T("https://") || str.Left(6) == _T("ftp://"))
@@ -132,13 +158,21 @@ void CPb::WriteSettings()
     root["playmode"] = Json::Value(set.playmode);
     root["smain_rem_pl_location"] = Json::Value(set.smain_rem_pl_location);
     root["smain_allow_drag"] = Json::Value(set.smain_allow_drag);
-    root["smain_skin_path"] = Json::Value(set.smain_skin_path);
+    root["smain_skin_path"] = Json::Value(CPb::CStrToChar(set.smain_skin_path));
     root["smain_sfx_render_elapse"] = Json::Value(set.smain_sfx_render_elapse);
-    root["spl_title_format"] = Json::Value(set.spl_title_format);
+    root["spl_title_format"] = Json::Value(CPb::CStrToChar(set.spl_title_format));
     root["spl_show_snum"] = Json::Value(set.spl_show_snum);
-    root["smidi_sf_path"] = Json::Value(set.smidi_sf_path);
+    root["smidi_sf_path"] = Json::Value(CPb::CStrToChar(set.smidi_sf_path));
     std::ofstream os;
     os.open(path, std::ios::out);
     os << sw.write(root);
     os.close();
+}
+
+int CPb::GetRand(int min, int max)
+{     
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(min, max);
+    return dis(gen);
 }

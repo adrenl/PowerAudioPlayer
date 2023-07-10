@@ -15,7 +15,6 @@
 #include "bass_sfx.h"
 #include "tags.h"
 #include "json/json.h"
-#include "SkinH.h"
 
 #endif //PCH_H
 

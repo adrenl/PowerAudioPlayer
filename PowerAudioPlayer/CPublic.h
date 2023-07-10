@@ -19,14 +19,14 @@
 struct Settings
 {
     int vol = 50;
-    int is_mute = FALSE;
+    bool is_mute = FALSE;
     int pl_location = -1;
-    int sfx_id = 0;
+    int sfx_id = -1;
+    int dsp_id = -1;
     int playmode = 0;
 
     bool smain_rem_pl_location = TRUE;
     bool smain_allow_drag = TRUE;
-    CString smain_skin_path = _T("");
     int smain_sfx_render_elapse = 20;
     //---
     CString spl_title_format =_T("%IFV2(%ARTI,%ICAP(%ARTI),无艺术家) - %IFV2(%TITL,%ICAP(%TITL) ,无标题 ) %IFV1(%ALBM,%IUPC(- %ALBM))");
@@ -50,6 +50,7 @@ public:
     static std::vector<int> pl_time;
     static std::vector<bool> pl_isconvert;
     static std::vector<CString> SFXs;
+    static std::vector<CString> DSPs;
     static Settings set;
     static int split(const CString strLine, char split, CStringArray &strArray);
     static CString i2cs(QWORD var);

@@ -69,6 +69,7 @@ public:
     void ConvertList(bool ReConvert = FALSE);
     void LoadPlugins();
     void BuildSFXList();
+    void BuildDSPList();
     afx_msg void OnBnClickedButton5();
     afx_msg void OnBnClickedButton1();
     afx_msg void OnBnClickedButton2();

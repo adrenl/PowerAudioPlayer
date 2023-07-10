@@ -24,14 +24,15 @@ protected:
 public:
     virtual BOOL OnInitDialog();
     CString LoadStr;
-    afx_msg void OnBnClickedOk();
-    afx_msg void OnBnClickedCancel();
     CMFCPropertyGridCtrl m_pgctrl;
     void MFCPropertyGridPropertyMakeTrueOrFalse(CMFCPropertyGridProperty *PropertyGridProperty);
     LPCWSTR PropertyGridPropertyOutputTrueOrFalse(bool val);
+    bool  TXTTrueOrFalseToBool(CString val);
     afx_msg void OnSize(UINT nType, int cx, int cy);
     CButton m_can;
     CButton m_ok;
     afx_msg void OnBnClickedOkbtn();
     afx_msg void OnBnClickedCancelbtn();
+    afx_msg LRESULT OnPropertyChanged(WPARAM wParam, LPARAM lParam);
+    int OldDSPId;
 };

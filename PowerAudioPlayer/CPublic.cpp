@@ -10,6 +10,7 @@ std::vector<CString> CPb::pl_title;
 std::vector<int> CPb::pl_time;
 std::vector<bool> CPb::pl_isconvert;
 std::vector<CString> CPb::SFXs;
+std::vector<CString> CPb::DSPs;
 Settings CPb::set;
 CPb::CPb()
 {
@@ -134,10 +135,10 @@ void CPb::ReadSettings()
         set.is_mute = root["is_mute"].asBool();
         set.pl_location = root["pl_location"].asInt();
         set.sfx_id = root["sfx_id"].asInt();
+        set.dsp_id = root["dsp_id"].asInt();
         set.playmode = root["playmode"].asInt();
         set.smain_rem_pl_location = root["smain_rem_pl_location"].asBool();
         set.smain_allow_drag = root["smain_allow_drag"].asBool();
-        set.smain_skin_path = (CString)root["smain_skin_path"].asCString();
         set.smain_sfx_render_elapse = root["smain_sfx_render_elapse"].asInt();
         set.spl_title_format = (CString)root["spl_title_format"].asCString();
         set.spl_show_snum = root["spl_show_snum"].asBool();
@@ -155,10 +156,10 @@ void CPb::WriteSettings()
     root["is_mute"] = Json::Value(set.is_mute);
     root["pl_location"] = Json::Value(set.pl_location);
     root["sfx_id"] = Json::Value(set.sfx_id);
+    root["dsp_id"] = Json::Value(set.dsp_id);
     root["playmode"] = Json::Value(set.playmode);
     root["smain_rem_pl_location"] = Json::Value(set.smain_rem_pl_location);
     root["smain_allow_drag"] = Json::Value(set.smain_allow_drag);
-    root["smain_skin_path"] = Json::Value(CPb::CStrToChar(set.smain_skin_path));
     root["smain_sfx_render_elapse"] = Json::Value(set.smain_sfx_render_elapse);
     root["spl_title_format"] = Json::Value(CPb::CStrToChar(set.spl_title_format));
     root["spl_show_snum"] = Json::Value(set.spl_show_snum);

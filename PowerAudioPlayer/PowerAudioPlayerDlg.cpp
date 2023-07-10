@@ -92,8 +92,15 @@ void CPowerAudioPlayerDlg::LoadSettings(bool isReload)
     m_volchk.SetCheck(CPb::set.is_mute);
     CPowerAudioPlayerDlg::CPowerAudioPlayerDlg::OnBnClickedCheck1();
     ChangePlayMode(CPb::set.playmode,TRUE);
-    //BASS::SetMidiSoundFont(CPb::set.smidi_sf_path);
-    BASS::SetMidiSoundFont(_T("D:\\程序\\SF2\\gm.sf2"));
+    BASS::SetMidiSoundFont(CPb::set.smidi_sf_path);
+    if (CPb::set.dsp_id != -1 && CPb::set.dsp_id < CPb::DSPs.size())
+    {
+        if(BASS::Wadsp = BASS_WADSP_Load(CPb::CStrToChar(CPb::DSPs[CPb::set.dsp_id]), NULL, NULL, NULL, NULL, NULL))
+        {
+            BASS_WADSP_Start(BASS::Wadsp, 0, NULL);
+            BASS_WADSP_ChannelSetDSP(BASS::Wadsp, BASS::Stream, NULL);
+        }
+    }
 }
 
 void CPowerAudioPlayerDlg::ChangeVolumeSide()
@@ -170,6 +177,8 @@ void CPowerAudioPlayerDlg::Play(int Id)
         m_ttimesta.SetWindowTextW(BASS::TimeToString(BASS::ChannelBytes2Seconds(CPb::length)));
         m_playlist.SetItemState(Id, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
         m_playlist.EnsureVisible(Id, FALSE);
+        BASS_WADSP_ChannelSetDSP(BASS::Wadsp, BASS::Stream, NULL);
+        CPowerAudioPlayerDlg::CPowerAudioPlayerDlg::OnBnClickedCheck1();
     }
     else
     {
@@ -254,14 +263,17 @@ void CPowerAudioPlayerDlg::ConvertList(bool ReConvert)
     for (int i = 0; i < total; i++)
     {
         if (CPb::pl_isconvert[i] == TRUE && ReConvert == FALSE) continue;
-        HSTREAM STREAM = BASS_StreamCreateFile(FALSE, CPb::pl_path[i], NULL, NULL, NULL);
-        CPb::pl_title[i] = CPb::CharToLPCWSTR((char *)TAGS_Read(STREAM, "%IFV2(%ARTI,%ICAP(%ARTI),无艺术家) - %IFV2(%TITL,%ICAP(%TITL) ,无标题 ) %IFV1(%ALBM,%IUPC(- %ALBM))"));
-        if (CPb::pl_title[i] == _T("")) CPb::pl_title[i] = CPb::GetInPathFileName(CPb::pl_path[i]);
+        HSTREAM STREAM = (!CPb::IsUrl(CPb::pl_path[i]) ? BASS_StreamCreateFile(FALSE, CPb::pl_path[i], NULL, NULL, 256) : BASS_StreamCreateURL((char*)CPb::CStrToChar(CPb::pl_path[i]), 0, BASS_SAMPLE_FLOAT, NULL, NULL));
+        CString FMT = (CPb::set.spl_show_snum ? CPb::i2cs(i + 1) + _T(".") : NULL) + CPb::set.spl_title_format;
+        FMT.Replace(_T("%FILE"), CPb::GetInPathFileName(CPb::pl_path[i]));
+        CPb::pl_title[i] = CPb::CharToLPCWSTR((char*)TAGS_Read(STREAM, CPb::CStrToChar(FMT)));
+        if (CPb::pl_title[i] == _T("")) CPb::pl_title[i] = (CPb::set.spl_show_snum ? CPb::i2cs(i + 1) + _T(".") : NULL) + CPb::GetInPathFileName(CPb::pl_path[i]);
         CPb::pl_time[i] = BASS_ChannelBytes2Seconds(STREAM, BASS_ChannelGetLength(STREAM, 0));
         m_playlist.SetItemText(i, 0, CPb::pl_title[i]);
         m_playlist.SetItemText(i, 1, BASS::TimeToString(CPb::pl_time[i]));
         CPb::pl_isconvert[i] = TRUE;
         BASS_StreamFree(STREAM);
+        AfxPumpMessage();
     }
     CPb::ToConvertList = FALSE;
 }
@@ -311,7 +323,6 @@ void CPowerAudioPlayerDlg::LoadPlugins()
 void CPowerAudioPlayerDlg::BuildSFXList()
 {
     CString filepath = CPb::GetExeModuleDir();
-    //CString filename = _T("");
     CFileFind find;
     CString FindFiles[2] = { _T("\\sfx\\*.dll"), _T("\\sfx\\*.svp") };
     for(int j = 0; j < 2; ++j)
@@ -332,12 +343,30 @@ void CPowerAudioPlayerDlg::BuildSFXList()
     }
 }
 
+void CPowerAudioPlayerDlg::BuildDSPList()
+{
+    CString filepath = CPb::GetExeModuleDir();
+    CFileFind find;
+    bool IsFind = find.FindFile(filepath + "\\dsp\\*.dll");
+    while (IsFind)
+    {
+        IsFind = find.FindNextFile();
+        if (find.IsDots())
+        {
+            continue;
+        }
+        else
+        {
+            CPb::DSPs.push_back(_T(".\\dsp\\") + find.GetFileName());
+        }
+    }
+}
+
 // CPowerAudioPlayerDlg 消息处理程序
 
 BOOL CPowerAudioPlayerDlg::OnInitDialog()
 {
     CDialogEx::OnInitDialog();
-
     // 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
     //  执行此操作
     SetIcon(m_hBigIcon, TRUE);			// 设置大图标
@@ -346,9 +375,10 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
     // TODO: 在此添加额外的初始化代码
     if (!BASS_Init(-1, 44100, 0, 0, NULL))
     {
-        MessageBox(_T("初始化Bass失败"), NULL, MB_ICONERROR);
+        AfxMessageBox(_T("Initializing BASS failed with error code ") + CPb::i2cs(BASS::ErrorGetCode()));
         exit(-1);
     }
+    BASS_WADSP_Init(this->m_hWnd);
     SetTimer(TIMER_ALAWAYS, 400, NULL);
     m_playlist.InsertColumn(0, _T("标题"), LVCFMT_LEFT, 210);
     m_playlist.InsertColumn(1, _T("时间"), LVCFMT_LEFT, 50);
@@ -364,6 +394,7 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
     
     LoadPlugins();
     BuildSFXList();
+    BuildDSPList();
     LoadList();
     LoadSettings();
     return TRUE;
@@ -462,7 +493,6 @@ void CPowerAudioPlayerDlg::OnTimer(UINT_PTR nIDEvent)
                 }
                 case 3:         //随机播放
                 {
-                   // MessageBox();
                     Play(CPb::GetRand(0, CPb::pl_path.size()));
                     break;
                 }
@@ -538,14 +568,21 @@ void CPowerAudioPlayerDlg::OnBnClickedCheck1()
         m_volchk.SetIcon(m_hVolIcon);
         CPowerAudioPlayerDlg::ChangeVolumeSide();
     }
+    CPb::set.is_mute = m_volchk.GetCheck();
 }
 
 void CPowerAudioPlayerDlg::OnClose()
 {
     On32798();
     SaveList(NULL);
-    BASS_Free();
     CPb::WriteSettings();
+    if(BASS::Wadsp)
+    {
+        BASS_WADSP_Stop(BASS::Wadsp);
+        BASS_WADSP_FreeDSP(BASS::Wadsp); 
+    }
+    BASS_WADSP_Free();
+    BASS_Free();
     CDialogEx::OnClose();
 }
 
@@ -555,6 +592,7 @@ void CPowerAudioPlayerDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar *pScrol
     CWnd *pTimeSider = GetDlgItem(IDC_SLIDER2);
     if(pScrollBar == pVolumeSider)
     {
+        CPb::set.vol = m_volside.GetPos();
         ChangeVolumeSide();
     }
     else if (pScrollBar == pTimeSider)
@@ -665,7 +703,7 @@ void CPowerAudioPlayerDlg::On32784()
 
 void CPowerAudioPlayerDlg::On32794()
 {
-    CPb::ToConvertList = TRUE;
+    ConvertList(TRUE);
 }
 
 

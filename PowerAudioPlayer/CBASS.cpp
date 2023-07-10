@@ -2,6 +2,7 @@
 #include "CBASS.h"
 HSTREAM BASS::Stream = NULL;
 HSOUNDFONT BASS::SoundFont = NULL;
+HWADSP BASS::Wadsp = NULL;
 std::vector<HPLUGIN> BASS::PLUGINS;
 
 BASS::BASS()
@@ -235,24 +236,6 @@ BOOL BASS::ChannelSetPosition(QWORD pos, DWORD mode)
     return BASS_ChannelSetPosition(BASS::Stream, pos, mode);
 }
 
-const char* BASS::TAGS_Read(DWORD dwHandle, const char* fmt)
-{
-    BASS_CHANNELINFO* info{};
-    BASS_ChannelGetInfo(dwHandle, info);
-    const char* result = TAGS_Read(dwHandle, fmt);
-    BASS::replace_str((char *)result, (char)"%FILE", (char)info->filename);
-    return result;
-}
-
-const char* BASS::TAGS_ReadEx(DWORD dwHandle, const char* fmt, DWORD tagtype, int codepage)
-{
-    BASS_CHANNELINFO* info{};
-    BASS_ChannelGetInfo(dwHandle, info);
-    const char* result = TAGS_ReadEx(dwHandle, fmt, tagtype, codepage);
-    BASS::replace_str((char*)result, (char)"%FILE", (char)info->filename);
-    return result;
-}
-
 //
 CString BASS::i2cs(QWORD val)
 {
@@ -308,29 +291,4 @@ QWORD BASS::LengthFile(CString file, bool byte2sec)
     if (byte2sec) time = BASS_ChannelBytes2Seconds(Stream, time);
     BASS_StreamFree(STREAM);
     return time;
-}
-
-char* BASS::replace_str(char* text, char sp_ch, char re_ch)
-{
-    int len = strlen(text);
-
-    // 动态创建copy之后的字符创
-    char* copy = (char*)malloc(len + 1);
-
-    for (int i = 0; i < len; i++)
-    {
-        // 获取当前的char
-        char ch = text[i];
-        if (ch == sp_ch)
-            copy[i] = re_ch;
-        else
-            copy[i] = ch;
-    }
-    // 结束
-    copy[len] = 0;
-    // 赋值给传进来的字符串
-    strcpy(text, copy);
-    // 释放动态创建的内存
-    free(copy);
-    return text;
 }

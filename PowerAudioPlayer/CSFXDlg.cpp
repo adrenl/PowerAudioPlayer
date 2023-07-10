@@ -51,11 +51,11 @@ BOOL CSFXDlg::OnInitDialog()
     {
         m_sfx_select.InsertString(i + 1, CPb::GetInPathFileName(CPb::SFXs[i]));
     }
-    m_sfx_select.SetCurSel(CPb::set.sfx_id);
-
     m_vis_panel.GetClientRect(&rect);
     m_pVisDC = m_vis_panel.GetDC();
     BASS_SFX_Init(AfxGetApp()->m_hInstance, m_hWnd);
+    m_sfx_select.SetCurSel(CPb::set.sfx_id + 1);
+    CSFXDlg::OnCbnSelchangeSfxSelect();
     return TRUE;
 }
 
@@ -69,7 +69,7 @@ void CSFXDlg::PostNcDestroy()
 void CSFXDlg::OnCancel()
 {
     KillTimer(TIMER_SFX);
-    Sleep(20);
+    //Sleep(CPb::set.smain_sfx_render_elapse);
     ReleaseDC(m_pVisDC);
     BASS_SFX_Free();
     DestroyWindow();
@@ -81,9 +81,10 @@ void CSFXDlg::OnCbnSelchangeSfxSelect()
     int nIndex = m_sfx_select.GetCurSel();
     if(nIndex != 0)
     {
+        CPb::set.sfx_id = nIndex - 1;
         char *file = (char *)CPb::CStrToChar(CPb::SFXs[nIndex - 1]);
         KillTimer(TIMER_SFX);
-        Sleep(25);
+        //Sleep(CPb::set.smain_sfx_render_elapse);
         CString Title;
         if (hsfx)
             BASS_SFX_PluginFree(hsfx);
@@ -91,7 +92,7 @@ void CSFXDlg::OnCbnSelchangeSfxSelect()
         {
             BASS_SFX_PluginSetStream(hsfx, BASS::Stream);
             BASS_SFX_PluginStart(hsfx);
-            SetTimer(TIMER_SFX, 25, NULL);
+            SetTimer(TIMER_SFX, CPb::set.smain_sfx_render_elapse, NULL);
             Title.Format(_T("可视化效果 - %s"), CPb::CharToLPCWSTR(BASS_SFX_PluginGetName(hsfx)));
         }
         else
@@ -107,6 +108,7 @@ void CSFXDlg::OnCbnSelchangeSfxSelect()
             SetWindowText(_T("可视化效果"));
             BASS_SFX_PluginFree(hsfx);
             KillTimer(TIMER_SFX);
+            CPb::set.sfx_id = -1;
         }
     }
 }

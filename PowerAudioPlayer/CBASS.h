@@ -6,6 +6,7 @@ public:
     virtual ~BASS();
     static HSTREAM Stream;
     static HSOUNDFONT SoundFont;
+    static HWADSP Wadsp;
     static std::vector<HPLUGIN> PLUGINS;
     static DWORD GetConfig(DWORD option);
     static const void *GetConfigPtr(DWORD option);
@@ -51,13 +52,11 @@ public:
     static BOOL ChannelStop();
     static BOOL ChannelUpdate(DWORD length);
     static BOOL ChannelSetPosition(QWORD pos, DWORD mode);
-    static const char* TAGS_Read(DWORD dwHandle, const char* fmt);
-    static const char* TAGS_ReadEx(DWORD dwHandle, const char* fmt, DWORD tagtype, int codepage);
     //
     static void SetMidiSoundFont(CString file);
     static CString TimeToString(QWORD time);
     static QWORD LengthFile(CString file, bool byte2sec = TRUE);
 private:
     static CString i2cs(QWORD val);
-    static char* replace_str(char* text, char sp_ch, char re_ch);
+
 };

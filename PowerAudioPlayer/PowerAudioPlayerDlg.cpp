@@ -83,6 +83,9 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
     ON_COMMAND(ID_32803, &CPowerAudioPlayerDlg::On32803)
     ON_BN_CLICKED(IDC_BUTTON3, &CPowerAudioPlayerDlg::OnBnClickedButton3)
     ON_BN_CLICKED(IDC_BUTTON4, &CPowerAudioPlayerDlg::OnBnClickedButton4)
+    ON_COMMAND(ID_MENU_32785, &CPowerAudioPlayerDlg::OnMenu32785)
+    ON_COMMAND(ID_32778, &CPowerAudioPlayerDlg::On32778)
+    ON_COMMAND(ID_32781, &CPowerAudioPlayerDlg::On32781)
 END_MESSAGE_MAP()
 
 void CPowerAudioPlayerDlg::LoadSettings(bool isReload)
@@ -146,6 +149,8 @@ void CPowerAudioPlayerDlg::ChangePlayMode(int Mode, bool ChangeMenu_)
 
 void CPowerAudioPlayerDlg::Play(int Id)
 {
+    if (CPb::pl_path.size() == 0)
+        return;
     BASS::StreamFree();
     if (Id >= 0 && Id < CPb::pl_path.size())
     {
@@ -159,8 +164,15 @@ void CPowerAudioPlayerDlg::Play(int Id)
         }
         if (BASS::Stream == 0)
         {
-            Play(Id + 1);
-            m_playlist.SetItemText(Id, 0, _T("!!错误  - " + CPb::i2cs(BASS::ErrorGetCode()) + "!! ") + CPb::pl_title[Id]);
+            m_playlist.SetItemText(Id, 0, _T("!!错误!!") + CPb::pl_title[Id]);
+            if (Id + 1 < CPb::pl_path.size())
+            {
+                Play(Id + 1);
+            }
+            else
+            {
+                RestUI();
+            }
             return;
         }
         m_playlist.SetItemText(Id, 0,CPb::pl_title[Id]);
@@ -362,6 +374,16 @@ void CPowerAudioPlayerDlg::BuildDSPList()
     }
 }
 
+void CPowerAudioPlayerDlg::RestUI()
+{
+    m_infosta.SetWindowText(_T(VER_NAME));
+    m_ttimesta.SetWindowText(_T("00:00"));
+    m_ntimesta.SetWindowText(_T("00:00"));
+    m_timeside.SetPos(0);
+    m_playbtn.SetWindowTextW(_T("播放"));
+    m_playbtn.SetIcon(m_hPauseIcon);
+}
+
 // CPowerAudioPlayerDlg 消息处理程序
 
 BOOL CPowerAudioPlayerDlg::OnInitDialog()
@@ -475,7 +497,12 @@ void CPowerAudioPlayerDlg::OnTimer(UINT_PTR nIDEvent)
             switch (CPb::set.playmode) {
                 case 0:         //顺序播放
                 {
-                    CPowerAudioPlayerDlg::OnBnClickedButton4();
+                    //CPowerAudioPlayerDlg::OnBnClickedButton4();
+                    if (CPb::PlayId == CPb::pl_path.size())
+                    {
+                        BASS::ChannelFree();
+                        RestUI();
+                    }
                     break;
                 }
                 case 1:         //单曲循环
@@ -944,3 +971,30 @@ void CPowerAudioPlayerDlg::On32803()
     GetMenu()->GetSubMenu(0)->CheckMenuRadioItem(ID_32800, ID_32803, ID_32803, MF_BYCOMMAND);
 }
 
+void CPowerAudioPlayerDlg::OnMenu32785()
+{
+    int iSel = m_playlist.GetSelectionMark();
+    if (iSel != -1)
+    {
+        Play(iSel);
+    }
+}
+
+
+void CPowerAudioPlayerDlg::On32778()
+{
+    CString url;
+    if (CInputDlg::InputBox(_T("输入文件的URL\r\n例子：http://example.com/test.mp3"), NULL, NULL, url))
+    {
+        if (url != _T(""))
+        {
+            AddToList(url);
+        }
+    }
+}
+
+
+void CPowerAudioPlayerDlg::On32781()
+{
+    On32784();
+}

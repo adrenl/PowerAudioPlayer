@@ -5,6 +5,7 @@
 #pragma once
 #include "CSettingsDlg.h"
 #include "CSFXDlg.h"
+#include "CInputDlg.h"
 
 // CPowerAudioPlayerDlg 对话框
 class CPowerAudioPlayerDlg : public CDialogEx
@@ -70,6 +71,7 @@ public:
     void LoadPlugins();
     void BuildSFXList();
     void BuildDSPList();
+    void RestUI();
     afx_msg void OnBnClickedButton5();
     afx_msg void OnBnClickedButton1();
     afx_msg void OnBnClickedButton2();
@@ -102,4 +104,7 @@ public:
     afx_msg void On32803();
     afx_msg void OnBnClickedButton3();
     afx_msg void OnBnClickedButton4();
+    afx_msg void OnMenu32785();
+    afx_msg void On32778();
+    afx_msg void On32781();
 };

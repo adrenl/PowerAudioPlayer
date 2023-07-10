@@ -253,6 +253,7 @@
     <ClInclude Include="bass_sfx.h" />
     <ClInclude Include="BASS_WADSP.h" />
     <ClInclude Include="CBASS.h" />
+    <ClInclude Include="CInputDlg.h" />
     <ClInclude Include="CPublic.h" />
     <ClInclude Include="CSettingsDlg.h" />
     <ClInclude Include="CSFXDlg.h" />
@@ -268,6 +269,7 @@
     <ClCompile Include="CBASS.cpp">
       <FileType>CppCode</FileType>
     </ClCompile>
+    <ClCompile Include="CInputDlg.cpp" />
     <ClCompile Include="CPublic.cpp" />
     <ClCompile Include="CSettingsDlg.cpp" />
     <ClCompile Include="CSFXDlg.cpp" />

@@ -29,7 +29,7 @@ struct Settings
     bool smain_allow_drag = TRUE;
     int smain_sfx_render_elapse = 20;
     //---
-    CString spl_title_format =_T("%IFV2(%ARTI,%ICAP(%ARTI),无艺术家) - %IFV2(%TITL,%ICAP(%TITL) ,无标题 ) %IFV1(%ALBM,%IUPC(- %ALBM))");
+    CString spl_title_format =_T("%IFV2(%TITL,%IFV2(%TITL,%TITL,无标题) - %IFV2(%ARTI,%ARTI,无艺术家)%IFV1(%ALBM, - %ALBM),%FILE)");
     bool spl_show_snum = TRUE;
     //---
     CString smidi_sf_path = _T("");

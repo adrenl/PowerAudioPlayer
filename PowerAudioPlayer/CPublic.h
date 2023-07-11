@@ -9,6 +9,7 @@
 #define TASKBARBTN_STOP		2001
 #define TASKBARBTN_BACK		2002
 #define TASKBARBTN_NEXT		2003
+#define WM_MSG_CMD          WM_USER + 1
 #include <vector>
 #include <string>
 #include <fstream>
@@ -48,6 +49,7 @@ public:
     static std::vector<CString> pl_title;
     static std::vector<int> pl_time;
     static std::vector<bool> pl_isconvert;
+    static int pl_totaltime;
     static std::vector<CString> SFXs;
     static std::vector<CString> DSPs;
     static std::vector<CString> support_exts;

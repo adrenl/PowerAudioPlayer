@@ -13,7 +13,11 @@
 #define new DEBUG_NEW
 #endif
 
-
+static UINT indicators[] =    //指定状态栏上三个元素的ID  
+{
+    IDS_SBAR_COUNT,
+    IDS_SBAR_TOTALTIME
+};
 // CPowerAudioPlayerDlg 对话框
 
 CPowerAudioPlayerDlg::CPowerAudioPlayerDlg(CWnd *pParent /*=nullptr*/)
@@ -86,11 +90,15 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
     ON_COMMAND(ID_32778, &CPowerAudioPlayerDlg::On32778)
     ON_COMMAND(ID_32781, &CPowerAudioPlayerDlg::On32781)
     ON_WM_DROPFILES()
+    ON_MESSAGE(WM_MSG_CMD, &CPowerAudioPlayerDlg::OnMsg)
+    ON_COMMAND(ID_32805, &CPowerAudioPlayerDlg::On32805)
 END_MESSAGE_MAP()
 
 void CPowerAudioPlayerDlg::LoadSettings(bool isReload)
 {
     CPb::ReadSettings();
+    if (CPb::set.smain_rem_pl_location)
+        m_playlist.EnsureVisible(CPb::set.pl_location, TRUE);
     m_volside.SetPos(CPb::set.vol);
     m_volchk.SetCheck(CPb::set.is_mute);
     CPowerAudioPlayerDlg::CPowerAudioPlayerDlg::OnBnClickedCheck1();
@@ -189,8 +197,8 @@ void CPowerAudioPlayerDlg::Play(int Id)
         m_playbtn.SetIcon(m_hPlayIcon);
         m_infosta.SetWindowTextW(CPb::pl_title[Id]);
         m_ttimesta.SetWindowTextW(BASS::TimeToString(BASS::ChannelBytes2Seconds(CPb::length)));
-        m_playlist.SetItemState(Id, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
-        m_playlist.EnsureVisible(Id, FALSE);
+        //m_playlist.SetItemState(Id, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
+        m_playlist.EnsureVisible(Id, TRUE);
     }
     else
     {
@@ -212,10 +220,13 @@ void CPowerAudioPlayerDlg::AddToList(CString Path, CString Title, int Time, bool
 
 void CPowerAudioPlayerDlg::DelToList(int Id)
 {
+    CPb::pl_totaltime = CPb::pl_totaltime - CPb::pl_time[Id];
     CPb::pl_path.erase(CPb::pl_path.begin() + Id);
     CPb::pl_title.erase(CPb::pl_title.begin() + Id);
     CPb::pl_time.erase(CPb::pl_time.begin() + Id);
     CPb::pl_isconvert.erase(CPb::pl_isconvert.begin() + Id);
+    m_Statusbar.SetPaneText(0, CPb::i2cs(CPb::pl_path.size()));
+    m_Statusbar.SetPaneText(1, BASS::TimeToString(CPb::pl_totaltime));
 }
 
 void CPowerAudioPlayerDlg::CleanList()
@@ -225,6 +236,9 @@ void CPowerAudioPlayerDlg::CleanList()
     CPb::pl_path.clear();
     CPb::pl_time.clear();
     CPb::pl_isconvert.clear();
+    CPb::pl_totaltime = 0;
+    m_Statusbar.SetPaneText(0, _T("0"));
+    m_Statusbar.SetPaneText(1, _T("00:00"));
 }
 
 void CPowerAudioPlayerDlg::SaveList(CString Path)
@@ -263,14 +277,20 @@ void CPowerAudioPlayerDlg::LoadList(CString Path)
             int nTime = root[i]["time"].asInt();
             bool nIsConvert = root[i]["isconvert"].asBool();
             AddToList(nPath, nTitle, nTime, nIsConvert);
+            CPb::pl_totaltime += nTime;
         }
+        m_Statusbar.SetPaneText(0, CPb::i2cs(CPb::pl_path.size()));
+        m_Statusbar.SetPaneText(1, BASS::TimeToString(CPb::pl_totaltime));
     }
     in.close();
 }
 
 void CPowerAudioPlayerDlg::ConvertList(bool ReConvert)
 {
-    if (CPb::pl_path.size() == 0) return;
+    if(CPb::pl_path.size() == 0) 
+        return;
+    if (ReConvert)
+        CPb::pl_totaltime = 0;
     int total = CPb::pl_path.size();
     for (int i = 0; i < total; i++)
     {
@@ -281,12 +301,14 @@ void CPowerAudioPlayerDlg::ConvertList(bool ReConvert)
         CPb::pl_title[i] = CPb::CharToLPCWSTR((char*)TAGS_Read(STREAM, CPb::CStrToChar(FMT)));
         if (CPb::pl_title[i] == _T("")) CPb::pl_title[i] = (CPb::set.spl_show_snum ? CPb::i2cs(i + 1) + _T(".") : NULL) + CPb::GetInPathFileName(CPb::pl_path[i]);
         CPb::pl_time[i] = BASS_ChannelBytes2Seconds(STREAM, BASS_ChannelGetLength(STREAM, 0));
+        CPb::pl_totaltime += CPb::pl_time[i];
         m_playlist.SetItemText(i, 0, CPb::pl_title[i]);
         m_playlist.SetItemText(i, 1, BASS::TimeToString(CPb::pl_time[i]));
         CPb::pl_isconvert[i] = TRUE;
         BASS_StreamFree(STREAM);
+        m_Statusbar.SetPaneText(1, BASS::TimeToString(CPb::pl_totaltime));
         AfxPumpMessage();
-    }
+    }m_Statusbar.SetPaneText(0, CPb::i2cs(CPb::pl_path.size()));
     CPb::ToConvertList = FALSE;
 }
 
@@ -422,6 +444,33 @@ void CPowerAudioPlayerDlg::CmdLineHandle(LPTSTR CmdLine)
     }
 }
 
+void CPowerAudioPlayerDlg::FindFiles(CString strPath, CString ext)
+{
+    CFileFind hFileFind;
+    strPath += _T("\\") + ext;
+    BOOL bWorking = hFileFind.FindFile(strPath, 0);
+    while (bWorking)
+    {
+        bWorking = hFileFind.FindNextFile();
+        if (hFileFind.IsDirectory() && !hFileFind.IsDots())
+        {
+            FindFiles(hFileFind.GetFilePath(), ext);
+        }
+        else
+        { 
+            /*CString FileName = CPb::GetInPathFileName(hFileFind.GetFilePath());
+            CString ext1 = _T("*.") + FileName.Right(FileName.GetLength() - FileName.ReverseFind('.') - 1);
+            if (ext == ext1.MakeLower())
+            {
+                AddToList(hFileFind.GetFilePath()); 
+            }*/
+            AddToList(hFileFind.GetFilePath());
+            m_FindFileStatic->SetWindowText(_T("寻找文件...\r\n") + hFileFind.GetFilePath());
+        }
+        AfxPumpMessage();
+    }
+    hFileFind.Close();
+}
 // CPowerAudioPlayerDlg 消息处理程序
 
 BOOL CPowerAudioPlayerDlg::OnInitDialog()
@@ -443,6 +492,19 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
     m_playlist.InsertColumn(0, _T("标题"), LVCFMT_LEFT, 210);
     m_playlist.InsertColumn(1, _T("时间"), LVCFMT_LEFT, 50);
     m_playlist.SetExtendedStyle(m_playlist.GetExtendedStyle() | LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
+
+    m_Statusbar.Create(this);
+    m_Statusbar.SetIndicators(indicators, sizeof(indicators) / sizeof(UINT));
+    CRect rect;//,rectBar;
+    GetWindowRect(&rect);
+    m_Statusbar.SetPaneInfo(0, IDS_SBAR_COUNT, SBPS_NORMAL, rect.Width() / 2);
+    m_Statusbar.SetPaneInfo(1, IDS_SBAR_TOTALTIME, SBPS_NORMAL, rect.Width() / 2);
+    m_Statusbar.SetPaneText(0, _T("0"));
+    m_Statusbar.SetPaneText(1, _T("00:00"));
+    RepositionBars(AFX_IDW_CONTROLBAR_FIRST, AFX_IDW_CONTROLBAR_LAST, 0);
+    //m_Statusbar.GetWindowRect(&rectBar);
+    //SetWindowPos(this, 0, 0, rect.Width(), rect.Height() + rectBar.Height(), SWP_NOMOVE | SWP_NOZORDER);
+
 
     m_playbtn.SetIcon(m_hPauseIcon);
     m_stopbtn.SetIcon(m_hStopIcon);
@@ -647,6 +709,8 @@ void CPowerAudioPlayerDlg::OnClose()
     }
     BASS_WADSP_Free();
     BASS_Free();
+    HANDLE hself = GetCurrentProcess();
+    TerminateProcess(hself, 0);
     CDialogEx::OnClose();
 }
 
@@ -674,10 +738,11 @@ void CPowerAudioPlayerDlg::OnHScroll(UINT nSBCode, UINT nPos, CScrollBar *pScrol
 void CPowerAudioPlayerDlg::OnNMDblclkList1(NMHDR *pNMHDR, LRESULT *pResult)
 {
     LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-    int iSel = m_playlist.GetSelectionMark();
-    if (iSel != -1)
+    int nIndex = m_playlist.GetSelectionMark();
+    if (nIndex != -1)
     {
-        Play(iSel);
+        CPb::set.pl_location = nIndex;
+        Play(nIndex);
     }
     *pResult = 0;
 }
@@ -1042,7 +1107,7 @@ void CPowerAudioPlayerDlg::OnDropFiles(HDROP hDropInfo)
         {
             CString FileName = CPb::GetInPathFileName(filepath);
             CString ext = FileName.Right(FileName.GetLength() - FileName.ReverseFind('.') - 1);
-;            if (CPb::IsInVectorCString(CPb::support_exts, _T("*.") + ext.MakeLower()))
+            if (CPb::IsInVectorCString(CPb::support_exts, _T("*.") + ext.MakeLower()))
             {
                 AddToList(filepath);
             }
@@ -1050,4 +1115,54 @@ void CPowerAudioPlayerDlg::OnDropFiles(HDROP hDropInfo)
     }
     CPb::ToConvertList = TRUE;
     CDialogEx::OnDropFiles(hDropInfo);
+}
+
+LRESULT CPowerAudioPlayerDlg::OnMsg(WPARAM wParam, LPARAM lParam)
+{
+    if (wParam == 1000) 
+    {
+        LPTSTR Command = (LPTSTR)(LPCTSTR)theApp.GetProfileStringW(_T("MsgPass"), _T("Command"));
+        CmdLineHandle(Command);
+    }
+    return LRESULT();
+}
+
+
+void CPowerAudioPlayerDlg::On32805()
+{
+    /*BROWSEINFO bi;
+    ZeroMemory(&bi, sizeof(BROWSEINFO));
+    bi.hwndOwner = m_hWnd;
+    bi.ulFlags = BIF_RETURNONLYFSDIRS;
+    bi.lpszTitle = _T("选择欲添加的文件夹");
+    LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
+    BOOL bRet = FALSE;
+    TCHAR szFolder[MAX_PATH * 2];
+    szFolder[0] = _T('/0');
+    if (pidl)
+    {
+        if (SHGetPathFromIDList(pidl, szFolder))
+            bRet = TRUE;
+        IMalloc* pMalloc = NULL;
+        if (SUCCEEDED(SHGetMalloc(&pMalloc)) && pMalloc)
+        {
+            pMalloc->Free(pidl);
+            pMalloc->Release();
+        }
+    }
+    if (szFolder)
+    {
+        CRect rect;
+        GetClientRect(rect);
+        m_FindFileStatic = new CStatic();
+        m_FindFileStatic->ModifyStyle(0, SS_LEFTNOWORDWRAP);
+        m_FindFileStatic->Create(_T("寻找文件..."), WS_CHILD | WS_VISIBLE | SS_CENTER, CRect(0, 0, rect.Width(), rect.Height()), this);
+        for (int i = 0; i < CPb::support_exts.size(); ++i)
+        {
+            FindFiles(szFolder, CPb::support_exts[i]);
+        }
+        CPb::ToConvertList = TRUE;
+        delete m_FindFileStatic;
+    }
+*/
 }

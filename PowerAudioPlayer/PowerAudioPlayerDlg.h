@@ -73,6 +73,7 @@ public:
     void BuildDSPList();
     void RestUI();
     void CmdLineHandle(LPTSTR CmdLine = NULL);
+    void FindFiles(CString strPath, CString ext);
     afx_msg void OnBnClickedButton5();
     afx_msg void OnBnClickedButton1();
     afx_msg void OnBnClickedButton2();
@@ -108,4 +109,8 @@ public:
     afx_msg void On32778();
     afx_msg void On32781();
     afx_msg void OnDropFiles(HDROP hDropInfo);
+    afx_msg LRESULT OnMsg(WPARAM wParam, LPARAM lParam);
+    afx_msg void On32805();
+    CStatic* m_FindFileStatic;
+    CStatusBar  m_Statusbar;
 };

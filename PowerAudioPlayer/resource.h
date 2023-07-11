@@ -9,11 +9,13 @@
 #define IDS_FILTER_ALL                  134
 #define IDS_FILTER_PAPPL                135
 #define IDS_FILTER_SKIN                 136
+#define IDS_SBAR_COUNT                  136
 #define IDD_SETTINGS                    137
 #define IDS_DESCRIBE_TITLE              137
 #define IDS_BASIC_EXTS                  138
 #define IDS_BASIC_EXTS_NAME             139
 #define IDR_MAINMENU                    140
+#define IDS_SBAR_TOTALTIME              140
 #define IDS_FILTER_SF                   143
 #define IDD_SFXDLG                      144
 #define IDI_BIG                         147
@@ -87,13 +89,14 @@
 #define ID_32802                        32802
 #define ID_32803                        32803
 #define ID_C                            32804
+#define ID_32805                        32805
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        193
-#define _APS_NEXT_COMMAND_VALUE         32805
+#define _APS_NEXT_COMMAND_VALUE         32806
 #define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

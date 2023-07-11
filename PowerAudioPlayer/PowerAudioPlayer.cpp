@@ -39,22 +39,35 @@ CPowerAudioPlayerApp theApp;
 
 BOOL CPowerAudioPlayerApp::InitInstance()
 {
-    m_hMutex = CreateMutex(NULL, FALSE, _T("796e4e47004fb11d00809d22b8890781"));
+    SetRegistryKey(_T("PowerAudioPlayer"));
+    m_hMutex = CreateMutex(NULL, TRUE, _T("PowerAudioPlayer"));
+    if (m_hMutex == NULL)
+    {
+        return FALSE;
+    }
     if (GetLastError() == ERROR_ALREADY_EXISTS)
     {
-        CWnd* pDesktopWnd = CWnd::GetDesktopWindow();
-        CWnd* pWnd = pDesktopWnd->GetWindow(GW_CHILD);
-        while (pWnd != NULL)
+        HWND hProgramWnd = ::FindWindow(NULL, _T("PowerAudioPlayer"));
+        if (hProgramWnd)
         {
-            if (::GetProp(pWnd->m_hWnd, m_pszExeName))
+            WINDOWPLACEMENT* pWndpl = NULL;
+            WINDOWPLACEMENT   wpm;
+            pWndpl = &wpm;
+            GetWindowPlacement(hProgramWnd, &wpm);
+            if (pWndpl)
             {
-                pWnd->SetForegroundWindow();
-                break;
+                pWndpl->showCmd = SW_SHOWNORMAL;
+                ::SetWindowPlacement(hProgramWnd, pWndpl);
+                SetWindowPos(hProgramWnd, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE);
+                SetForegroundWindow(hProgramWnd);
+                theApp.WriteProfileString(_T("MsgPass"), _T("Command"), GetCommandLine());
+                SendMessage(hProgramWnd, WM_MSG_CMD, 1000, 0);
             }
-            pWnd = pWnd->GetWindow(GW_HWNDNEXT);
         }
-        AfxMessageBox(_T("已经有一个实例在运行了"));
+        CloseHandle(m_hMutex);
+        m_hMutex = NULL;
         return FALSE;
+
     }
 
     AddDllDirectory(_T(".\\plugins"));
@@ -92,7 +105,6 @@ BOOL CPowerAudioPlayerApp::InitInstance()
     // 更改用于存储设置的注册表项
     // TODO: 应适当修改该字符串，
     // 例如修改为公司或组织名
-    //SetRegistryKey(_T("PowerAudioPlayer"));
     CPowerAudioPlayerDlg dlg;
     m_pMainWnd = &dlg;
     INT_PTR nResponse = dlg.DoModal();
@@ -100,15 +112,13 @@ BOOL CPowerAudioPlayerApp::InitInstance()
     {
         // TODO: 在此放置处理何时用
         //  “确定”来关闭对话框的代码
-        HANDLE hself = GetCurrentProcess();
-        TerminateProcess(hself, 0);
+
     }
     else if (nResponse == IDCANCEL)
     {
         // TODO: 在此放置处理何时用
         //  “取消”来关闭对话框的代码
-        HANDLE hself = GetCurrentProcess();
-        TerminateProcess(hself, 0);
+
     }
     else if (nResponse == -1)
     {

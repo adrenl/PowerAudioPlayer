@@ -9,6 +9,7 @@ std::vector<CString> CPb::pl_path;
 std::vector<CString> CPb::pl_title;
 std::vector<int> CPb::pl_time;
 std::vector<bool> CPb::pl_isconvert;
+int CPb::pl_totaltime = 0;
 std::vector<CString> CPb::SFXs;
 std::vector<CString> CPb::DSPs;
 std::vector<CString> CPb::support_exts = {_T("*.mp3"), _T("*.mp2"), _T("*.mp1"), _T("*.ogg"), _T("*.wav"), _T("*.mp3"), _T("*.aiff") };

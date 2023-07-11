@@ -53,7 +53,7 @@ BOOL CPowerAudioPlayerApp::InitInstance()
             }
             pWnd = pWnd->GetWindow(GW_HWNDNEXT);
         }
-        MessageBox(NULL, _T("已经有一个实例在运行了"), _T("提示"), MB_OK);
+        AfxMessageBox(_T("已经有一个实例在运行了"));
         return FALSE;
     }
 
@@ -100,11 +100,15 @@ BOOL CPowerAudioPlayerApp::InitInstance()
     {
         // TODO: 在此放置处理何时用
         //  “确定”来关闭对话框的代码
+        HANDLE hself = GetCurrentProcess();
+        TerminateProcess(hself, 0);
     }
     else if (nResponse == IDCANCEL)
     {
         // TODO: 在此放置处理何时用
         //  “取消”来关闭对话框的代码
+        HANDLE hself = GetCurrentProcess();
+        TerminateProcess(hself, 0);
     }
     else if (nResponse == -1)
     {

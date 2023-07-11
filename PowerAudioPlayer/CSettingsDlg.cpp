@@ -61,13 +61,12 @@ BOOL CSettingsDlg::OnInitDialog()
     CMFCPropertyGridProperty *g0Props[] =
     {
         new CMFCPropertyGridProperty(_T("记忆播放位置"), PropertyGridPropertyOutputTrueOrFalse(CPb::set.smain_rem_pl_location), _T("启动时列表是否跳到上次播放位置")),
-        new CMFCPropertyGridProperty(_T("接收文件拖放"), PropertyGridPropertyOutputTrueOrFalse(CPb::set.smain_allow_drag), _T("是否接收文件拖放")),
         new CMFCPropertyGridProperty(_T("可视化效果刷新周期"), (_variant_t)CPb::set.smain_sfx_render_elapse, _T("设置可视化效果每次刷新时的间隔，单位为毫秒，越小的值会获得更流畅的效果，但也会占用更多资源。你必须重新打开可视化效果窗口才能看到所做更改"), NULL, NULL, NULL, _T("0123456789")),
     };
     g0Props[3]->EnableSpinControl(TRUE, 1, 1000);
     MFCPropertyGridPropertyMakeTrueOrFalse(g0Props[0]);
     MFCPropertyGridPropertyMakeTrueOrFalse(g0Props[1]);
-    for (int i = 0; i < 3; ++i)
+    for (int i = 0; i < 2; ++i)
     {
         Groups[0]->AddSubItem(g0Props[i]);
     }
@@ -258,11 +257,6 @@ void CSettingsDlg::OnBnClickedOkbtn()
                         }
                         case 1:
                         {
-                            CPb::set.smain_allow_drag = TXTTrueOrFalseToBool(value);
-                            break;
-                        }
-                        case 2:
-                        {
                             CPb::set.smain_sfx_render_elapse = (_variant_t)value;
                             break;
                         }
@@ -310,7 +304,7 @@ void CSettingsDlg::OnBnClickedOkbtn()
                 }
                 else
                 {
-                    for (int k = 0; k < CPb::DSPs.size(); ++k) 
+                    for (int k = 0; k < CPb::DSPs.size(); ++k)
                     {
                         if (CPb::GetInPathFileName(CPb::DSPs[k]) == value)
                         {

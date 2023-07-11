@@ -1,14 +1,13 @@
 {
-   "dsp_id" : 0,
+   "dsp_id" : -1,
    "is_mute" : false,
    "pl_location" : -1,
-   "playmode" : 2,
-   "sfx_id" : 4,
-   "smain_allow_drag" : true,
+   "playmode" : 1,
+   "sfx_id" : 35,
    "smain_rem_pl_location" : true,
-   "smain_sfx_render_elapse" : 20,
+   "smain_sfx_render_elapse" : 1,
    "smidi_sf_path" : "D:\\程序\\SF2\\gm.sf2",
    "spl_show_snum" : true,
    "spl_title_format" : "%IFV2(%TITL,%IFV2(%TITL,%TITL,无标题) - %IFV2(%ARTI,%ARTI,无艺术家)%IFV1(%ALBM, - %ALBM),%FILE)",
-   "vol" : 80
+   "vol" : 20
 }

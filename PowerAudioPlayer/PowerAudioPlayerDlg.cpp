@@ -71,7 +71,6 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
     ON_COMMAND(ID_32779, &CPowerAudioPlayerDlg::On32779)
     ON_COMMAND(ID_32784, &CPowerAudioPlayerDlg::On32784)
     ON_COMMAND(ID_32794, &CPowerAudioPlayerDlg::On32794)
-    ON_COMMAND(ID_32777, &CPowerAudioPlayerDlg::On32777)
     ON_COMMAND(ID_MENU_32786, &CPowerAudioPlayerDlg::OnMenu32786)
     ON_COMMAND(ID_MENU_32795, &CPowerAudioPlayerDlg::OnMenu32795)
     ON_COMMAND(ID_32797, &CPowerAudioPlayerDlg::On32797)
@@ -86,6 +85,7 @@ BEGIN_MESSAGE_MAP(CPowerAudioPlayerDlg, CDialogEx)
     ON_COMMAND(ID_MENU_32785, &CPowerAudioPlayerDlg::OnMenu32785)
     ON_COMMAND(ID_32778, &CPowerAudioPlayerDlg::On32778)
     ON_COMMAND(ID_32781, &CPowerAudioPlayerDlg::On32781)
+    ON_WM_DROPFILES()
 END_MESSAGE_MAP()
 
 void CPowerAudioPlayerDlg::LoadSettings(bool isReload)
@@ -178,19 +178,19 @@ void CPowerAudioPlayerDlg::Play(int Id)
         m_playlist.SetItemText(Id, 0,CPb::pl_title[Id]);
         CPb::length = BASS::ChannelGetLength(0);
         BASS::ChannelPlay(FALSE);
+        BASS_WADSP_ChannelSetDSP(BASS::Wadsp, BASS::Stream, NULL);
+        CPowerAudioPlayerDlg::CPowerAudioPlayerDlg::OnBnClickedCheck1();
         SetTimer(TIMER_PLAYING, 200, NULL);
-        CPowerAudioPlayerDlg::ChangeVolumeSide();
+        CPowerAudioPlayerDlg::ChangeVolumeSide();        
+        CPb::PlayId = Id;
         m_timeside.SetRange(0, CPb::length);
         m_timeside.SetPos(0);
-        CPb::PlayId = Id;
         m_playbtn.SetWindowTextW(_T("暂停"));
         m_playbtn.SetIcon(m_hPlayIcon);
         m_infosta.SetWindowTextW(CPb::pl_title[Id]);
         m_ttimesta.SetWindowTextW(BASS::TimeToString(BASS::ChannelBytes2Seconds(CPb::length)));
         m_playlist.SetItemState(Id, LVIS_SELECTED | LVIS_FOCUSED, LVIS_SELECTED | LVIS_FOCUSED);
         m_playlist.EnsureVisible(Id, FALSE);
-        BASS_WADSP_ChannelSetDSP(BASS::Wadsp, BASS::Stream, NULL);
-        CPowerAudioPlayerDlg::CPowerAudioPlayerDlg::OnBnClickedCheck1();
     }
     else
     {
@@ -294,6 +294,7 @@ void CPowerAudioPlayerDlg::LoadPlugins()
 {
     CString filepath = CPb::GetExeModuleDir();
     CString filename = _T("");
+    CString AllFile, OtherFile;
     CFileFind find;
     BOOL IsFind = find.FindFile(filepath + _T("\\plugins\\*.dll"));
     while (IsFind)
@@ -313,23 +314,37 @@ void CPowerAudioPlayerDlg::LoadPlugins()
     CString Basic_exts;
     Basic_name.LoadStringW(IDS_BASIC_EXTS_NAME);
     Basic_exts.LoadStringW(IDS_BASIC_EXTS);
-    CPb::SFF.Format(_T("%s(%s)|%s"), Basic_name, Basic_exts, Basic_exts);
+    AllFile.Format(_T("所有支持的文件|%s"), Basic_exts);
+    OtherFile.Format(_T("%s(%s)|%s"), Basic_name, Basic_exts, Basic_exts);
     CString Name = _T("");
     CString Exts = _T("");
     CString Add = _T("");
+    std::vector<CString> _temp;
     for (int i = 0; i < BASS::PLUGINS.size(); ++i)
     {
-        const BASS_PLUGININFO *info = BASS::PluginGetInfo(i);
+        const BASS_PLUGININFO* info = BASS::PluginGetInfo(i);
         if (info)
         {
-            if (info->formats->name) Name = CPb::CharToLPCWSTR((char *)info->formats->name);
-            if (info->formats->exts) Exts = CPb::CharToLPCWSTR((char *)info->formats->exts);
+            if (info->formats->name) Name = CPb::CharToLPCWSTR((char*)info->formats->name);
+            if (info->formats->exts) Exts = CPb::CharToLPCWSTR((char*)info->formats->exts);
+            _temp.push_back(Exts);
             Add.Format(_T("|%s(%s)|%s"), Name, Exts, Exts);
-            CPb::SFF += Add;
+            OtherFile += Add;
+            AllFile += _T(";") + Exts;
         }
     }
     LoadStr.LoadStringW(IDS_FILTER_ALL);
-    CPb::SFF += _T("|") + LoadStr;
+    CPb::SFF = AllFile + _T("|") + OtherFile + _T("|") + LoadStr;
+        
+    CStringArray StrArray;
+    for(int i=0;i<_temp.size();++i)
+    {
+        CPb::split(_temp[i], *";", StrArray);
+        for (int j = 0; j < StrArray.GetCount(); ++j)
+        {
+            CPb::support_exts.push_back(StrArray[j]);
+        }
+    }
 }
 
 void CPowerAudioPlayerDlg::BuildSFXList()
@@ -384,6 +399,29 @@ void CPowerAudioPlayerDlg::RestUI()
     m_playbtn.SetIcon(m_hPauseIcon);
 }
 
+void CPowerAudioPlayerDlg::CmdLineHandle(LPTSTR CmdLine)
+{
+    LPTSTR cmd;
+    if (CmdLine == NULL)
+        cmd = ::GetCommandLine();
+    else
+        cmd = CmdLine;
+    int argc = 0;
+    WCHAR* const* argv;
+    argv = ::CommandLineToArgvW(cmd, &argc);
+    for(int i = 0;i < argc;++i)
+    {
+        if (i == 0)
+            continue;
+        CString FileName = CPb::GetInPathFileName(argv[i]);
+        CString ext = FileName.Right(FileName.GetLength() - FileName.ReverseFind('.') - 1);
+        if (CPb::IsInVectorCString(CPb::support_exts, _T("*.") + ext.MakeLower()))
+        {
+            AddToList(argv[i]);
+        }
+    }
+}
+
 // CPowerAudioPlayerDlg 消息处理程序
 
 BOOL CPowerAudioPlayerDlg::OnInitDialog()
@@ -413,19 +451,18 @@ BOOL CPowerAudioPlayerDlg::OnInitDialog()
     m_listbtn.SetIcon(m_hListIcon);
     m_volchk.SetIcon(m_hVolIcon);
 
-    
     LoadPlugins();
     BuildSFXList();
     BuildDSPList();
     LoadList();
     LoadSettings();
+    CmdLineHandle();
     return TRUE;
 }
 
 LRESULT CPowerAudioPlayerDlg::OnKickIdle(WPARAM wParam, LPARAM lParam)
 {
     int Active = BASS::ChannelIsActive();
-
     if (Active == 1)
     {
         UpdateThumbarButton(this->m_hWnd, FALSE);
@@ -497,11 +534,14 @@ void CPowerAudioPlayerDlg::OnTimer(UINT_PTR nIDEvent)
             switch (CPb::set.playmode) {
                 case 0:         //顺序播放
                 {
-                    //CPowerAudioPlayerDlg::OnBnClickedButton4();
                     if (CPb::PlayId == CPb::pl_path.size())
                     {
                         BASS::ChannelFree();
                         RestUI();
+                    }
+                    else
+                    {
+                        CPowerAudioPlayerDlg::OnBnClickedButton4();
                     }
                     break;
                 }
@@ -512,10 +552,7 @@ void CPowerAudioPlayerDlg::OnTimer(UINT_PTR nIDEvent)
                 }
                 case 2:         //列表循环
                 {
-                    if (CPb::PlayId == CPb::pl_path.size())
-                    {
-                        Play(0);
-                    }
+                    CPowerAudioPlayerDlg::OnBnClickedButton4();
                     break;
                 }
                 case 3:         //随机播放
@@ -683,7 +720,7 @@ void CPowerAudioPlayerDlg::On32783()
 void CPowerAudioPlayerDlg::On32782()
 {
     LoadStr.LoadStringW(IDS_FILTER_PAPPL);
-    CFileDialog Dlg(FALSE, NULL, _T("json"), 0, LoadStr, this);
+    CFileDialog Dlg(FALSE, _T("json"), NULL, 0, LoadStr, this);
     CString FilePath;
     if (Dlg.DoModal() == IDOK)
     {
@@ -731,12 +768,6 @@ void CPowerAudioPlayerDlg::On32784()
 void CPowerAudioPlayerDlg::On32794()
 {
     ConvertList(TRUE);
-}
-
-
-void CPowerAudioPlayerDlg::On32777()
-{
-    CleanList();
 }
 
 
@@ -989,6 +1020,7 @@ void CPowerAudioPlayerDlg::On32778()
         if (url != _T(""))
         {
             AddToList(url);
+            CPb::ToConvertList = TRUE;
         }
     }
 }
@@ -997,4 +1029,25 @@ void CPowerAudioPlayerDlg::On32778()
 void CPowerAudioPlayerDlg::On32781()
 {
     On32784();
+}
+
+
+void CPowerAudioPlayerDlg::OnDropFiles(HDROP hDropInfo)
+{
+    int count_droppedfile = DragQueryFile(hDropInfo, 0xFFFFFFFF, NULL, 0);
+    for (int i = 0; i < count_droppedfile; ++i)
+    {
+        wchar_t filepath[MAX_PATH] = { 0 };
+        if (DragQueryFile(hDropInfo, i, filepath, MAX_PATH) > 0)
+        {
+            CString FileName = CPb::GetInPathFileName(filepath);
+            CString ext = FileName.Right(FileName.GetLength() - FileName.ReverseFind('.') - 1);
+;            if (CPb::IsInVectorCString(CPb::support_exts, _T("*.") + ext.MakeLower()))
+            {
+                AddToList(filepath);
+            }
+        }
+    }
+    CPb::ToConvertList = TRUE;
+    CDialogEx::OnDropFiles(hDropInfo);
 }

@@ -11,6 +11,7 @@ std::vector<int> CPb::pl_time;
 std::vector<bool> CPb::pl_isconvert;
 std::vector<CString> CPb::SFXs;
 std::vector<CString> CPb::DSPs;
+std::vector<CString> CPb::support_exts = {_T("*.mp3"), _T("*.mp2"), _T("*.mp1"), _T("*.ogg"), _T("*.wav"), _T("*.mp3"), _T("*.aiff") };
 Settings CPb::set;
 CPb::CPb()
 {
@@ -96,24 +97,18 @@ LPCWSTR CPb::CharToLPCWSTR(char *szStr)
 char* CPb::replace_str(char* text, char sp_ch, char re_ch)
 {
     int len = strlen(text);
-
-    // 动态创建copy之后的字符创
     char* copy = (char*)malloc(len + 1);
 
     for (int i = 0; i < len; i++)
     {
-        // 获取当前的char
         char ch = text[i];
         if (ch == sp_ch)
             copy[i] = re_ch;
         else
             copy[i] = ch;
     }
-    // 结束
     copy[len] = 0;
-    // 赋值给传进来的字符串
     strcpy(text, copy);
-    // 释放动态创建的内存
     free(copy);
     return text;
 }
@@ -145,7 +140,6 @@ void CPb::ReadSettings()
         set.dsp_id = root["dsp_id"].asInt();
         set.playmode = root["playmode"].asInt();
         set.smain_rem_pl_location = root["smain_rem_pl_location"].asBool();
-        set.smain_allow_drag = root["smain_allow_drag"].asBool();
         set.smain_sfx_render_elapse = root["smain_sfx_render_elapse"].asInt();
         set.spl_title_format = (CString)root["spl_title_format"].asCString();
         set.spl_show_snum = root["spl_show_snum"].asBool();
@@ -166,7 +160,6 @@ void CPb::WriteSettings()
     root["dsp_id"] = Json::Value(set.dsp_id);
     root["playmode"] = Json::Value(set.playmode);
     root["smain_rem_pl_location"] = Json::Value(set.smain_rem_pl_location);
-    root["smain_allow_drag"] = Json::Value(set.smain_allow_drag);
     root["smain_sfx_render_elapse"] = Json::Value(set.smain_sfx_render_elapse);
     root["spl_title_format"] = Json::Value(CPb::CStrToChar(set.spl_title_format));
     root["spl_show_snum"] = Json::Value(set.spl_show_snum);
@@ -183,4 +176,16 @@ int CPb::GetRand(int min, int max)
     std::mt19937 gen(rd());
     std::uniform_int_distribution<int> dis(min, max);
     return dis(gen);
+}
+
+bool CPb::IsInVectorCString(std::vector<CString> vtr, CString Find)
+{
+    for (int l = 0; l < vtr.size(); ++l)
+    {
+        if (vtr[l] == Find)
+        {
+            return TRUE;
+        }
+    }
+    return FALSE;
 }

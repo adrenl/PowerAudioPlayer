@@ -26,7 +26,6 @@ struct Settings
     int playmode = 0;
 
     bool smain_rem_pl_location = TRUE;
-    bool smain_allow_drag = TRUE;
     int smain_sfx_render_elapse = 20;
     //---
     CString spl_title_format =_T("%IFV2(%TITL,%IFV2(%TITL,%TITL,无标题) - %IFV2(%ARTI,%ARTI,无艺术家)%IFV1(%ALBM, - %ALBM),%FILE)");
@@ -51,6 +50,7 @@ public:
     static std::vector<bool> pl_isconvert;
     static std::vector<CString> SFXs;
     static std::vector<CString> DSPs;
+    static std::vector<CString> support_exts;
     static Settings set;
     static int split(const CString strLine, char split, CStringArray &strArray);
     static CString i2cs(QWORD var);
@@ -64,4 +64,5 @@ public:
     static void ReadSettings();
     static void WriteSettings();
     static int GetRand(int MIN, int MAX);
+    static bool IsInVectorCString(std::vector<CString> vtr, CString Find);
 };

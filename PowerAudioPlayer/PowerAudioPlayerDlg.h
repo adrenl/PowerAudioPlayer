@@ -72,6 +72,7 @@ public:
     void BuildSFXList();
     void BuildDSPList();
     void RestUI();
+    void CmdLineHandle(LPTSTR CmdLine = NULL);
     afx_msg void OnBnClickedButton5();
     afx_msg void OnBnClickedButton1();
     afx_msg void OnBnClickedButton2();
@@ -87,7 +88,6 @@ public:
     afx_msg void On32779();
     afx_msg void On32784();
     afx_msg void On32794();
-    afx_msg void On32777();
     afx_msg void OnMenu32786();
     afx_msg void OnMenu32795();
     afx_msg void On32797();
@@ -107,4 +107,5 @@ public:
     afx_msg void OnMenu32785();
     afx_msg void On32778();
     afx_msg void On32781();
+    afx_msg void OnDropFiles(HDROP hDropInfo);
 };

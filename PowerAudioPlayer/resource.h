@@ -35,6 +35,7 @@
 #define IDI_STOP                        189
 #define IDI_VOL                         190
 #define IDD_INPUTDLG                    191
+#define IDD_FILEINFO                    193
 #define IDC_TTIME                       1000
 #define IDC_BUTTON1                     1001
 #define IDC_CHECK1                      1002
@@ -95,7 +96,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        193
+#define _APS_NEXT_RESOURCE_VALUE        195
 #define _APS_NEXT_COMMAND_VALUE         32806
 #define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           101

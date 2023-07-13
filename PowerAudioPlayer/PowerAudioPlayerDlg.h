@@ -6,6 +6,7 @@
 #include "CSettingsDlg.h"
 #include "CSFXDlg.h"
 #include "CInputDlg.h"
+#include "CFileInfoDlg.h"
 
 // CPowerAudioPlayerDlg 对话框
 class CPowerAudioPlayerDlg : public CDialogEx
@@ -60,7 +61,7 @@ public:
     Settings Sets;
     void LoadSettings(bool isReload = FALSE);
     void ChangeVolumeSide();
-    void ChangePlayMode(int Mode,bool ChangeMenu_ = FALSE);
+    void ChangePlayMode(int Mode, bool ChangeMenu_ = FALSE);
     void Play(int Id);
     void AddToList(CString Path, CString Title = _T(""), int Time = 0, bool IsConvert = FALSE);
     void DelToList(int Id);
@@ -111,6 +112,9 @@ public:
     afx_msg void OnDropFiles(HDROP hDropInfo);
     afx_msg LRESULT OnMsg(WPARAM wParam, LPARAM lParam);
     afx_msg void On32805();
-    CStatic* m_FindFileStatic;
+    CStatic *m_FindFileStatic;
     CStatusBar  m_Statusbar;
+    afx_msg void OnMenu32791();
+    afx_msg void OnLvnKeydownList1(NMHDR* pNMHDR, LRESULT* pResult);
+    afx_msg HBRUSH OnCtlColor(CDC* pDC, CWnd* pWnd, UINT nCtlColor);
 };

@@ -74,12 +74,10 @@ BOOL CSettingsDlg::OnInitDialog()
     CMFCPropertyGridProperty *g1Props[] =
     {
         new CMFCPropertyGridProperty(_T("标题显示格式"), CPb::set.spl_title_format, TITLEFMTDescribe),
-        new CMFCPropertyGridProperty(_T("显示序号"), PropertyGridPropertyOutputTrueOrFalse(CPb::set.spl_show_snum), _T("是否在标题前显示项目在列表的序号")),
         new CMFCPropertyGridProperty(_T("注意"), _T("你必须重新转换列表才能看到所做更改"), _T("")),
     };
-    MFCPropertyGridPropertyMakeTrueOrFalse(g1Props[1]);
-    g1Props[2]->Enable(FALSE);
-    for (int i = 0; i < 3; ++i)
+    g1Props[1]->Enable(FALSE);
+    for (int i = 0; i < 2; ++i)
     {
         Groups[1]->AddSubItem(g1Props[i]);
     }
@@ -96,14 +94,14 @@ BOOL CSettingsDlg::OnInitDialog()
     CString p0Value;
     if (CPb::set.dsp_id != -1)
     {
-        p0Value =CPb::GetInPathFileName(CPb::DSPs[CPb::set.dsp_id]);
+        p0Value = CPb::GetInPathFileName(CPb::DSPs[CPb::set.dsp_id]);
     }
     else
     {
         p0Value = _T("空");
     }
     OldDSPId = CPb::set.dsp_id;
-    CMFCPropertyGridProperty* g3Props[] =
+    CMFCPropertyGridProperty *g3Props[] =
     {
         new CMFCPropertyGridProperty(_T("加载的DSP"), p0Value, _T("选择需要加载的DSP")),
         new CMFCPropertyGridProperty(_T("配置DSP"), _T(""), _T("当DSP已加载时，选中下拉列表以配置DSP")),
@@ -111,7 +109,8 @@ BOOL CSettingsDlg::OnInitDialog()
     g3Props[0]->AddOption(_T("空"));
     g3Props[1]->AddOption(_T("<配置>"));
     g3Props[1]->AllowEdit(FALSE);
-    for (int i = 0; i < CPb::DSPs.size(); ++i) {
+    for (int i = 0; i < CPb::DSPs.size(); ++i)
+    {
         g3Props[0]->AddOption(CPb::GetInPathFileName(CPb::DSPs[i]));
     }
     for (int i = 0; i < 2; ++i)
@@ -144,7 +143,7 @@ BOOL CSettingsDlg::OnInitDialog()
     for (int i = 0; i < g4Props.size(); ++i)
     {
         Groups[4]->AddSubItem(g4Props[i]);
-    }    
+    }
     /////////////5
     CMFCPropertyGridProperty *g5Props[] =
     {
@@ -173,13 +172,14 @@ BOOL CSettingsDlg::OnInitDialog()
 
 LRESULT CSettingsDlg::OnPropertyChanged(WPARAM wParam, LPARAM lParam)
 {
-    CMFCPropertyGridProperty* pProp = (CMFCPropertyGridProperty*)lParam;
+    CMFCPropertyGridProperty *pProp = (CMFCPropertyGridProperty *)lParam;
     COleVariant name = pProp->GetName();
     COleVariant value = pProp->GetValue();
     if ((CString)value == _T("<配置>") && (CString)name == _T("配置DSP"))
     {
         pProp->SetValue(static_cast <_variant_t>(""));
-        if(!BASS_WADSP_Config(BASS::Wadsp)) {
+        if(!BASS_WADSP_Config(BASS::Wadsp))
+        {
             AfxMessageBox(_T("未加载DSP或没有可配置项目"));
         }
     }
@@ -236,90 +236,89 @@ void CSettingsDlg::OnBnClickedOkbtn()
     int count = m_pgctrl.GetPropertyCount();
     for (int i = 0; i < count; i++)
     {
-        CMFCPropertyGridProperty* pProperty = m_pgctrl.GetProperty(i);
+        CMFCPropertyGridProperty *pProperty = m_pgctrl.GetProperty(i);
         if (pProperty == nullptr)
             continue;
-        switch (i) {
-            case 0:
+        switch (i)
+        {
+        case 0:
+        {
+            int subItemCount = pProperty->GetSubItemsCount();
+            for (int j = 0; j < subItemCount; j++)
             {
-                int subItemCount = pProperty->GetSubItemsCount();
-                for (int j = 0; j < subItemCount; j++)
+                CMFCPropertyGridProperty *pSubProperty = pProperty->GetSubItem(j);
+                if (pSubProperty == nullptr)
+                    continue;
+                COleVariant value = pSubProperty->GetValue();
+                switch (j)
                 {
-                    CMFCPropertyGridProperty* pSubProperty = pProperty->GetSubItem(j);
-                    if (pSubProperty == nullptr)
-                        continue;
-                    COleVariant value = pSubProperty->GetValue();
-                    switch (j) {
-                        case 0:
-                        {
-                            CPb::set.smain_rem_pl_location =TXTTrueOrFalseToBool(value);
-                            break;
-                        }
-                        case 1:
-                        {
-                            CPb::set.smain_sfx_render_elapse = (_variant_t)value;
-                            break;
-                        }
-                    }
+                case 0:
+                {
+                    CPb::set.smain_rem_pl_location = TXTTrueOrFalseToBool(value);
+                    break;
                 }
-                break;
-            }
-            case 1:
-            {
-                int subItemCount = pProperty->GetSubItemsCount();
-                for (int j = 0; j < subItemCount; j++)
+                case 1:
                 {
-                    CMFCPropertyGridProperty* pSubProperty = pProperty->GetSubItem(j);
-                    if (pSubProperty == nullptr)
-                        continue;
-                    COleVariant value = pSubProperty->GetValue();
-                    switch (j) {
-                        case 0:
-                        {
-                            CPb::set.spl_title_format = value;
-                            break;
-                        }
-                        case 1:
-                        {
-                            CPb::set.spl_show_snum = TXTTrueOrFalseToBool(value);
-                            break;
-                        }
-                    }
+                    CPb::set.smain_sfx_render_elapse = (_variant_t)value;
+                    break;
                 }
-                break;
-            }
-            case 2:
-            {
-                CMFCPropertyGridProperty* pSubProperty = pProperty->GetSubItem(0);
-                CPb::set.smidi_sf_path = pSubProperty->GetValue();
-                break;
-            }
-            case 3:
-            {
-                CMFCPropertyGridProperty* pSubProperty = pProperty->GetSubItem(0);
-                CString value = pSubProperty->GetValue();
-                if (value == _T("空"))
-                {
-                    CPb::set.dsp_id = -1;
                 }
-                else
+            }
+            break;
+        }
+        case 1:
+        {
+            int subItemCount = pProperty->GetSubItemsCount();
+            for (int j = 0; j < subItemCount; j++)
+            {
+                CMFCPropertyGridProperty *pSubProperty = pProperty->GetSubItem(j);
+                if (pSubProperty == nullptr)
+                    continue;
+                COleVariant value = pSubProperty->GetValue();
+                switch (j)
                 {
-                    for (int k = 0; k < CPb::DSPs.size(); ++k)
+                    case 0:
                     {
-                        if (CPb::GetInPathFileName(CPb::DSPs[k]) == value)
-                        {
-                            CPb::set.dsp_id = k;
-                            break; 
-                        }
+                        CPb::set.spl_title_format = value;
+                        break;
                     }
                 }
-                break;
             }
+            break;
+        }
+        case 2:
+        {
+            CMFCPropertyGridProperty *pSubProperty = pProperty->GetSubItem(0);
+            CPb::set.smidi_sf_path = pSubProperty->GetValue();
+            break;
+        }
+        case 3:
+        {
+            CMFCPropertyGridProperty *pSubProperty = pProperty->GetSubItem(0);
+            CString value = pSubProperty->GetValue();
+            if (value == _T("空"))
+            {
+                CPb::set.dsp_id = -1;
+            }
+            else
+            {
+                for (int k = 0; k < CPb::DSPs.size(); ++k)
+                {
+                    if (CPb::GetInPathFileName(CPb::DSPs[k]) == value)
+                    {
+                        CPb::set.dsp_id = k;
+                        break;
+                    }
+                }
+            }
+            break;
+        }
         }
     }
-    if (CPb::set.dsp_id != -1) 
+    if (CPb::set.dsp_id != -1)
     {
-        if(CPb::set.dsp_id != OldDSPId){
+        if(CPb::set.dsp_id != OldDSPId)
+        {
             if (BASS::Wadsp)
             {
                 BASS_WADSP_Stop(BASS::Wadsp);

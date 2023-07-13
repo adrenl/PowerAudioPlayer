@@ -44,6 +44,7 @@ public:
     static DWORD ChannelGetLevel();
     static BOOL ChannelGetLevelEx(float *levels, float length, DWORD flags);
     static QWORD ChannelGetPosition(DWORD mode);
+    static BOOL ChannelGetInfo(BASS_CHANNELINFO* info);
     static DWORD ChannelIsActive();
     static BOOL ChannelPause();
     static BOOL ChannelPlay(BOOL restart);

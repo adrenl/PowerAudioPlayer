@@ -63,6 +63,9 @@
     <ClInclude Include="CInputDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CFileInfoDlg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PowerAudioPlayer.cpp">
@@ -87,6 +90,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="CInputDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CFileInfoDlg.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

@@ -50,7 +50,7 @@ BOOL CPowerAudioPlayerApp::InitInstance()
         HWND hProgramWnd = ::FindWindow(NULL, _T("PowerAudioPlayer"));
         if (hProgramWnd)
         {
-            WINDOWPLACEMENT* pWndpl = NULL;
+            WINDOWPLACEMENT *pWndpl = NULL;
             WINDOWPLACEMENT   wpm;
             pWndpl = &wpm;
             GetWindowPlacement(hProgramWnd, &wpm);

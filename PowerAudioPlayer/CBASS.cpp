@@ -196,6 +196,11 @@ QWORD BASS::ChannelGetPosition(DWORD mode)
     return BASS_ChannelGetPosition(BASS::Stream, mode);
 }
 
+BOOL BASS::ChannelGetInfo(BASS_CHANNELINFO* info)
+{
+    return BASS_ChannelGetInfo(BASS::Stream, info);
+}
+
 DWORD BASS::ChannelIsActive()
 {
     return BASS_ChannelIsActive(BASS::Stream);
@@ -247,7 +252,7 @@ CString BASS::i2cs(QWORD val)
 void BASS::SetMidiSoundFont(CString file)
 {
     HSOUNDFONT newfont = BASS_MIDI_FontInit(file, 0);
-    if (newfont) 
+    if (newfont)
     {
         BASS_MIDI_FONT sf{};
         sf.font = newfont;
@@ -255,7 +260,7 @@ void BASS::SetMidiSoundFont(CString file)
         sf.bank = 0;
         BASS_MIDI_StreamSetFonts(0, &sf, 1);
         BASS_MIDI_StreamSetFonts(BASS::Stream, &sf, 1);
-        BASS_MIDI_FontFree(SoundFont); 
+        BASS_MIDI_FontFree(SoundFont);
         SoundFont = newfont;
     }
 }

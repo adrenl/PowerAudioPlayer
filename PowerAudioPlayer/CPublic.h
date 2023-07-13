@@ -29,8 +29,7 @@ struct Settings
     bool smain_rem_pl_location = TRUE;
     int smain_sfx_render_elapse = 20;
     //---
-    CString spl_title_format =_T("%IFV2(%TITL,%IFV2(%TITL,%TITL,无标题) - %IFV2(%ARTI,%ARTI,无艺术家)%IFV1(%ALBM, - %ALBM),%FILE)");
-    bool spl_show_snum = TRUE;
+    CString spl_title_format = _T("%IFV2(%TITL,%IFV2(%TITL,%TITL,无标题) - %IFV2(%ARTI,%ARTI,无艺术家)%IFV1(%ALBM, - %ALBM),%FILE)");
     //---
     CString smidi_sf_path = _T("");
     //---
@@ -44,6 +43,7 @@ public:
     static int length;
     static bool ToConvertList;
     static int PlayId;
+    static CString PlayPath;
     static CString SFF;
     static std::vector<CString> pl_path;
     static std::vector<CString> pl_title;
@@ -61,7 +61,7 @@ public:
     static CString CharToCStr(char *CharStr);
     static const char *CStrToChar(CString CStr);
     static LPCWSTR CharToLPCWSTR(char *szStr);
-    static char* replace_str(char* text, char sp_ch, char re_ch);
+    static char *replace_str(char *text, char sp_ch, char re_ch);
     static bool IsUrl(CString str);
     static void ReadSettings();
     static void WriteSettings();

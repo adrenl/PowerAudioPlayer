@@ -1,0 +1,45 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="ApplicationPic" UriSource=".\Dark\Application.png"/>
+    <BitmapImage x:Key="Play" UriSource=".\Dark\Play.png"/>
+    <BitmapImage x:Key="Pause" UriSource=".\Dark\Pause.png"/>
+    <BitmapImage x:Key="Next" UriSource=".\Dark\Next.png"/>
+    <BitmapImage x:Key="Previous" UriSource=".\Dark\Previous.png"/>
+    <BitmapImage x:Key="Stop" UriSource=".\Dark\Stop.png"/>
+
+    <BitmapImage x:Key="OrderPlay" UriSource=".\Dark\OrderPlay.png"/>
+    <BitmapImage x:Key="PlayListLoop" UriSource=".\Dark\PlayListLoop.png"/>
+    <BitmapImage x:Key="TrackLoop" UriSource=".\Dark\TrackLoop.png"/>
+    <BitmapImage x:Key="RandomPlay" UriSource=".\Dark\RandomPlay.png"/>
+
+    <BitmapImage x:Key="Settings" UriSource=".\Dark\Settings.png"/>
+    <BitmapImage x:Key="Effect" UriSource=".\Dark\Effect.png"/>
+    <BitmapImage x:Key="Error" UriSource=".\Dark\Error.png"/>
+    <BitmapImage x:Key="List" UriSource=".\Dark\List.png"/>
+    <BitmapImage x:Key="Add" UriSource=".\Dark\Add.png"/>
+    <BitmapImage x:Key="Remove" UriSource=".\Dark\Remove.png"/>
+    <BitmapImage x:Key="Edit" UriSource=".\Dark\Edit.png"/>
+    <BitmapImage x:Key="CloseFile" UriSource=".\Dark\CloseFile.png"/>
+    <BitmapImage x:Key="LocateTo" UriSource=".\Dark\LocateTo.png"/>
+
+    <BitmapImage x:Key="Volume0" UriSource=".\Dark\Vol0.png"/>
+    <BitmapImage x:Key="Volume1" UriSource=".\Dark\Vol1.png"/>
+    <BitmapImage x:Key="Volume2" UriSource=".\Dark\Vol2.png"/>
+    <BitmapImage x:Key="Volume3" UriSource=".\Dark\Vol3.png"/>
+    <BitmapImage x:Key="Volume4" UriSource=".\Dark\Vol4.png"/>
+
+    <BitmapImage x:Key="AddFile" UriSource=".\Dark\AddFile.png"/>
+    <BitmapImage x:Key="AddFolder" UriSource=".\Dark\AddFolder.png"/>
+    <BitmapImage x:Key="AddURL" UriSource=".\Dark\AddURL.png"/>
+
+    <BitmapImage x:Key="RemoveFile" UriSource=".\Dark\RemoveFile.png"/>
+    <BitmapImage x:Key="RemoveClear" UriSource=".\Dark\RemoveClear.png"/>
+
+    <BitmapImage x:Key="Import" UriSource=".\Dark\Import.png"/>
+    <BitmapImage x:Key="Export" UriSource=".\Dark\Export.png"/>
+
+    <BitmapImage x:Key="AddPlayList" UriSource=".\Dark\AddPlayList.png"/>
+    <BitmapImage x:Key="RemovePlayList" UriSource=".\Dark\RemovePlayList.png"/>
+    
+    <BitmapImage x:Key="Rename" UriSource=".\Dark\Rename.png"/>
+</ResourceDictionary>

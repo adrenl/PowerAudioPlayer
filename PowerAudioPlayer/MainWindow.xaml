@@ -1,0 +1,264 @@
+﻿<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" 
+    xmlns:local="clr-namespace:PowerAudioPlayer"
+    x:Class="PowerAudioPlayer.MainWindow"
+    mc:Ignorable="d"
+    Title="PowerAudioPlayer" Opacity="{Binding MainWindowOpacity}" Closing="Window_Closing" Width="1050" Height="600">
+    <Window.Resources>
+        <Style x:Key="ImageButton">
+            <Setter Property="Image.Stretch" Value="None"/>
+            <Setter Property="UIElement.SnapsToDevicePixels" Value="True"/>
+        </Style>
+        <Style x:Key="ToolbarDropDownButton">
+            <Setter Property="Control.BorderThickness" Value="0"/>
+            <Setter Property="Control.Background" Value="Transparent"/>
+        </Style>
+    </Window.Resources>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBarItem" Overlay="{StaticResource PlaySmall}">
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfo ImageSource="{StaticResource PreviousSmall}" Description="{DynamicResource TipPrevious}" Click="ThumbButton_Click_3"/>
+                <ThumbButtonInfo ImageSource="{StaticResource StopSmall}" Description="{DynamicResource TipStop}" Click="ThumbButton_Click"/>
+                <ThumbButtonInfo ImageSource="{StaticResource PlaySmall}" Description="{DynamicResource TipPlay}" Click="ThumbButton_Click_2" x:Name="ThumbButtonPlayPause"/>
+                <ThumbButtonInfo ImageSource="{StaticResource NextSmall}" Description="{DynamicResource TipNext}" Click="ThumbButton_Click_1"/>
+            </TaskbarItemInfo.ThumbButtonInfos>
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="124"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <GridSplitter Grid.RowSpan="4" Width="3" VerticalAlignment="Stretch" HorizontalAlignment="Right" Panel.ZIndex="20"/>
+        <Image x:Name="imgBackground" Grid.RowSpan="4" Opacity="{Binding BgOpacity}" Stretch="Fill" Visibility="{Binding BgEnable, Converter={StaticResource BoolToVisibilityConverter}}">
+            <Image.Effect>
+                <BlurEffect Radius="{Binding BgBlur}"/>
+            </Image.Effect>
+        </Image>
+        <xctk:BusyIndicator x:Name="busyIndicator" IsBusy="False" Grid.ColumnSpan="2" Grid.RowSpan="4" Panel.ZIndex="100" d:Panel.ZIndex="0"/>
+        <local:CenterPage x:Name="EffectCenterFrame" Source="EffectPage.xaml" Grid.ColumnSpan="2" Grid.RowSpan="4" Panel.ZIndex="100" PageHeight="280" PageWidth="560"/>
+        <local:BottomLeftMessage x:Name="ErrorMessage" Grid.ColumnSpan="2" Grid.RowSpan="4" Panel.ZIndex="99" Delay="1500"/>
+        <Grid Grid.Column="0" Grid.Row="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="124"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}" BorderThickness="1" Margin="11">
+                <Grid>
+                    <Image x:Name="imgAlbumPicture" Source="{StaticResource ApplicationImage}" Stretch="None" RenderOptions.BitmapScalingMode="HighQuality" Margin="0" Width="100" Height="100"/>
+                    <Image x:Name="imgSpectrum" Height="100" Width="100" Stretch="None" Margin="0" Visibility="{Binding ShowSpectrum, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                </Grid>
+            </Border>
+            <StackPanel Grid.Column="1" Margin="0,5,0,0">
+                <WrapPanel>
+                    <TextBlock x:Name="tbStatus" Margin="3" Text="{DynamicResource TipStop}" VerticalAlignment="Top"/>
+                    <TextBlock x:Name="tbSN" Margin="3" Text="0"/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="3" Text="{DynamicResource TipFileNameWithDot}"  HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbFileName" Margin="3" Text=""/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="3" Text="{DynamicResource TipTitleWithDot}" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbTitle" Margin="3" Text=""/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="3" Text="{DynamicResource TipArtistWithDot}" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbArtist" Margin="3" Text=""/>
+                </WrapPanel>
+                <WrapPanel>
+                    <TextBlock Margin="3" Text="{DynamicResource TipAlbumWithDot}" HorizontalAlignment="Left"/>
+                    <TextBlock x:Name="tbAlbum" Margin="3" Text=""/>
+                </WrapPanel>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <StackPanel Orientation="Horizontal">
+                <Button HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="36" Height="35" Click="Button_Click" RenderTransformOrigin="0.417,6.307">
+                    <Image Source="{StaticResource StopImage}" Margin="5"/>
+                </Button>
+                <Button HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="36" Height="35" Click="Button_Click_3">
+                    <Image Source="{StaticResource PreviousImage}" Margin="5"/>
+                </Button>
+                <Button HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="36" Height="35" Click="Button_Click_2">
+                    <Image x:Name="imgPlay" Source="{StaticResource PlayImage}" Margin="5"/>
+                </Button>
+                <Button HorizontalAlignment="Left" Margin="5,0,0,0" VerticalAlignment="Top" Width="36" Height="35" Click="Button_Click_1">
+                    <Image Source="{StaticResource NextImage}" Margin="5"/>
+                </Button>
+                <ToolBar Height="30" Margin="5,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                    <RadioButton ToolTip="{DynamicResource TipOrderPlay}" GroupName="PlayMode" Checked="RadioButton_Checked" x:Name="rbOrderPlay">
+                        <Image Source="{DynamicResource OrderPlayImage}" Style="{StaticResource ImageButton}"/>
+                    </RadioButton>
+                    <RadioButton x:Name="rbTrackLoop" ToolTip="{DynamicResource TipTrackLoop}" GroupName="PlayMode" Checked="RadioButton_Checked_1">
+                        <Image Source="{DynamicResource TrackLoopImage}" Style="{StaticResource ImageButton}"/>
+                    </RadioButton>
+                    <RadioButton x:Name="rbPlayListLoop" ToolTip="{DynamicResource TipPlayListLoop}" GroupName="PlayMode" Checked="RadioButton_Checked_2">
+                        <Image Source="{DynamicResource PlayListLoopImage}" Style="{StaticResource ImageButton}"/>
+                    </RadioButton>
+                    <RadioButton x:Name="rbRandomPlay" ToolTip="{DynamicResource TipRandomPlay}" GroupName="PlayMode" Checked="RadioButton_Checked_3">
+                        <Image Source="{DynamicResource RandomPlayImage}" Style="{StaticResource ImageButton}"/>
+                    </RadioButton>
+                    <Separator/>
+                    <Button ToolTip="{DynamicResource TipSettings}" Click="Button_Click_5">
+                        <Image Source="{DynamicResource SettingsImage}" Style="{StaticResource ImageButton}"/>
+                    </Button>
+                    <Button ToolTip="{DynamicResource TipEffect}" Click="Button_Click_6">
+                        <Image Source="{DynamicResource EffectImage}" Style="{StaticResource ImageButton}"/>
+                    </Button>
+                    <Separator/>
+                    <Button ToolTip="{DynamicResource TipAddAndPlay}">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{DynamicResource AddImage}" Style="{StaticResource ImageButton}"/>
+                            <TextBlock Margin="3,0,0,0" Text="{DynamicResource TipAddAndPlay}" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button ToolTip="{DynamicResource TipCloseFile}" Click="Button_Click_7">
+                        <Image Source="{DynamicResource CloseFileImage}" Style="{StaticResource ImageButton}"/>
+                    </Button>
+                </ToolBar>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="2" Margin="5,3,0,3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="tbLength" Grid.Column="0" Text="{DynamicResource TipTimeZero}" VerticalAlignment="Center"/>
+            <Slider x:Name="sliderCurrent" Grid.Column="1" IsEnabled="False" Margin="5,0,0,0" IsMoveToPointEnabled="True" MouseMove="sliderCurrent_MouseMove" VerticalAlignment="Center" d:Value="1"/>
+            <TextBlock x:Name="tbCurrent" Grid.Column="2" Margin="5,0,0,0" Text="{DynamicResource TipTimeZero}" VerticalAlignment="Center"/>
+            <TextBlock x:Name="tbVolume" Grid.Column="3" Margin="5,0,0,0" Text="{Binding Value, Converter={StaticResource SndVolTextConverter}, ElementName=sliderVolume}" VerticalAlignment="Center"/>
+            <Image x:Name="imgVolume" Grid.Column="4" Height="16" Margin="5,0,0,0" Width="16" Source="{Binding Value, Converter={StaticResource SndVolPictureConverter}, ElementName=sliderVolume}" VerticalAlignment="Center"/>
+            <Slider x:Name="sliderVolume" Grid.Column="5" Margin="5,0,10,0" Minimum="0" Maximum="100" Value="{Binding Volume}" ValueChanged="sliderVolume_ValueChanged" IsMoveToPointEnabled="True" IsSnapToTickEnabled="True" VerticalAlignment="Center" d:Value="50"/>
+        </Grid>
+        <Grid Grid.Column="1" Grid.RowSpan="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <ToolBar Height="30" Margin="5,5,5,5">
+                <xctk:DropDownButton Style="{StaticResource ToolbarDropDownButton}" ToolTip="{DynamicResource TipAdd}">
+                    <xctk:DropDownButton.DropDownContent>
+                        <StackPanel>
+                            <MenuItem Header="{DynamicResource TipAddFile}" Click="MenuItem_Click">
+                                <MenuItem.Icon>
+                                    <Image Source="{DynamicResource AddFileImage}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource TipAddFolder}" Click="MenuItem_Click_1">
+                                <MenuItem.Icon>
+                                    <Image Source="{DynamicResource AddFolderImage}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource TipAddURL}" Click="MenuItem_Click_2">
+                                <MenuItem.Icon>
+                                    <Image Source="{DynamicResource AddURLImage}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </StackPanel>
+                    </xctk:DropDownButton.DropDownContent>
+                    <Image Source="{DynamicResource AddImage}" Style="{StaticResource ImageButton}"/>
+                </xctk:DropDownButton>
+                <xctk:DropDownButton x:Name="RemoveButton" Style="{StaticResource ToolbarDropDownButton}" ToolTip="{DynamicResource TipRemove}">
+                    <xctk:DropDownButton.DropDownContent>
+                        <StackPanel>
+                            <MenuItem Header="{DynamicResource TipRemoveSelected}" Click="MenuItem_Click_3">
+                                <MenuItem.Icon>
+                                    <Image Source="{DynamicResource RemoveFileImage}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource TipRemoveClear}" Click="MenuItem_Click_4">
+                                <MenuItem.Icon>
+                                    <Image Source="{DynamicResource RemoveClearImage}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </StackPanel>
+                    </xctk:DropDownButton.DropDownContent>
+                    <Image Source="{DynamicResource RemoveImage}" Style="{StaticResource ImageButton}"/>
+                </xctk:DropDownButton>
+                <xctk:DropDownButton Style="{StaticResource ToolbarDropDownButton}" ToolTip="{DynamicResource TipPlayList}">
+                    <xctk:DropDownButton.DropDownContent>
+                        <StackPanel>
+                            <MenuItem Header="{DynamicResource TipPlayListAdd}" Click="MenuItem_Click_5">
+                                <MenuItem.Icon>
+                                    <Image Source="{DynamicResource AddPlayListImage}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource TipPlayListRemove}" Click="MenuItem_Click_6">
+                                <MenuItem.Icon>
+                                    <Image Source="{DynamicResource RemovePlayListImage}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                            <MenuItem Header="{DynamicResource TipPlayListRename}" Click="MenuItem_Click_7">
+                                <MenuItem.Icon>
+                                    <Image Source="{DynamicResource RenameImage}"/>
+                                </MenuItem.Icon>
+                            </MenuItem>
+                        </StackPanel>
+                    </xctk:DropDownButton.DropDownContent>
+                    <Image Source="{DynamicResource ListImage}" Style="{StaticResource ImageButton}"/>
+                </xctk:DropDownButton>
+                <Button ToolTip="{StaticResource TipLocateTo}" Click="Button_Click_4">
+                    <Image Source="{DynamicResource LocateToImage}" Style="{StaticResource ImageButton}" />
+                </Button>
+                
+            </ToolBar>
+            <ComboBox x:Name="cbCurrentPlayList" Grid.Row="1" Margin="5,0,5,5" SelectedIndex="{Binding CurrentPlayList}" SelectionChanged="cbCurrentPlayList_SelectionChanged"/>
+            <Grid Grid.Row="2" Margin="25,0,25,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="80"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" x:Name="PlayListColumn0"/>
+                    <Grid Grid.Column="1" x:Name="PlayListColumn1"/>
+                    <Grid Grid.Column="2" x:Name="PlayListColumn2"/>
+                </Grid>
+            </Grid>
+            <ListView x:Name="lvPlayList" Grid.Row="2" Margin="5,0,5,5">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel/>
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+                <ListView.Style>
+                    <Style TargetType="{x:Type ListView}">
+                        <Setter Property="ItemContainerStyle">
+                            <Setter.Value>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <EventSetter Event="Control.MouseDoubleClick" Handler="Item_MouseDoubleClick"/>
+                                    <Setter Property="Background" Value="{Binding Converter={StaticResource ListViewBackgroundConverter}, RelativeSource={RelativeSource Mode=self}}"/>
+                                </Style>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListView.Style>
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Width="{Binding ActualWidth, ElementName=PlayListColumn0}" Header="{DynamicResource TipSN}" DisplayMemberBinding="{Binding Converter={StaticResource IndexConverter}, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}, Mode=FindAncestor}}"/>
+                        <GridViewColumn Width="{Binding ActualWidth, ElementName=PlayListColumn1}" Header="{DynamicResource TipDisplayTitle}" DisplayMemberBinding="{Binding}"/>
+                        <GridViewColumn Width="{Binding ActualWidth, ElementName=PlayListColumn2}" Header="{DynamicResource TipLength}" DisplayMemberBinding="{Binding File, Converter={StaticResource PlayListTimeConverter}}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+        <local:LyricsViewer x:Name="lyricsViewer" Grid.Row="4" ItemsMargin="{Binding LrcMargin}"/>
+    </Grid>
+</Window>

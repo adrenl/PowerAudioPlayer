@@ -1,0 +1,157 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\Application.ico</ApplicationIcon>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <UseWindowsForms>True</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="!NOUSE!\**" />
+    <Compile Remove="Resources\Dark\**" />
+    <Compile Remove="Resources\Light\**" />
+    <Compile Remove="resource\**" />
+    <EmbeddedResource Remove="!NOUSE!\**" />
+    <EmbeddedResource Remove="Resources\Dark\**" />
+    <EmbeddedResource Remove="Resources\Light\**" />
+    <EmbeddedResource Remove="resource\**" />
+    <None Remove="!NOUSE!\**" />
+    <None Remove="Resources\Dark\**" />
+    <None Remove="Resources\Light\**" />
+    <None Remove="resource\**" />
+    <Page Remove="!NOUSE!\**" />
+    <Page Remove="Resources\Dark\**" />
+    <Page Remove="Resources\Light\**" />
+    <Page Remove="resource\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="MainWindow.xaml~RF91ea3f.TMP" />
+    <None Remove="Resources\Add.png" />
+    <None Remove="Resources\AddFile.png" />
+    <None Remove="Resources\AddFolder.png" />
+    <None Remove="Resources\AddURL.png" />
+    <None Remove="Resources\Application.png" />
+    <None Remove="Resources\CloseFile.png" />
+    <None Remove="Resources\Edit.png" />
+    <None Remove="Resources\Effect.ico" />
+    <None Remove="Resources\Effect.png" />
+    <None Remove="Resources\Error.png" />
+    <None Remove="Resources\Export.png" />
+    <None Remove="Resources\Import.png" />
+    <None Remove="Resources\List.png" />
+    <None Remove="Resources\LocateTo.png" />
+    <None Remove="Resources\Next.png" />
+    <None Remove="Resources\NextSmall.png" />
+    <None Remove="Resources\OrderPlay.png" />
+    <None Remove="Resources\Pause.png" />
+    <None Remove="Resources\PauseSmall.png" />
+    <None Remove="Resources\Play.png" />
+    <None Remove="Resources\PlayListLoop.png" />
+    <None Remove="Resources\PlaySmall.png" />
+    <None Remove="Resources\Previous.png" />
+    <None Remove="Resources\PreviousSmall.png" />
+    <None Remove="Resources\RandomPlay.png" />
+    <None Remove="Resources\Remove.png" />
+    <None Remove="Resources\RemoveClear.png" />
+    <None Remove="Resources\RemoveFile.png" />
+    <None Remove="Resources\RepeatPlay.png" />
+    <None Remove="Resources\Settings.ico" />
+    <None Remove="Resources\Settings.png" />
+    <None Remove="Resources\Stop.png" />
+    <None Remove="Resources\StopSmall.png" />
+    <None Remove="Resources\TrackLoop.png" />
+    <None Remove="Resources\Vol0.png" />
+    <None Remove="Resources\Vol1.png" />
+    <None Remove="Resources\Vol2.png" />
+    <None Remove="Resources\Vol3.png" />
+    <None Remove="Resources\Vol4.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Language\Strings.en-us.xaml" />
+    <Page Remove="Resources\Strings.zh-cn.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Language\Strings.en-us.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Extended.Wpf.Toolkit" Version="4.5.1" />
+    <PackageReference Include="Microsoft.VisualBasic" Version="10.3.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.118" />
+    <PackageReference Include="TagLibSharp" Version="2.3.0" />
+    <PackageReference Include="WpfMultiStyle" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Bass.Net">
+      <HintPath>Bass.Net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Application.ico">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\Effect.ico" />
+    <Resource Include="Resources\NextSmall.png" />
+    <Resource Include="Resources\PauseSmall.png" />
+    <Resource Include="Resources\PlaySmall.png" />
+    <Resource Include="Resources\PreviousSmall.png" />
+    <Resource Include="Resources\Settings.ico" />
+    <Resource Include="Resources\StopSmall.png" />
+    <Resource Include="Resources\Application.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resource.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="bass.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Bass.Net.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bass_fx.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="FileData.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Themes\Color.Dark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+</Project>

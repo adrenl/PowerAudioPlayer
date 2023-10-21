@@ -1,0 +1,24 @@
+﻿<Application x:Class="PowerAudioPlayer.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+             xmlns:local="clr-namespace:PowerAudioPlayer"
+             StartupUri="MainWindow.xaml" Startup="Application_Startup" >
+    <Application.Resources>
+        <ResourceDictionary>
+            <local:IndexConverter x:Key="IndexConverter"/>
+            <local:TimeConverter x:Key="TimeConverter"/>
+            <local:SndVolPictrueConverter x:Key="SndVolPictureConverter"/>
+            <local:SndVolTextConverter x:Key="SndVolTextConverter"/>
+            <local:ListViewBackgroundConverter x:Key="ListViewBackgroundConverter"/>
+            <local:DrawColorToMediaColorConverter x:Key="DrawColorToMediaColorConverter"/>
+            <local:ReverseBoolConverter x:Key="ReverseBoolConverter"/>
+            <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <local:PlayListTimeConverter x:Key="PlayListTimeConverter"/>
+            <local:SystemThemeColorConverter x:Key="SystemThemeColorConverter"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Language\Strings.zh-cn.xaml"/>
+                <ResourceDictionary Source="Resources\Images.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,137 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+    <sys:String x:Key="TipProgramName">PowerAudioPlayer</sys:String>
+    
+    <sys:String x:Key="TipPlay">播放</sys:String>
+    <sys:String x:Key="TipPause">暂停</sys:String>
+    <sys:String x:Key="TipStop">停止</sys:String>
+    <sys:String x:Key="TipNext">下一首</sys:String>
+    <sys:String x:Key="TipPrevious">上一首</sys:String>
+    <sys:String x:Key="TipTimeZero">00:00</sys:String>
+    
+    <sys:String x:Key="TipFileName">文件名</sys:String>
+    <sys:String x:Key="TipPath">路径</sys:String>
+    <sys:String x:Key="TipAlbum">专辑</sys:String>
+    <sys:String x:Key="TipArtist">艺术家</sys:String>
+    <sys:String x:Key="TipGenre">流派</sys:String>
+    <sys:String x:Key="TipBitRate">比特率</sys:String>
+    <sys:String x:Key="TipSampleRate">采样率</sys:String>
+    <sys:String x:Key="TipChannels">声道</sys:String>
+    <sys:String x:Key="TipTitle">标题</sys:String>
+    <sys:String x:Key="TipComment">注释</sys:String>
+
+    <sys:String x:Key="TipFileNameWithDot">文件名：</sys:String>
+    <sys:String x:Key="TipPathWithDot">路径：</sys:String>
+    <sys:String x:Key="TipAlbumWithDot">专辑：</sys:String>
+    <sys:String x:Key="TipArtistWithDot">艺术家：</sys:String>
+    <sys:String x:Key="TipGenreWithDot">流派：</sys:String>
+    <sys:String x:Key="TipBitRateWithDot">比特率：</sys:String>
+    <sys:String x:Key="TipSampleRateWithDot">采样率：</sys:String>
+    <sys:String x:Key="TipChannelsWithDot">声道：</sys:String>
+    <sys:String x:Key="TipTitleWithDot">标题：</sys:String>
+    <sys:String x:Key="TipCommentWithDot">注释：</sys:String>
+
+    <sys:String x:Key="TipAlbumUnknow">&lt;未知专辑&gt;</sys:String>
+    <sys:String x:Key="TipArtistUnknow">&lt;未知艺术家&gt;</sys:String>
+    <sys:String x:Key="TipGenreUnknow">&lt;未知流派&gt;</sys:String>
+    <sys:String x:Key="TipTitleUnknow">&lt;未知标题&gt;</sys:String>
+    <sys:String x:Key="TipCommentUnknow">&lt;未知注释&gt;</sys:String>
+
+    <sys:String x:Key="TipTag">标签</sys:String>
+    
+    <sys:String x:Key="TipDisplayTitle">显示标题</sys:String>
+    <sys:String x:Key="TipSN">#</sys:String>
+    <sys:String x:Key="TipLength">长度</sys:String>
+    <sys:String x:Key="TipNoLyrics">无歌词</sys:String>
+    <sys:String x:Key="TipPlayList">播放列表</sys:String>
+    
+    <sys:String x:Key="TipOrderPlay">顺序播放</sys:String>
+    <sys:String x:Key="TipTrackLoop">单曲循环</sys:String>
+    <sys:String x:Key="TipPlayListLoop">列表循环</sys:String>
+    <sys:String x:Key="TipRandomPlay">随机播放</sys:String>
+
+    <sys:String x:Key="TipSettings">设置</sys:String>
+    <sys:String x:Key="TipEffect">效果调整</sys:String>
+    <sys:String x:Key="TipAddAndPlay">添加并播放</sys:String>
+    <sys:String x:Key="TipCloseFile">关闭文件</sys:String>
+
+    <sys:String x:Key="TipAdd">添加</sys:String>
+    <sys:String x:Key="TipAddFile">添加文件</sys:String>
+    <sys:String x:Key="TipAddFolder">添加文件夹</sys:String>
+    <sys:String x:Key="TipAddURL">添加URL</sys:String>
+
+    <sys:String x:Key="TipRemove">移除</sys:String>
+    <sys:String x:Key="TipRemoveSelected">移除选中项目</sys:String>
+    <sys:String x:Key="TipRemoveClear">清空</sys:String>
+
+    <sys:String x:Key="TipImport">导入</sys:String>
+    <sys:String x:Key="TipExport">导出</sys:String>
+    
+    <sys:String x:Key="TipPlayListRename">重命名播放列表</sys:String>
+    <sys:String x:Key="TipPlayListAdd">添加播放列表</sys:String>
+    <sys:String x:Key="TipPlayListRemove">删除播放列表</sys:String>
+
+    <sys:String x:Key="TipLocateTo">定位到当前播放</sys:String>
+
+    <sys:String x:Key="TipPlayer">播放</sys:String>
+    <sys:String x:Key="TipAppearance">外观</sys:String>
+    <sys:String x:Key="TipAbout">关于</sys:String>
+    <sys:String x:Key="TipOutput">输出</sys:String>
+    <sys:String x:Key="TipOutputDevice">输出设备</sys:String>
+    <sys:String x:Key="TipOutputFreq">输出采样率</sys:String>
+    <sys:String x:Key="TipMenoryPlayListSelected">记忆播放列表位置</sys:String>
+    <sys:String x:Key="TipAutoPlayLastFile">自动播放上次文件</sys:String>
+    <sys:String x:Key="TipDisbaleAutoPlay">禁用自动切换</sys:String>
+    <sys:String x:Key="TipDisableAutoNextWhenError">禁用错误时切换</sys:String>
+    <sys:String x:Key="TipLanguage">语言</sys:String>
+    <sys:String x:Key="TipMIDI">MIDI</sys:String>
+    <sys:String x:Key="TipMIDIVoice">最大播放样本数</sys:String>
+    <sys:String x:Key="TipMIDISoundFont">MIDI音色库</sys:String>
+    <sys:String x:Key="TipThemeColor">主题色</sys:String>
+    <sys:String x:Key="TipFollowSystem">跟随系统</sys:String>
+    <sys:String x:Key="TipColorMode">颜色模式</sys:String>
+    <sys:String x:Key="TipLightMode">浅色模式</sys:String>
+    <sys:String x:Key="TipDarkMode">深色模式</sys:String>
+    <sys:String x:Key="TipMainWindowOpacity">主窗口不透明度</sys:String>
+    <sys:String x:Key="TipShowAlbumPicture">显示专辑图片</sys:String>
+    <sys:String x:Key="TipShowSpectrum">显示频谱</sys:String>
+    <sys:String x:Key="TipBackground">背景</sys:String>
+    <sys:String x:Key="TipShowBackground">显示背景</sys:String>
+    <sys:String x:Key="TipUseAlbumPicture">使用专辑图片作为背景</sys:String>
+    <sys:String x:Key="TipUseWallpaperAsDefaultBackground">使用桌面壁纸作为默认背景</sys:String>
+    <sys:String x:Key="TipDefaultBackground">默认背景</sys:String>
+    <sys:String x:Key="TipBackgroundOpacity">背景不透明度</sys:String>
+    <sys:String x:Key="TipBackgroundBlur">模糊半径，0为不使用</sys:String>
+    <sys:String x:Key="TipSpectrum">频谱</sys:String>
+
+    <sys:String x:Key="TipEnableEQ">启用均衡器</sys:String>
+    <sys:String x:Key="TipEQ">均衡器</sys:String>
+    <sys:String x:Key="TipReset">重置</sys:String>
+    <sys:String x:Key="TipOtherEffect">额外效果</sys:String>
+    <sys:String x:Key="TipEnableOtherEffect">启用额外效果（下一次播放生效）</sys:String>
+    <sys:String x:Key="TipTempo">播放速度</sys:String>
+    <sys:String x:Key="TipPitch">音调</sys:String>
+    <sys:String x:Key="TipReversePlay">倒放</sys:String>
+    <sys:String x:Key="TipGain">放大器</sys:String>
+
+    <sys:String x:Key="TipPlayListDefault">[默认播放列表]</sys:String>
+
+    <sys:String x:Key="FilterAllFile">所有文件</sys:String>
+    <sys:String x:Key="FilterSupportedFile">全部支持的文件</sys:String>
+    <sys:String x:Key="FilterLyrics">歌词文件|*.lrc|所有文件|*.*</sys:String>
+    <sys:String x:Key="FilterListFile">列表文件|*.json|所有文件|*.*</sys:String>
+    <sys:String x:Key="FilterSoundFont">MIDI音色库文件|*.sf2;*.sf2pack;*.sf3|所有文件|*.*</sys:String>
+    <sys:String x:Key="FilterImage">图片文件|*.png;*.jpeg;*.jpg;*.bmp;*.gif|所有文件|*.*</sys:String>
+
+    <sys:String x:Key="MsgInputURL">输入URL</sys:String>
+    <sys:String x:Key="MsgNewList">新建播放列表</sys:String>
+    <sys:String x:Key="MsgRenameList">重命名播放列表</sys:String>
+    <sys:String x:Key="MsgListName">输入播放列表名称</sys:String>
+    <sys:String x:Key="MsgListNameError">操作失败。已有同名播放列表或有非法字符。</sys:String>
+    <sys:String x:Key="MsgAddingTitle">正在添加</sys:String>
+    <sys:String x:Key="MsgAdding">正在添加 {0}</sys:String>
+    <sys:String x:Key="MsgRemovingTitle">正在移除</sys:String>
+    <sys:String x:Key="MsgRemoving">正在移除 {0}</sys:String>
+    <sys:String x:Key="MsgErrorPlay">{0} 播放失败</sys:String>
+</ResourceDictionary>

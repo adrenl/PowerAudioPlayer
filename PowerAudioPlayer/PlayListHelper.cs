@@ -1,6 +1,10 @@
 ﻿using Newtonsoft.Json;
 using PowerAudioPlayer.Properties;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.IO;
 using Un4seen.Bass;
 
@@ -29,17 +33,70 @@ namespace PowerAudioPlayer
         }
     }
 
-    public class PlayList
+    public class PlayList : INotifyPropertyChanged
     {
-        public string Name { get; set; } = "";
+        private string _name;
+        public string Name
+        {
+            get { 
+                return _name; 
+            }
+            set { 
+                _name = value;
+                OnPropertyChanged(nameof(Name)); 
+            }
+        }
+
+        private List<PlayListItem> _items = new List<PlayListItem>();
+        public List<PlayListItem> Items
+        {
+            get
+            {
+                return _items;
+            }
+            set
+            {
+                _items = value;
+                OnPropertyChanged(nameof(Items));
+            }
+        }
+
+        public int ItemsCount
+        {
+            get
+            {
+                return Items.Count;
+            }
+        }        
+        
+        public int TotalTime
+        {
+            get
+            {
+                int tt = 0;
+                foreach (var item in _items) 
+                {
+                    tt += (int)AudioInfoDataHelper.Get(item.File).Length;  
+                }
+                return tt;
+            }
+        }
 
         public bool IsDefault { get; set; } = false;
 
-        public List<PlayListItem> Items = new List<PlayListItem>();
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public override string ToString()
         {
             return Name;
+        }
+
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+            }
         }
     }
 
@@ -57,6 +114,7 @@ namespace PowerAudioPlayer
 
         public static void Load()
         {
+            Directory.CreateDirectory(PlayListDir);
             List<string> files = Utils.FindFile(PlayListDir, "*.json", false);
             foreach (string file in files)
             {
@@ -299,7 +357,7 @@ namespace PowerAudioPlayer
             string emptyArtist = Player.GetStr("TipArtistUnknow");
             if (format == null)
                 format = (DisplayTitleFormat)Settings.Default.DisplayTitleFormat;
-            if (info.IsTagNull || info.IsInfoAcquired == false)
+            if (info.IsTagNull || info.IsInfoAcquired)
                 return Path.GetFileName(info.File);
             switch (format)
             {
@@ -314,12 +372,12 @@ namespace PowerAudioPlayer
                     if (info.Title == "" && info.Artist == "")
                         return Path.GetFileName(info.File);
                     else
-                        return info.Artist == "" ? emptyArtist : info.Artist + "-" + info.Title == "" ? emptyTitle : info.Title;
+                        return (info.Artist == "" ? emptyArtist : info.Artist) + " - " + (info.Title == "" ? emptyTitle : info.Title);
                 case DisplayTitleFormat.TitleArtist:
                     if (info.Title == "" && info.Artist == "")
                         return Path.GetFileName(info.File);
                     else
-                        return info.Title == "" ? emptyTitle : info.Title + "-" + info.Artist == "" ? emptyArtist : info.Artist;
+                        return (info.Title == "" ? emptyTitle : info.Title) + " - " + (info.Artist == "" ? emptyArtist : info.Artist);
                 default:
                     return Path.GetFileName(info.File);
             }

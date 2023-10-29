@@ -49,6 +49,7 @@ namespace PowerAudioPlayer
             SystemEvents.UserPreferenceChanged += SystemEvents_UserPreferenceChanged;
             cbCurrentPlayList.ItemsSource = PlayListHelper.playLists;
             lvPlayList.ItemsSource = PlayListHelper.playLists[PlayListHelper.Current].Items;
+            statusBar.DataContext = PlayListHelper.playLists[PlayListHelper.Current];
             SetBackground();
         }
 
@@ -304,17 +305,12 @@ namespace PowerAudioPlayer
             {
                 if (!Settings.Default.DisableAutoNextWhenError)
                 {
-                    if (Utils.DelayWithFlag(500))
-                    {
-                        ErrorMessage.MessageText = string.Format(Player.GetStr("MsgErrorPlay"), PlayListHelper.ItemGetDisplayTitle(index));
-                        ErrorMessage.Show();
-                        Play(index + 1);
-                    }
+                    StatusBarMessage.Text = string.Format(Player.GetStr("MsgErrorPlay"), PlayListHelper.ItemGet(index));
+                    StatusBarMessage.Open();
+                    Play(index + 1);
                 }
                 return;
             }
-            if (Utils.IsDelaing)
-                Utils.DelayFunctionInterrupt = true;
             tbLength.Text = Utils.ParseTime((int)Player.bassCore.GetLength(true));
             AudioInfo info = AudioInfoDataHelper.Get(PlayListHelper.ItemGet(index));
             tbSN.Text = (index + 1).ToString();
@@ -433,26 +429,29 @@ namespace PowerAudioPlayer
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                busyIndicator.IsBusy = true;
-                busyIndicator.BusyContent = Player.GetStr("MsgAddingTitle");
+                StatusBarProgress.Visibility = Visibility.Visible;
+                StatusBarProgress.ToolTip = Player.GetStr("MsgAddingTitle");
+                ListCtrlArea.IsEnabled = false;
                 Thread thread = new Thread(() =>
                 {
                     foreach (string Ext in Player.supportedExtensions)
                     {
                         List<string> Files = Utils.FindFile(folderBrowserDialog.SelectedPath, Ext, true, false, (string file) =>
                         {
-                            PlayListHelper.ItemAdd(file);
-                            AudioInfoDataHelper.Add(PlayListHelper.GetFileDataInfoByFile(file));
                             Dispatcher.BeginInvoke(new Action(() =>
                             {
-                                busyIndicator.BusyContent = string.Format(Player.GetStr("MsgAdding"), file);
+                                StatusBarProgress.ToolTip = string.Format(Player.GetStr("MsgAdding"), file);
+                                PlayListHelper.ItemAdd(file);
                             }));
+                            AudioInfoDataHelper.Add(PlayListHelper.GetFileDataInfoByFile(file));
                         });
                     }
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         lvPlayList.Items.Refresh();
-                        busyIndicator.IsBusy = false;
+                        StatusBarProgress.Visibility = Visibility.Collapsed;
+                        statusBar.DataContext = PlayListHelper.playLists[PlayListHelper.Current];
+                        ListCtrlArea.IsEnabled = true;
                     }));
                 });
                 thread.IsBackground = true;
@@ -467,24 +466,26 @@ namespace PowerAudioPlayer
             openFileDialog.Multiselect = true;
             if (openFileDialog.ShowDialog() == true)
             {
-                busyIndicator.IsBusy = true;
-                busyIndicator.BusyContent = Player.GetStr("MsgAddingTitle");
-
+                StatusBarProgress.Visibility = Visibility.Visible;
+                StatusBarProgress.ToolTip = Player.GetStr("MsgAddingTitle");
+                ListCtrlArea.IsEnabled = false;
                 Thread thread = new Thread(() =>
                 {
                     foreach (string file in openFileDialog.FileNames)
                     {
-                        PlayListHelper.ItemAdd(file);
-                        AudioInfoDataHelper.Add(PlayListHelper.GetFileDataInfoByFile(file));
                         Dispatcher.BeginInvoke(new Action(() =>
                         {
-                            busyIndicator.BusyContent = string.Format(Player.GetStr("MsgAdding"), file);
+                            StatusBarProgress.ToolTip = string.Format(Player.GetStr("MsgAdding"), file);
+                            PlayListHelper.ItemAdd(file);
                         }));
+                        AudioInfoDataHelper.Add(PlayListHelper.GetFileDataInfoByFile(file));
                     }
                     Dispatcher.BeginInvoke(new Action(() =>
                     {
                         lvPlayList.Items.Refresh();
-                        busyIndicator.IsBusy = false;
+                        StatusBarProgress.Visibility = Visibility.Collapsed;
+                        statusBar.DataContext = PlayListHelper.playLists[PlayListHelper.Current];
+                        ListCtrlArea.IsEnabled = true;
                     }));
                 });
                 thread.IsBackground = true;
@@ -494,7 +495,10 @@ namespace PowerAudioPlayer
 
         private void MenuItem_Click_2(object sender, RoutedEventArgs e)
         {
-            Interaction.InputBox(Player.GetStr("MsgInputURL"));
+            string URL = Interaction.InputBox(Player.GetStr("MsgInputURL"));
+            PlayListHelper.ItemAdd(URL);
+            lvPlayList.Items.Refresh();
+            statusBar.DataContext = PlayListHelper.playLists[PlayListHelper.Current];
         }
 
         private void sliderCurrent_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
@@ -603,8 +607,8 @@ namespace PowerAudioPlayer
                     PlayListHelper.ItemRemoveAt(PlayListHelper.ItemIndexOf(item));
                 }
                 lvPlayList.Items.Refresh();
+                statusBar.DataContext = PlayListHelper.playLists[PlayListHelper.Current];
             }
-            RemoveButton.IsOpen = false;
         }
 
         private void MenuItem_Click_4(object sender, RoutedEventArgs e)
@@ -612,7 +616,6 @@ namespace PowerAudioPlayer
             PlayListHelper.ItemClear();
             CloseFile();
             lvPlayList.Items.Refresh();
-            RemoveButton.IsOpen = false;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -626,6 +629,7 @@ namespace PowerAudioPlayer
             if (Player.playIndex != -1)
             {
                 lvPlayList.SelectedIndex = Player.playIndex;
+                lvPlayList.ScrollIntoView(lvPlayList.SelectedItem);
             }
         }
 
@@ -695,8 +699,8 @@ namespace PowerAudioPlayer
                 CloseFile();
                 PlayListHelper.Current = cbCurrentPlayList.SelectedIndex;
                 lvPlayList.ItemsSource = PlayListHelper.playLists[PlayListHelper.Current].Items;
+                statusBar.DataContext = PlayListHelper.playLists[PlayListHelper.Current];
                 lvPlayList.Items.Refresh();
-
             }
             catch { }
         }
@@ -720,6 +724,7 @@ namespace PowerAudioPlayer
             PlayListHelper.ListRemoveAt(PlayListHelper.Current);
             PlayListHelper.Current = Settings.Default.CurrentPlayList = 0;
             cbCurrentPlayList.Items.Refresh();
+            statusBar.DataContext = PlayListHelper.playLists[PlayListHelper.Current];
         }
 
         private void MenuItem_Click_7(object sender, RoutedEventArgs e)
@@ -742,6 +747,81 @@ namespace PowerAudioPlayer
         private void Button_Click_7(object sender, RoutedEventArgs e)
         {
             CloseFile();
+        }
+
+        private void MenuItem_Click_8(object sender, RoutedEventArgs e)
+        {
+            Play(lvPlayList.SelectedIndex);
+        }
+
+        private void Button_Click_8(object sender, RoutedEventArgs e)
+        {
+            if (StatusBarProgress.Visibility == Visibility.Visible)
+                return;
+            StatusBarProgress.Visibility = Visibility.Visible;
+            StatusBarProgress.ToolTip = string.Format(Player.GetStr("MsgHandling"), 0, 0);
+            ListCtrlArea.IsEnabled = false;
+            Thread thread = new Thread(() =>
+            {
+                var Items = PlayListHelper.ListGet();
+                for(int i = 0; i < Items.Count; i++) 
+                {
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        StatusBarProgress.ToolTip = string.Format(Player.GetStr("MsgHandling"), i, Items.Count);
+                    }));
+                    AudioInfoDataHelper.Add(PlayListHelper.GetFileDataInfoByFile(Items[i].File));
+                }
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    lvPlayList.Items.Refresh();
+                    StatusBarProgress.Visibility = Visibility.Collapsed;
+                    ListCtrlArea.IsEnabled = true;
+                }));
+            });
+            thread.IsBackground = true;
+            thread.Start();
+        }
+
+        private void MenuItem_Click_9(object sender, RoutedEventArgs e)
+        {
+            if (StatusBarProgress.Visibility == Visibility.Visible)
+                return;
+            if (lvPlayList.SelectedItems.Count > 0)
+            {
+                StatusBarProgress.Visibility = Visibility.Visible;
+                StatusBarProgress.ToolTip = string.Format(Player.GetStr("MsgHandling"), 0, 0);
+                ListCtrlArea.IsEnabled = false;
+                List<PlayListItem> Items = lvPlayList.SelectedItems.Cast<PlayListItem>().ToList();
+
+                Thread thread = new Thread(() =>
+                {
+                    for (int i = 0; i < Items.Count; i++)
+                    {
+                        Dispatcher.BeginInvoke(new Action(() =>
+                        {
+                            StatusBarProgress.ToolTip = string.Format(Player.GetStr("MsgHandling"), i, Items.Count);
+                        }));
+                        AudioInfoDataHelper.Add(PlayListHelper.GetFileDataInfoByFile(Items[i].File));
+                    }
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        lvPlayList.Items.Refresh();
+                        StatusBarProgress.Visibility = Visibility.Collapsed;
+                        ListCtrlArea.IsEnabled = true;
+                    }));
+                });
+                thread.IsBackground = true;
+                thread.Start();
+            }
+        }
+
+        private void MenuItem_Click_10(object sender, RoutedEventArgs e)
+        {
+            InformationWindow informationWindow = new InformationWindow();
+            informationWindow.File = ((PlayListItem)lvPlayList.SelectedItem).File;
+            informationWindow.Owner = this;
+            informationWindow.ShowDialog();
         }
     }
 }

@@ -2,8 +2,10 @@
 using PowerAudioPlayer.Properties;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -359,6 +361,26 @@ namespace PowerAudioPlayer
             catch (Exception)
             {
                 return null;
+            }
+        }
+    }
+
+    public class PNotifyPropertyChanged : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        public void RaisePropertyChanged(string p)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(p));
+            }
+        }
+        public void RaiseAndSetIfChanged<T>(ref T a, T v, [CallerMemberName] string propertyName = null)
+        {
+            a = v;
+            if (propertyName != null)
+            {
+                RaisePropertyChanged(propertyName);
             }
         }
     }

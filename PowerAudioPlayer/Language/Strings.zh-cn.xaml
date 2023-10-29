@@ -20,6 +20,12 @@
     <sys:String x:Key="TipChannels">声道</sys:String>
     <sys:String x:Key="TipTitle">标题</sys:String>
     <sys:String x:Key="TipComment">注释</sys:String>
+    <sys:String x:Key="TipYear">年份</sys:String>
+    <sys:String x:Key="TipTrack">音轨号</sys:String>
+    <sys:String x:Key="TipAlbumPicture">专辑图片</sys:String>
+    
+    <sys:String x:Key="TipType">类型</sys:String>
+    <sys:String x:Key="TipSize">大小</sys:String>
 
     <sys:String x:Key="TipFileNameWithDot">文件名：</sys:String>
     <sys:String x:Key="TipPathWithDot">路径：</sys:String>
@@ -31,6 +37,16 @@
     <sys:String x:Key="TipChannelsWithDot">声道：</sys:String>
     <sys:String x:Key="TipTitleWithDot">标题：</sys:String>
     <sys:String x:Key="TipCommentWithDot">注释：</sys:String>
+    
+    <sys:String x:Key="TipMIDIMarkCopy">版权声明</sys:String>
+    <sys:String x:Key="TipMIDIMarkCue">提示</sys:String>
+    <sys:String x:Key="TipMIDIMarkInst">乐器</sys:String>
+    <sys:String x:Key="TipMIDIMarkKeySig">调号</sys:String>
+    <sys:String x:Key="TipMIDIMarkLyric">歌词</sys:String>
+    <sys:String x:Key="TipMIDIMarkMarker">标记</sys:String>
+    <sys:String x:Key="TipMIDIMarkText">文本</sys:String>
+    <sys:String x:Key="TipMIDIMarkTimeSign">拍号</sys:String>
+    <sys:String x:Key="TipMIDIMarkTrack">轨道</sys:String>
 
     <sys:String x:Key="TipAlbumUnknow">&lt;未知专辑&gt;</sys:String>
     <sys:String x:Key="TipArtistUnknow">&lt;未知艺术家&gt;</sys:String>
@@ -73,6 +89,8 @@
     <sys:String x:Key="TipPlayListRemove">删除播放列表</sys:String>
 
     <sys:String x:Key="TipLocateTo">定位到当前播放</sys:String>
+    <sys:String x:Key="TipRefreshList">刷新播放列表</sys:String>
+    <sys:String x:Key="TipRefreshListSelected">刷新选中项目</sys:String>
 
     <sys:String x:Key="TipPlayer">播放</sys:String>
     <sys:String x:Key="TipAppearance">外观</sys:String>
@@ -104,6 +122,13 @@
     <sys:String x:Key="TipBackgroundOpacity">背景不透明度</sys:String>
     <sys:String x:Key="TipBackgroundBlur">模糊半径，0为不使用</sys:String>
     <sys:String x:Key="TipSpectrum">频谱</sys:String>
+    <sys:String x:Key="TipSpectrumLW">线宽</sys:String>
+    <sys:String x:Key="TipSpectrumPW">峰宽</sys:String>
+    <sys:String x:Key="TipSpectrumDistance">间距</sys:String>
+    <sys:String x:Key="TipSpectrumPD">峰值延迟</sys:String>
+    <sys:String x:Key="TipSpectrumHQ">高质量</sys:String>
+    <sys:String x:Key="TipSpectrumFull">完整频谱</sys:String>
+    <sys:String x:Key="TipSpectrumLinear">线性缩放</sys:String>
 
     <sys:String x:Key="TipEnableEQ">启用均衡器</sys:String>
     <sys:String x:Key="TipEQ">均衡器</sys:String>
@@ -114,6 +139,9 @@
     <sys:String x:Key="TipPitch">音调</sys:String>
     <sys:String x:Key="TipReversePlay">倒放</sys:String>
     <sys:String x:Key="TipGain">放大器</sys:String>
+    
+    <sys:String x:Key="TipFileInformation">文件信息</sys:String>
+    <sys:String x:Key="TipBaiscInformation">基本信息</sys:String>
 
     <sys:String x:Key="TipPlayListDefault">[默认播放列表]</sys:String>
 
@@ -134,4 +162,6 @@
     <sys:String x:Key="MsgRemovingTitle">正在移除</sys:String>
     <sys:String x:Key="MsgRemoving">正在移除 {0}</sys:String>
     <sys:String x:Key="MsgErrorPlay">{0} 播放失败</sys:String>
+    <sys:String x:Key="MsgHandling">正在处理：第{0}个，共{1}个</sys:String>
+    <sys:String x:Key="MsgOpenError">打开文件失败</sys:String>
 </ResourceDictionary>

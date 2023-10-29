@@ -5,6 +5,11 @@
              StartupUri="MainWindow.xaml" Startup="Application_Startup" >
     <Application.Resources>
         <ResourceDictionary>
+            <Style x:Key="ImageButton">
+                <Setter Property="Image.Stretch" Value="None"/>
+                <Setter Property="UIElement.SnapsToDevicePixels" Value="True"/>
+            </Style>
+
             <local:IndexConverter x:Key="IndexConverter"/>
             <local:TimeConverter x:Key="TimeConverter"/>
             <local:SndVolPictrueConverter x:Key="SndVolPictureConverter"/>
@@ -15,10 +20,13 @@
             <local:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
             <local:PlayListTimeConverter x:Key="PlayListTimeConverter"/>
             <local:SystemThemeColorConverter x:Key="SystemThemeColorConverter"/>
+            
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Language\Strings.zh-cn.xaml"/>
                 <ResourceDictionary Source="Resources\Images.xaml"/>
+                <ResourceDictionary Source="Themes\Generic.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
         </ResourceDictionary>
     </Application.Resources>
 </Application>

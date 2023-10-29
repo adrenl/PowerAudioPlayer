@@ -112,8 +112,7 @@ namespace PowerAudioPlayer
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (parameter == null)
-                parameter = 0f;
+            parameter ??= 0f;
             if (targetType.FullName == "System.Windows.Media.Color")
             {
                 return Utils.ChangeColorLight(Utils.GetSystemThemeColor(), (float)System.Convert.ToSingle(parameter));
@@ -160,8 +159,7 @@ namespace PowerAudioPlayer
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (parameter == null)
-                parameter = "0";
+            parameter ??= "0";
             return (bool)value ? Visibility.Visible : ((string)parameter == "0" ? Visibility.Hidden : Visibility.Collapsed);
         }
 

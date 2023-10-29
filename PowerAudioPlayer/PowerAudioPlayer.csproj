@@ -29,6 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="DropDownMenu.xaml~RF33c49f.TMP" />
     <None Remove="MainWindow.xaml~RF91ea3f.TMP" />
     <None Remove="Resources\Add.png" />
     <None Remove="Resources\AddFile.png" />
@@ -42,6 +43,7 @@
     <None Remove="Resources\Error.png" />
     <None Remove="Resources\Export.png" />
     <None Remove="Resources\Import.png" />
+    <None Remove="Resources\Information.ico" />
     <None Remove="Resources\List.png" />
     <None Remove="Resources\LocateTo.png" />
     <None Remove="Resources\Next.png" />
@@ -100,6 +102,7 @@
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
     <Resource Include="Resources\Effect.ico" />
+    <Resource Include="Resources\Information.ico" />
     <Resource Include="Resources\NextSmall.png" />
     <Resource Include="Resources\PauseSmall.png" />
     <Resource Include="Resources\PlaySmall.png" />
@@ -140,18 +143,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="FileData.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Themes\Color.Dark.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
 
 </Project>

@@ -57,6 +57,7 @@ namespace PowerAudioPlayer
                 {
                     info.File = file;
                     info.Album = reader.GetValue("Album").ToString();
+                    info.Title = reader.GetValue("Title").ToString();
                     info.Artist = reader.GetValue("Artist").ToString();
                     info.Genre = reader.GetValue("Genre").ToString();
                     info.Comment = reader.GetValue("Comment").ToString();
@@ -66,8 +67,8 @@ namespace PowerAudioPlayer
                     info.SampleRate = Convert.ToInt32(reader.GetValue("SampleRate"));
                     info.Channel = Convert.ToInt32(reader.GetValue("Channel"));
                     info.Length = Convert.ToDouble(reader.GetValue("Length"));
-                    info.IsTagNull = reader.GetBoolean("IsTagNull").ToString().Equals("0");
-                    info.IsInfoAcquired = reader.GetBoolean("IsInfoAcquired").ToString().Equals("0");
+                    info.IsTagNull = reader.GetBoolean("IsTagNull").ToString().Equals("1");
+                    info.IsInfoAcquired = reader.GetBoolean("IsInfoAcquired").ToString().Equals("1");
                 }
                 reader.Close();
                 return info;

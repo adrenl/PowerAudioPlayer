@@ -4,19 +4,47 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
-        xmlns:wms="clr-namespace:WpfMultiStyle;assembly=WpfMultiStyle"
         xmlns:local="clr-namespace:PowerAudioPlayer"
         mc:Ignorable="d"
-        Title="{DynamicResource TipSettings}" Height="450" Width="500" WindowStartupLocation="CenterOwner">
+        Title="{DynamicResource TipSettings}" Height="400" Width="500" WindowStartupLocation="CenterOwner" Icon="pack://application:,,,/Resources/Settings.ico">
     <Window.Resources>
-        <Style x:Key="ControlMargin">
-            <Setter Property="Control.Margin" Value="5,3,5,3"/>
+        <Style TargetType="{x:Type StackPanel}">
+            <Setter Property="Margin" Value="2,2,2,2"/>
+        </Style>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
+        </Style>
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="2,3,2,3" />
+        </Style>
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
+        </Style>        
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
+        </Style>
+        <Style TargetType="{x:Type xctk:ColorPicker}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>        
+        <Style TargetType="{x:Type xctk:DoubleUpDown}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
+        </Style>          
+        <Style TargetType="{x:Type xctk:IntegerUpDown}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
+        </Style>        
+        <Style TargetType="{x:Type Slider}">
+            <Setter Property="Margin" Value="2,3,2,3"/>
         </Style>
     </Window.Resources>
     <Grid>
         <TabControl Margin="5">
             <TabItem Header="{DynamicResource TipPlayer}">
-                <Grid>
+                <ScrollViewer>
+                    <Grid>
                     <StackPanel>
                         <StackPanel>
                             <CheckBox Content="{DynamicResource TipAutoPlayLastFile}" IsChecked="{Binding AutoPlayLastFile}"/>
@@ -60,80 +88,107 @@
                                 <WrapPanel>
                                     <Label Content="{DynamicResource TipMIDISoundFont}"/>
                                     <TextBox Text="{Binding MIDISoundFont}" Width="200"/>
-                                    <Button Content="..." Width="30" Click="Button_Click"/>
+                                    <Button Width="20" Click="Button_Click" Style="{StaticResource ImageButton}">
+                                        <Image Source="{StaticResource OpenFileImage}"/>
+                                    </Button>
                                 </WrapPanel>
                             </StackPanel>
                         </GroupBox>
 
                     </StackPanel>
                 </Grid>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="{DynamicResource TipAppearance}">
-                <Grid>
-                    <StackPanel>
-                        <GroupBox Header="{DynamicResource TipAppearance}">
-                            <StackPanel>
-                                <WrapPanel>
-                                    <Label Content="{DynamicResource TipThemeColor}"/>
-                                    <xctk:ColorPicker SelectedColor="{Binding ThemeColor, Converter={StaticResource DrawColorToMediaColorConverter}}" IsEnabled="{Binding ThemeColorFollowSystem, Converter={StaticResource ReverseBoolConverter}, Mode=OneWay}" SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
-                                    <CheckBox Content="{DynamicResource TipFollowSystem}" IsChecked="{Binding ThemeColorFollowSystem}" Click="CheckBox_Click_1"/>
-                                </WrapPanel>
-                                <WrapPanel>
-                                    <Label Content="{DynamicResource TipColorMode}"/>
-                                    <ComboBox SelectedIndex="{Binding ColorMode}" SelectionChanged="ComboBox_SelectionChanged">
-                                        <ComboBoxItem Content="{DynamicResource TipFollowSystem}"/>
-                                        <ComboBoxItem Content="{DynamicResource TipLightMode}"/>
-                                        <ComboBoxItem Content="{DynamicResource TipDarkMode}"/>
-                                    </ComboBox>
-                                </WrapPanel>
-                                <WrapPanel>
-                                    <Label Content="{DynamicResource TipMainWindowOpacity}"/>
-                                    <Slider Maximum="1" Minimum="0" Value="{Binding MainWindowOpacity}" Width="200"/>
-                                </WrapPanel>
-                                <CheckBox Content="{DynamicResource TipShowAlbumPicture}" IsChecked="{Binding ShowAlbumPicture}"/>
-                                <CheckBox Content="{DynamicResource TipShowSpectrum}" IsChecked="{Binding ShowSpectrum}"/>
-                            </StackPanel>
-                        </GroupBox>
-                        <GroupBox Header="{DynamicResource TipBackground}">
-                            <StackPanel>
-                                <CheckBox Content="{DynamicResource TipShowBackground}" IsChecked="{Binding BgEnable}" Click="CheckBox_Click"/>
-                                <CheckBox Content="{DynamicResource TipUseAlbumPicture}" IsChecked="{Binding BgUseAlbumPicture}" Click="CheckBox_Click"/>
-                                <CheckBox Content="{DynamicResource TipUseWallpaperAsDefaultBackground}" IsChecked="{Binding BgDefaultUseDesktopBg}" Click="CheckBox_Click"/>
-                                <WrapPanel IsEnabled="{Binding BgDefaultUseDesktopBg, Converter={StaticResource ReverseBoolConverter}, Mode=OneWay}">
-                                    <Label Content="{DynamicResource TipDefaultBackground}"/>
-                                    <TextBox Text="{Binding BgDefault}" Width="200" TextChanged="TextBox_TextChanged"/>
-                                    <Button Content="..." Width="30" Click="Button_Click_1"/>
-                                </WrapPanel>
-                                <WrapPanel>
-                                    <Label Content="{DynamicResource TipBackgroundOpacity}"/>
-                                    <xctk:DoubleUpDown Minimum="0" Maximum="1" FormatString="F2" Increment=".02" Value="{Binding BgOpacity}"/>
-                                </WrapPanel>
-                                <WrapPanel>
-                                    <Label Content="{DynamicResource TipBackgroundBlur}"/>
-                                    <xctk:DoubleUpDown Minimum="0" Maximum="300" FormatString="F2" Increment=".05" Value="{Binding BgBlur}"/>
-                                </WrapPanel>
-                            </StackPanel>
-                        </GroupBox>
-                        <GroupBox Header="{DynamicResource TipSpectrum}">
-                            
-                        </GroupBox>
-                    </StackPanel>                        
-                </Grid>
+                <ScrollViewer>
+                    <Grid>
+                        <StackPanel>
+                            <GroupBox Header="{DynamicResource TipAppearance}">
+                                <StackPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipThemeColor}"/>
+                                        <xctk:ColorPicker SelectedColor="{Binding ThemeColor, Converter={StaticResource DrawColorToMediaColorConverter}}" IsEnabled="{Binding ThemeColorFollowSystem, Converter={StaticResource ReverseBoolConverter}, Mode=OneWay}" SelectedColorChanged="ColorPicker_SelectedColorChanged"/>
+                                        <CheckBox Content="{DynamicResource TipFollowSystem}" IsChecked="{Binding ThemeColorFollowSystem}" Click="CheckBox_Click_1"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipColorMode}"/>
+                                        <ComboBox SelectedIndex="{Binding ColorMode}" SelectionChanged="ComboBox_SelectionChanged">
+                                            <ComboBoxItem Content="{DynamicResource TipFollowSystem}"/>
+                                            <ComboBoxItem Content="{DynamicResource TipLightMode}"/>
+                                            <ComboBoxItem Content="{DynamicResource TipDarkMode}"/>
+                                        </ComboBox>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipMainWindowOpacity}"/>
+                                        <Slider Maximum="1" Minimum="0" Value="{Binding MainWindowOpacity}" Width="200"/>
+                                    </WrapPanel>
+                                    <CheckBox Content="{DynamicResource TipShowAlbumPicture}" IsChecked="{Binding ShowAlbumPicture}"/>
+                                    <CheckBox Content="{DynamicResource TipShowSpectrum}" IsChecked="{Binding ShowSpectrum}"/>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="{DynamicResource TipBackground}">
+                                <StackPanel>
+                                    <CheckBox Content="{DynamicResource TipShowBackground}" IsChecked="{Binding BgEnable}" Click="CheckBox_Click"/>
+                                    <CheckBox Content="{DynamicResource TipUseAlbumPicture}" IsChecked="{Binding BgUseAlbumPicture}" Click="CheckBox_Click"/>
+                                    <CheckBox Content="{DynamicResource TipUseWallpaperAsDefaultBackground}" IsChecked="{Binding BgDefaultUseDesktopBg}" Click="CheckBox_Click"/>
+                                    <WrapPanel IsEnabled="{Binding BgDefaultUseDesktopBg, Converter={StaticResource ReverseBoolConverter}, Mode=OneWay}">
+                                        <Label Content="{DynamicResource TipDefaultBackground}"/>
+                                        <TextBox Text="{Binding BgDefault}" Width="200" TextChanged="TextBox_TextChanged"/>
+                                        <Button Width="20" Click="Button_Click_1" Style="{StaticResource ImageButton}">
+                                            <Image Source="{StaticResource OpenFileImage}"/>
+                                        </Button>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipBackgroundOpacity}"/>
+                                        <xctk:DoubleUpDown Minimum="0" Maximum="1" FormatString="F2" Increment=".02" Value="{Binding BgOpacity}"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipBackgroundBlur}"/>
+                                        <xctk:DoubleUpDown Minimum="0" Maximum="300" FormatString="F2" Increment=".05" Value="{Binding BgBlur}"/>
+                                    </WrapPanel>
+                                </StackPanel>
+                            </GroupBox>
+                            <GroupBox Header="{DynamicResource TipSpectrum}">
+                                <StackPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipSpectrumLW}"/>
+                                        <xctk:IntegerUpDown Minimum="1" Maximum="10" Value="{Binding SpectrumLineWidth}"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipSpectrumPW}"/>
+                                        <xctk:IntegerUpDown Minimum="1" Maximum="10" Value="{Binding SpectrumPeakWidth}"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipSpectrumDistance}"/>
+                                        <xctk:IntegerUpDown Minimum="0" Maximum="65" Value="{Binding SpectrumDistance}"/>
+                                    </WrapPanel>
+                                    <WrapPanel>
+                                        <Label Content="{DynamicResource TipSpectrumPD}"/>
+                                        <xctk:IntegerUpDown Minimum="0" Maximum="500" Value="{Binding SpectrumPeakDelay}"/>
+                                    </WrapPanel>
+                                    <CheckBox Content="{DynamicResource TipSpectrumFull}" IsChecked="{Binding SpectrumFull}"/>
+                                    <CheckBox Content="{DynamicResource TipSpectrumHQ}" IsChecked="{Binding SpectrumHighQuality}"/>
+                                    <CheckBox Content="{DynamicResource TipSpectrumLinear}" IsChecked="{Binding SpectrumLinear}"/>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
             <TabItem Header="{DynamicResource TipPlayList}">
                 <Grid/>
             </TabItem>
             <TabItem Header="{DynamicResource TipAbout}">
                 <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="72"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <WrapPanel>
-                        <Image Source="{StaticResource ApplicationImage}" Stretch="None" Width="72" Height="72"/>
-                        <TextBlock Text="PowerAudioPlayer" VerticalAlignment="Center" FontSize="22"/>
-                    </WrapPanel>
-                </Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="72"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <WrapPanel>
+                            <Image Source="{StaticResource ApplicationImage}" Stretch="None" Width="72" Height="72"/>
+                            <TextBlock Text="PowerAudioPlayer" VerticalAlignment="Center" FontSize="22"/>
+                        </WrapPanel>
+                    </Grid>
             </TabItem>
         </TabControl>
     </Grid>
